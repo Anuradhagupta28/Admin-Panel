@@ -774,6 +774,7 @@ const Widgets = () => {
             />
           </CCardGroup>
         </DocsExample>
+        
         <DocsExample href="components/widgets/#cwidgetstatsc">
           <CRow xs={{ gutter: 4 }}>
             <CCol xs={6} lg={4} xxl={2}>

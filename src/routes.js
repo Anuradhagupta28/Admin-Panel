@@ -1,8 +1,13 @@
 import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
+const Author = React.lazy(() => import('./views/managementComp/ContentManagement/Author'))
+const Chapter = React.lazy(() => import('./views/managementComp/ContentManagement/Chapter'))
+const Subject = React.lazy(() => import('./views/managementComp/ContentManagement/Subject'))
+const Exam = React.lazy(() => import('./views/managementComp/ContentManagement/Exam'))
 const Colors = React.lazy(() => import('./views/theme/colors/Colors'))
 const Typography = React.lazy(() => import('./views/theme/typography/Typography'))
+const StudentManagement = React.lazy(() => import('./views/managementComp/StudentManagement'))
 
 // Base
 const Accordion = React.lazy(() => import('./views/base/accordion/Accordion'))
@@ -53,6 +58,11 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
+  {path: '/managementComp/ContentManagement/Exam', name: 'Exam', element:Exam},
+  {path: '/managementComp/ContentManagement/Author', name: 'Author', element:Author},
+  {path: '/managementComp/ContentManagement/Chapter', name: 'Chapter', element:Chapter},
+  {path: '/managementComp/ContentManagement/Subject', name: 'Subject', element:Subject},
+  { path: '/managementComp/StudentManagement', name: 'StudentManagement', element: StudentManagement },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },

@@ -28,6 +28,127 @@ const _nav = [
   },
   {
     component: CNavTitle,
+    name: 'Management',
+  },
+  {
+    component: CNavGroup,
+    name: 'Content Management',
+    icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Exam',
+        to: '/managementComp/ContentManagement/Exam',
+        
+      },
+      {
+        component: CNavItem,
+        name: 'Subject',
+        to: '/managementComp/ContentManagement/Subject',
+      },
+      {
+        component: CNavItem,
+        name: 'Chapter',
+        to: '/managementComp/ContentManagement/Chapter',
+      },
+      {
+        component: CNavItem,
+        name: 'Author',
+        to: '/managementComp/ContentManagement/Author',
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
+    name: 'Role Management',
+    icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'User Role',
+        to: '/managementComp/ContentManagement/Exam',
+        
+      },
+      {
+        component: CNavItem,
+        name: 'System User',
+        to: '/managementComp/ContentManagement/Subject',
+      },
+      {
+        component: CNavItem,
+        name: 'Menu Permission',
+        to: '/managementComp/ContentManagement/Chapter',
+      },
+    
+    ],
+  },
+  {
+    component: CNavGroup,
+    name: 'School Management',
+    icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'School Group',
+        to: '/managementComp/ContentManagement/Exam',
+        
+      },
+      {
+        component: CNavItem,
+        name: 'School ',
+        to: '/managementComp/ContentManagement/Subject',
+      },
+      {
+        component: CNavItem,
+        name: 'Branch',
+        to: '/managementComp/ContentManagement/Chapter',
+      },
+      {
+        component: CNavItem,
+        name: 'Student Code',
+        to: '/managementComp/ContentManagement/Author',
+      },
+      {
+        component: CNavItem,
+        name: 'Teacher Code',
+        to: '/managementComp/ContentManagement/Author',
+      },
+      {
+        component: CNavItem,
+        name: 'Assign slot to teacher',
+        to: '/managementComp/ContentManagement/Author',
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
+    name: 'Blog Management',
+    icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Author',
+        to: '/managementComp/ContentManagement/Exam',
+        
+      },
+      {
+        component: CNavItem,
+        name: 'Blogs',
+        to: '/managementComp/ContentManagement/Subject',
+      },
+      
+    
+    ],
+  },
+
+  {
+    component: CNavItem,
+    name: 'Student Management',
+    to: '/managementComp/StudentManagement',
+    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
     name: 'Theme',
   },
   {

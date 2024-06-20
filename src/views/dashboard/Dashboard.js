@@ -50,7 +50,9 @@ import {
   cilBasket,
   cilChartPie,
   cilSpeedometer,
-  cilSpeech
+  cilSpeech,
+  cilAddressBook,
+  cilPhone
 } from '@coreui/icons'
 
 import avatar1 from 'src/assets/images/avatars/1.jpg'
@@ -200,7 +202,7 @@ const Dashboard = () => {
                 color="info"
                 icon={<CIcon icon={cilPeople} height={36} />}
                 value="87.500"
-                title="Visitors"
+                title="Total users"
                 inverse
                 progress={{ value: 75 }}
               />
@@ -208,9 +210,9 @@ const Dashboard = () => {
             <CCol xs={6} lg={4} xxl={2}>
               <CWidgetStatsC
                 color="success"
-                icon={<CIcon icon={cilUserFollow} height={36} />}
+                icon={<CIcon icon={cilSpeedometer} height={36} />}
                 value="385"
-                title="New Clients"
+                title="Avg. Time"
                 inverse
                 progress={{ value: 75 }}
               />
@@ -218,9 +220,9 @@ const Dashboard = () => {
             <CCol xs={6} lg={4} xxl={2}>
               <CWidgetStatsC
                 color="warning"
-                icon={<CIcon icon={cilBasket} height={36} />}
+                icon={<CIcon icon={cilUser} height={36} />}
                 value="1238"
-                title="Products sold"
+                title="Total Males"
                 inverse
                 progress={{ value: 75 }}
               />
@@ -228,9 +230,9 @@ const Dashboard = () => {
             <CCol xs={6} lg={4} xxl={2}>
               <CWidgetStatsC
                 color="primary"
-                icon={<CIcon icon={cilChartPie} height={36} />}
+                icon={<CIcon icon={cilUserFemale} height={36} />}
                 value="28%"
-                title="Returning Visitors"
+                title="Total females"
                 inverse
                 progress={{ value: 75 }}
               />
@@ -238,9 +240,9 @@ const Dashboard = () => {
             <CCol xs={6} lg={4} xxl={2}>
               <CWidgetStatsC
                 color="danger"
-                icon={<CIcon icon={cilSpeedometer} height={36} />}
+                icon={<CIcon icon={cilAddressBook} height={36} />}
                 value="5:34:11"
-                title="Avg. Time"
+                title="Total Collections"
                 inverse
                 progress={{ value: 75 }}
               />
@@ -250,7 +252,7 @@ const Dashboard = () => {
                 color="info"
                 icon={<CIcon icon={cilSpeech} height={36} />}
                 value="972"
-                title="Comments"
+                title="Total Connections"
                 inverse
                 progress={{ value: 75 }}
               />
@@ -259,41 +261,42 @@ const Dashboard = () => {
         {/* </DocsExample>
     </CCardBody>
 </CCard> */}
+
 {/* 2nd part */}
       <CCard className="mb-4">
-      <CCardHeader>Widgets</CCardHeader>
+      {/* <CCardHeader>Widgets</CCardHeader> */}
       <CCardBody>
         <BasicDatePicker/>
    <div style={{margin:'20px 0'}}>
    <CCardGroup className="mb-4">
             <CWidgetStatsC
-              icon={<CIcon icon={cilPeople} height={36} />}
+              icon={<CIcon icon={cilPhone} height={36} />}
               value="87.500"
-              title="Visitors"
+              title="Total calls"
               progress={{ color: 'info', value: 75 }}
             />
             <CWidgetStatsC
               icon={<CIcon icon={cilUserFollow} height={36} />}
               value="385"
-              title="New Clients"
+              title="Accepted calls"
               progress={{ color: 'success', value: 75 }}
             />
             <CWidgetStatsC
               icon={<CIcon icon={cilBasket} height={36} />}
               value="1238"
-              title="Products sold"
+              title="Not accepted calls"
               progress={{ color: 'warning', value: 75 }}
             />
             <CWidgetStatsC
               icon={<CIcon icon={cilChartPie} height={36} />}
               value="28%"
-              title="Returning Visitors"
+              title="Less Then 3* calls"
               progress={{ color: 'primary', value: 75 }}
             />
             <CWidgetStatsC
               icon={<CIcon icon={cilSpeedometer} height={36} />}
               value="5:34:11"
-              title="Avg. Time"
+              title="Less Then 60s calls"
               progress={{ color: 'danger', value: 75 }}
             />
           </CCardGroup>
