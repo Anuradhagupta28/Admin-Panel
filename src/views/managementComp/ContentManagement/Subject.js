@@ -31,8 +31,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
-const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,formData }) => {
 
+const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData }) => {
 
   React.useEffect(() => {
     if (initialData) {
@@ -40,8 +40,9 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
     } else {
       setFormData({
         examName: '',
+        subjectName: '',
         description: '',
-        passingPercentage: '',
+       
         status: '',
       });
     }
@@ -69,11 +70,32 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
           margin="dense"
           name="examName"
           label="Exam Name *"
-          type="text"
+          select
           fullWidth
           value={formData.examName}
           onChange={handleChange}
-        />
+        >
+          {['VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'NEET', 'JEE Main', 'JEE Advanced', 'Other Exams'].map(option => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          margin="dense"
+          name="subjectName"
+          label="Subject Name *"
+          select
+          fullWidth
+          value={formData.subjectName}
+          onChange={handleChange}
+        >
+          {['Maths', 'Biology', 'Chemistry', 'Physics', 'English', 'History', 'Geography', 'Other'].map(option => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </TextField>
         <TextField
           margin="dense"
           name="description"
@@ -83,22 +105,13 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
           value={formData.description}
           onChange={handleChange}
         />
-        <TextField
-          margin="dense"
-          name="passingPercentage"
-          label="Passing Percentage *"
-          type="number"
-          fullWidth
-          value={formData.passingPercentage}
-          onChange={handleChange}
-        />
+        
         <TextField
           margin="dense"
           name="status"
           label="Status"
-          type="text"
-          fullWidth
           select
+          fullWidth
           value={formData.status}
           onChange={handleChange}
         >
@@ -116,6 +129,8 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
   );
 };
 
+
+
 const Subject = () => {
   const [open, setOpen] = useState(false);
   const [dialogData, setDialogData] = useState(null);
@@ -123,116 +138,96 @@ const Subject = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [formData, setFormData] = useState({
     examName: '',
+    subjectName:'',
     description: '',
-    passingPercentage: '',
+   
     status: '',
   });
 
   const [tableData, setTableData] = useState([
     {
       id: 1,
-      examName: 'JEE MAIN & OTHER ENGINEERING ENTRANCES',
-      description: 'Otto',
-      passingPercentage: 45,
-      status: 'Inactive'
+      examName: 'X-SCIENCE',
+      subjectName: 'BIOLOGY',
+      description: 'NONE',
+      status: 'Active'
     },
     {
       id: 2,
-      examName: 'ALL BOARDS',
-      description: 'Jacob',
-      passingPercentage: 34,
-      status: 'Inactive'
+      examName: 'X-SCIENCE',
+      subjectName: 'CHEMISTRY',
+      description: 'NONE',
+      status: 'Active'
     },
     {
       id: 3,
-      examName: 'NEET UG',
-      description: 'Biology, Physics, Chemistry',
-      passingPercentage: 50,
+      examName: 'X-SCIENCE',
+      subjectName: 'PHYSICS',
+      description: 'NONE',
       status: 'Active'
     },
     {
       id: 4,
-      examName: 'GATE',
-      description: 'Engineering Graduate Aptitude Test',
-      passingPercentage: 40,
+      examName: 'IX-SCIENCE',
+      subjectName: 'BIOLOGY',
+      description: 'NONE',
       status: 'Active'
     },
     {
       id: 5,
-      examName: 'CAT',
-      description: 'Common Admission Test',
-      passingPercentage: 55,
-      status: 'Inactive'
+      examName: 'IX-SCIENCE',
+      subjectName: 'CHEMISTRY',
+      description: 'NONE',
+      status: 'Active'
     },
     {
       id: 6,
-      examName: 'UPSC Civil Services',
-      description: 'Indian Administrative Services',
-      passingPercentage: 45,
+      examName: 'IX-SCIENCE',
+      subjectName: 'PHYSICS',
+      description: 'NONE',
       status: 'Active'
     },
     {
       id: 7,
-      examName: 'CLAT',
-      description: 'Common Law Admission Test',
-      passingPercentage: 50,
-      status: 'Inactive'
+      examName: 'VIII',
+      subjectName: 'BIOLOGY',
+      description: 'NONE',
+      status: 'Active'
     },
     {
       id: 8,
-      examName: 'NDA',
-      description: 'National Defence Academy',
-      passingPercentage: 60,
+      examName: 'VIII',
+      subjectName: 'BIOLOGY',
+      description: 'NONE',
       status: 'Active'
     },
     {
       id: 9,
-      examName: 'SSC CGL',
-      description: 'Staff Selection Commission',
-      passingPercentage: 55,
-      status: 'Inactive'
+      examName: 'VIII',
+      subjectName: 'BIOLOGY',
+      description: 'NONE',
+      status: 'Active'
     },
     {
       id: 10,
-      examName: 'IBPS PO',
-      description: 'Institute of Banking Personnel Selection',
-      passingPercentage: 50,
+      examName: 'VIII',
+      subjectName: 'BIOLOGY',
+      description: 'NONE',
       status: 'Active'
     },
     {
       id: 11,
-      examName: 'GRE',
-      description: 'Graduate Record Examinations',
-      passingPercentage: 60,
-      status: 'Inactive'
+      examName: 'VIII',
+      subjectName: 'BIOLOGY',
+      description: 'NONE',
+      status: 'Active'
     },
     {
       id: 12,
-      examName: 'IELTS',
-      description: 'International English Language Testing System',
-      passingPercentage: 50,
+      examName: 'VIII',
+      subjectName: 'BIOLOGY',
+      description: 'NONE',
       status: 'Active'
-    },
-    {
-      id: 13,
-      examName: 'TOEFL',
-      description: 'Test of English as a Foreign Language',
-      passingPercentage: 55,
-      status: 'Inactive'
-    },
-    {
-      id: 14,
-      examName: 'SAT',
-      description: 'Scholastic Assessment Test',
-      passingPercentage: 65,
-      status: 'Active'
-    },
-    {
-      id: 15,
-      examName: 'ACT',
-      description: 'American College Testing',
-      passingPercentage: 70,
-      status: 'Inactive'
     }
   ]);
   
@@ -295,10 +290,10 @@ const Subject = () => {
             <CRow >
               <CCol>
                 <CIcon icon={cilAddressBook} height={25} />
-                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Exam</strong> <small style={{ fontSize: '17px' }}>List</small>
+                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Subject</strong> <small style={{ fontSize: '17px' }}>List</small>
               </CCol>
 
-              <CCol>
+              <CCol md="auto">
                 <CInputGroup className="mb-3" style={{ width: '200px' }}>
                   <CInputGroupText id="basic-addon1">
                     <CIcon icon={cilSearch} height={17} />
@@ -311,9 +306,9 @@ const Subject = () => {
                 </CInputGroup>
               </CCol>
               <CCol xs lg={1}>
-                <CCardText onClick={() => handleClickOpen()}>Add
-                  <CIcon icon={cilPlus} height={18} />
-                </CCardText>
+                <CButton color='secondary' onClick={() => handleClickOpen()} className='pt-1 pb-1'>Add
+                  <CIcon icon={cilPlus} height={16} />
+                </CButton>
               </CCol>
             </CRow>
           </CCardHeader>
@@ -339,8 +334,9 @@ const Subject = () => {
                 <CTableRow>
                   <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
                   <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Exam Name</CTableHeaderCell>
+                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Subject Name</CTableHeaderCell>
                   <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Description</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Passing percentage</CTableHeaderCell>
+                 
                   <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Status</CTableHeaderCell>
                   <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Action</CTableHeaderCell>
                 </CTableRow>
@@ -350,8 +346,9 @@ const Subject = () => {
                   <CTableRow key={row.id}>
                     <CTableHeaderCell scope="row" style={{ padding: '20px' }}>{index + 1 + (currentPage - 1) * itemsPerPage}</CTableHeaderCell>
                     <CTableDataCell style={{ padding: '20px' }}>{row.examName}</CTableDataCell>
+                    <CTableDataCell style={{ padding: '20px' }}>{row.subjectName}</CTableDataCell>
                     <CTableDataCell style={{ padding: '20px' }}>{row.description}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.passingPercentage}</CTableDataCell>
+                    
                     <CTableDataCell style={{ padding: '20px' }}>
                       <CButton color={row.status === 'Active' ? 'success' : 'danger'} size="sm" style={{ color: 'white' }}>
                         {row.status}

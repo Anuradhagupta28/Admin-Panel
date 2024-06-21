@@ -1,5 +1,9 @@
 import React from 'react'
 
+
+const UserRole = React.lazy(() => import('./views/managementComp/RoleManagement/UserRole'))
+const SystemUser = React.lazy(() => import('./views/managementComp/RoleManagement/SystemUser'))
+
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 const Author = React.lazy(() => import('./views/managementComp/ContentManagement/Author'))
 const Chapter = React.lazy(() => import('./views/managementComp/ContentManagement/Chapter'))
@@ -63,6 +67,10 @@ const routes = [
   {path: '/managementComp/ContentManagement/Chapter', name: 'Chapter', element:Chapter},
   {path: '/managementComp/ContentManagement/Subject', name: 'Subject', element:Subject},
   { path: '/managementComp/StudentManagement', name: 'StudentManagement', element: StudentManagement },
+  {path: '/managementComp/RoleManagement/UserRole', name: 'UserRole', element:UserRole},
+
+  {path: '/managementComp/RoleManagement/SystemUser', name: 'SystemUser', element:SystemUser},
+
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },

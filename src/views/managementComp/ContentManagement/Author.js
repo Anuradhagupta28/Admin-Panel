@@ -327,10 +327,10 @@ const Author = () => {
             <CRow >
               <CCol>
                 <CIcon icon={cilAddressBook} height={25} />
-                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Exam</strong> <small style={{ fontSize: '17px' }}>List</small>
+                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Author</strong> <small style={{ fontSize: '17px' }}>List</small>
               </CCol>
 
-              <CCol>
+              <CCol md="auto">
                 <CInputGroup className="mb-3" style={{ width: '200px' }}>
                   <CInputGroupText id="basic-addon1">
                     <CIcon icon={cilSearch} height={17} />
@@ -343,9 +343,9 @@ const Author = () => {
                 </CInputGroup>
               </CCol>
               <CCol xs lg={1}>
-                <CCardText onClick={() => handleClickOpen()}>Add
-                  <CIcon icon={cilPlus} height={18} />
-                </CCardText>
+                <CButton color='secondary' onClick={() => handleClickOpen()} className='pt-1 pb-1'>Add
+                  <CIcon icon={cilPlus} height={16} />
+                </CButton>
               </CCol>
             </CRow>
           </CCardHeader>

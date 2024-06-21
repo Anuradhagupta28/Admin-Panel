@@ -241,6 +241,7 @@ const Tables = () => {
           </CCardBody>
         </CCard>
       </CCol>
+      {/* /////////////// */}
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>

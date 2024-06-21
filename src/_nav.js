@@ -66,18 +66,18 @@ const _nav = [
       {
         component: CNavItem,
         name: 'User Role',
-        to: '/managementComp/ContentManagement/Exam',
+        to: '/managementComp/RoleManagement/UserRole',
         
       },
       {
         component: CNavItem,
         name: 'System User',
-        to: '/managementComp/ContentManagement/Subject',
+        to: '/managementComp/RoleManagement/SystemUser',
       },
       {
         component: CNavItem,
         name: 'Menu Permission',
-        to: '/managementComp/ContentManagement/Chapter',
+        to: '/managementComp/RoleManagement/UserRole',
       },
     
     ],
