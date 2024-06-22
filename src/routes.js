@@ -1,6 +1,8 @@
 import React from 'react'
 
 
+const MenuPermission = React.lazy(() => import('./views/managementComp/RoleManagement/MenuPermission'))
+
 const UserRole = React.lazy(() => import('./views/managementComp/RoleManagement/UserRole'))
 const SystemUser = React.lazy(() => import('./views/managementComp/RoleManagement/SystemUser'))
 
@@ -68,7 +70,7 @@ const routes = [
   {path: '/managementComp/ContentManagement/Subject', name: 'Subject', element:Subject},
   { path: '/managementComp/StudentManagement', name: 'StudentManagement', element: StudentManagement },
   {path: '/managementComp/RoleManagement/UserRole', name: 'UserRole', element:UserRole},
-
+  {path: '/managementComp/RoleManagement/MenuPermission', name: 'MenuPermission', element:MenuPermission},
   {path: '/managementComp/RoleManagement/SystemUser', name: 'SystemUser', element:SystemUser},
 
   { path: '/theme', name: 'Theme', element: Colors, exact: true },

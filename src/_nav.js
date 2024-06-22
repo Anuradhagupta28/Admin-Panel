@@ -77,7 +77,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Menu Permission',
-        to: '/managementComp/RoleManagement/UserRole',
+        to: '/managementComp/RoleManagement/MenuPermission',
       },
     
     ],

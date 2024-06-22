@@ -23,17 +23,31 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilAddressBook, cilTrash, cilColorBorder, cilSearch, cilPlus } from '@coreui/icons'
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+// import Button from '@mui/material/Button';
+// import Dialog from '@mui/material/Dialog';
+// import DialogActions from '@mui/material/DialogActions';
+// import DialogContent from '@mui/material/DialogContent';
+// import DialogContentText from '@mui/material/DialogContentText';
+// import DialogTitle from '@mui/material/DialogTitle';
+// import TextField from '@mui/material/TextField';
+// import MenuItem from '@mui/material/MenuItem';
 
-const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,formData }) => {
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  DialogContentText,
+  TextField,
+  MenuItem,
+  Button,
+  FormControl,
+  InputLabel,
+  Select
+} from '@mui/material';
 
+const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData }) => {
+  const [selectedFileName, setSelectedFileName] = useState('');
 
   React.useEffect(() => {
     if (initialData) {
@@ -41,10 +55,13 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
     } else {
       setFormData({
         role: '',
-        exam: '',
+        name: '',
         email: '',
+        password: '',
         phoneNo: '',
+        image: '',
         status: '',
+       
       });
     }
   }, [initialData]);
@@ -57,63 +74,124 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
     });
   };
 
-  const onSubmit = () => {
+  const handleFileChange = (event) => {
+    const { name, files } = event.target;
+    if (files.length > 0) {
+      setFormData({
+        ...formData,
+        [name]: files[0],
+      });
+      setSelectedFileName(files[0].name);
+      console.log(files[0], formData);
+    }
+  };
+
+  const onSubmit = (event) => {
+    event.preventDefault();
     handleSubmit(formData);
     handleClose();
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Exam Form</DialogTitle>
-      <DialogContent>
-        <TextField
-          autoFocus
-          margin="dense"
-          name="examName"
-          label="Exam Name *"
-          type="text"
-          fullWidth
-          value={formData.examName}
-          onChange={handleChange}
-        />
-        <TextField
-          margin="dense"
-          name="description"
-          label="Description *"
-          type="text"
-          fullWidth
-          value={formData.description}
-          onChange={handleChange}
-        />
-        <TextField
-          margin="dense"
-          name="passingPercentage"
-          label="Passing Percentage *"
-          type="number"
-          fullWidth
-          value={formData.passingPercentage}
-          onChange={handleChange}
-        />
-        <TextField
-          margin="dense"
-          name="status"
-          label="Status"
-          type="text"
-          fullWidth
-          select
-          value={formData.status}
-          onChange={handleChange}
-        >
-          <MenuItem value="Active">Active</MenuItem>
-          <MenuItem value="Inactive">Inactive</MenuItem>
-        </TextField>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={onSubmit} variant="contained" color="primary">
-          Submit
-        </Button>
-      </DialogActions>
+      <DialogTitle>User data</DialogTitle>
+      <form onSubmit={onSubmit}>
+        <DialogContent>
+          <FormControl fullWidth margin="dense" required>
+            <InputLabel id="role-label">Select Role</InputLabel>
+            <Select
+              labelId="role-label"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              label="Select Role"
+            >
+              <MenuItem value=""><em>--select role--</em></MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="subadmin">Sub Admin</MenuItem>
+              <MenuItem value="staff">Staff</MenuItem>
+              <MenuItem value="teacher">Teacher</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            margin="dense"
+            name="name"
+            label="Name"
+            type="text"
+            fullWidth
+            required
+            value={formData.name}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="email"
+            label="Email"
+            type="email"
+            fullWidth
+            required
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="password"
+            label="Password"
+            type="password"
+            fullWidth
+            required
+            value={formData.password}
+            onChange={handleChange}
+          />
+          <TextField
+            margin="dense"
+            name="phoneNo"
+            label="Phone Number"
+            type="tel"
+            fullWidth
+            required
+            value={formData.phoneNo}
+            onChange={handleChange}
+          />
+          <input
+            accept="image/*"
+            style={{ display: 'none' }}
+            id="raised-button-file"
+            multiple
+            type="file"
+            name="image"
+            required
+            onChange={handleFileChange}
+          />
+          <label htmlFor="raised-button-file" style={{margin: "8px 12px 6px 0"}}>
+            <Button variant="contained" component="span">
+              choose file
+            </Button>
+          </label>
+          <span>{selectedFileName ? `${selectedFileName}` : '*No file chosen'}</span>
+
+          <TextField
+            margin="dense"
+            name="status"
+            label="Status"
+            type="text"
+            fullWidth
+            select
+            required
+            value={formData.status}
+            onChange={handleChange}
+          >
+            <MenuItem value="Active">Active</MenuItem>
+            <MenuItem value="Inactive">Inactive</MenuItem>
+          </TextField>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button type="submit" variant="contained" color="primary">
+            Submit
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   );
 };
@@ -128,6 +206,7 @@ const SystemUser = () => {
     exam: '',
     email: '',
     phoneNo: '',
+    image:'',
     status: '',
   });
 
@@ -135,99 +214,73 @@ const SystemUser = () => {
     {
       id: 1,
       role: 'admin',
-      exam: 'Admin',
+      name: 'Admin',
       email: 'solvedudar@gmail.com',
       phoneNo: '7800151777',
+      image:'https://dev-v1.solvedudar.com/assets/master/profile/default.png',
       status: 'Active'
     },
     {
       id: 2,
       role: 'teacher',
-      exam: 'Sandeep Kumar Singh',
+      name: 'Sandeep Kumar Singh',
       email: 'singhsandeep3137@gmail.com',
       phoneNo: '8010161320',
-      status: 'Active'
+      image:'https://dev-v1.solvedudar.com/assets/master/profile/default.png',
+
+    status: 'Active'
     },
     {
       id: 3,
       role: 'teacher',
-      exam: 'Devraj Singh',
+      name: 'Devraj Singh',
       email: 'devrajsingh86313@gmail.com',
       phoneNo: '7905341307',
+      image:'https://dev-v1.solvedudar.com/assets/master/profile/default.png',
+
       status: 'Active'
     },
     {
       id: 4,
       role: 'teacher',
-      exam: 'Saket Jha',
+      name: 'Saket Jha',
       email: 'saketjha2020@gmail.com',
       phoneNo: '9821708922',
+      image:'https://dev-v1.solvedudar.com/assets/master/profile/default.png',
+
       status: 'Active'
     },
     {
       id: 5,
       role: 'teacher',
-      exam: 'Varun Upadhyay',
+      name: 'Varun Upadhyay',
       email: 'vvekraiji@gmail.com',
       phoneNo: '7086887291',
+      image:'https://dev-v1.solvedudar.com/assets/master/profile/default.png',
+
       status: 'Active'
     },
     {
       id: 6,
       role: 'teacher',
-      exam: 'Amit Sharma',
+      name: 'Amit Sharma',
       email: 'amitsharma@gmail.com',
       phoneNo: '9801234567',
+      image:'https://dev-v1.solvedudar.com/assets/master/profile/default.png',
+
       status: 'Active'
     },
     {
       id: 7,
       role: 'teacher',
-      exam: 'Ravi Kumar',
+      name: 'Ravi Kumar',
       email: 'ravikumar@gmail.com',
       phoneNo: '9812345678',
+      image:'https://dev-v1.solvedudar.com/assets/master/profile/default.png',
+
       status: 'Inactive'
     },
-    {
-      id: 8,
-      role: 'teacher',
-      exam: 'Neha Gupta',
-      email: 'nehagupta@gmail.com',
-      phoneNo: '9876543210',
-      status: 'Active'
-    },
-    {
-      id: 9,
-      role: 'teacher',
-      exam: 'Anil Mehta',
-      email: 'anilmehta@gmail.com',
-      phoneNo: '9123456780',
-      status: 'Active'
-    },
-    {
-      id: 10,
-      role: 'teacher',
-      exam: 'Priya Verma',
-      email: 'priyaverma@gmail.com',
-      phoneNo: '9234567891',
-      status: 'Inactive'
-    },
-    {
-      id: 11,
-      role: 'teacher',
-      exam: 'Kiran Rao',
-      email: 'kiranrao@gmail.com',
-      phoneNo: '9345678901',
-      status: 'Active'
-    },
-    {
-      id: 12,
-      role: 'teacher',
-      exam: 'Vikas Patil',
-      email: 'vikaspatil@gmail.com',
-      phoneNo: '9456789012',
-      status: 'Inactive'
-    }
+    
   ]);
   
   
@@ -334,7 +387,7 @@ const SystemUser = () => {
                 <CTableRow>
                   <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
                   <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Role </CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Exam </CTableHeaderCell>
+                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Name </CTableHeaderCell>
                   <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Email </CTableHeaderCell>
                   <CTableHeaderCell scope="col" style={{ padding: '20px' }}>phone No.</CTableHeaderCell>
                 
@@ -348,7 +401,7 @@ const SystemUser = () => {
                   <CTableRow key={row.id}>
                     <CTableHeaderCell scope="row" style={{ padding: '20px' }}>{index + 1 + (currentPage - 1) * itemsPerPage}</CTableHeaderCell>
                     <CTableDataCell style={{ padding: '20px' }}>{row.role}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.exam}</CTableDataCell>
+                    <CTableDataCell style={{ padding: '20px' }}>{row.name}</CTableDataCell>
                     <CTableDataCell style={{ padding: '20px' }}>{row.email}</CTableDataCell>
                     <CTableDataCell style={{ padding: '20px' }}>{row.phoneNo}</CTableDataCell>
                     <CTableDataCell style={{ padding: '20px' }}>
@@ -357,7 +410,7 @@ const SystemUser = () => {
                       </CButton>
                     </CTableDataCell>
                     <CTableDataCell style={{ padding: '20px' }}>
-                    <CImage rounded thumbnail src="https://dev-v1.solvedudar.com/assets/master/profile/default.png" width={100} height={100} />
+                    <CImage rounded thumbnail src={row.image} width={100} height={100} />
                 
                     </CTableDataCell>
                     <CTableDataCell style={{ padding: '20px' }}>
