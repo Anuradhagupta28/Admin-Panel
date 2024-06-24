@@ -1,8 +1,11 @@
 import React from 'react'
 
 
-const MenuPermission = React.lazy(() => import('./views/managementComp/RoleManagement/MenuPermission'))
 
+const MenuPermission = React.lazy(() => import('./views/managementComp/RoleManagement/MenuPermission'))
+const Branch = React.lazy(() => import('./views/managementComp/SchoolManagement/Branch'))
+
+const School = React.lazy(() => import('./views/managementComp/SchoolManagement/School'))
 const UserRole = React.lazy(() => import('./views/managementComp/RoleManagement/UserRole'))
 const SystemUser = React.lazy(() => import('./views/managementComp/RoleManagement/SystemUser'))
 
@@ -72,7 +75,8 @@ const routes = [
   {path: '/managementComp/RoleManagement/UserRole', name: 'UserRole', element:UserRole},
   {path: '/managementComp/RoleManagement/MenuPermission', name: 'MenuPermission', element:MenuPermission},
   {path: '/managementComp/RoleManagement/SystemUser', name: 'SystemUser', element:SystemUser},
-
+  {path: '/managementComp/SchoolManagement/School', name: 'School', element:School},
+  {path: '/managementComp/SchoolManagement/Branch', name: 'Branch', element:Branch},
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },

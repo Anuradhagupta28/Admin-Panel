@@ -95,13 +95,13 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'School ',
-        to: '/managementComp/ContentManagement/Subject',
+        name: 'School',
+        to: '/managementComp/SchoolManagement/School',
       },
       {
         component: CNavItem,
         name: 'Branch',
-        to: '/managementComp/ContentManagement/Chapter',
+        to: '/managementComp/SchoolManagement/Branch',
       },
       {
         component: CNavItem,

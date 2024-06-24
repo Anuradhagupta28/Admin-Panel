@@ -210,7 +210,7 @@ const SystemUser = () => {
     status: '',
   });
 
-  const [tableData, setTableData] = useState([
+  const [tableData, setTableData] = useState([  
     {
       id: 1,
       role: 'admin',
