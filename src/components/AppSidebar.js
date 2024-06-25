@@ -37,8 +37,12 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
-          <CIcon customClassName="sidebar-brand-full" icon={logo} height={32} />
-          <CIcon customClassName="sidebar-brand-narrow" icon={sygnet} height={32} />
+        <img
+        src="https://dev-v1.solvedudar.com/assets/web/images/logo/logo.png"
+        alt="Logo"
+        height={50} // Adjust the height as needed
+        style={{ width: 'auto' }} // Ensures the image maintains its aspect ratio
+      />
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"

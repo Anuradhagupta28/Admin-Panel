@@ -2,9 +2,13 @@ import React from 'react'
 
 
 
+const Login = React.lazy(() => import('./views/pages/login/Login'))
+const TeacherCode = React.lazy(() => import('./views/managementComp/SchoolManagement/TeacherCode'))
+const AssignSlot = React.lazy(() => import('./views/managementComp/SchoolManagement/AssignSlot'))
+
 const MenuPermission = React.lazy(() => import('./views/managementComp/RoleManagement/MenuPermission'))
 const Branch = React.lazy(() => import('./views/managementComp/SchoolManagement/Branch'))
-
+const StudentCode = React.lazy(() => import('./views/managementComp/SchoolManagement/StudentCode'))
 const School = React.lazy(() => import('./views/managementComp/SchoolManagement/School'))
 const UserRole = React.lazy(() => import('./views/managementComp/RoleManagement/UserRole'))
 const SystemUser = React.lazy(() => import('./views/managementComp/RoleManagement/SystemUser'))
@@ -77,6 +81,12 @@ const routes = [
   {path: '/managementComp/RoleManagement/SystemUser', name: 'SystemUser', element:SystemUser},
   {path: '/managementComp/SchoolManagement/School', name: 'School', element:School},
   {path: '/managementComp/SchoolManagement/Branch', name: 'Branch', element:Branch},
+  {path: 'pages/login/Login', name: 'Branch', element:Login},
+  {path: '/managementComp/SchoolManagement/StudentCode', name: 'StudentCode', element:StudentCode},
+  {path: '/managementComp/SchoolManagement/TeacherCode', name: 'TeacherCode', element:TeacherCode},
+  {path: '/managementComp/SchoolManagement/AssignSlot', name: 'AssignSlot', element:AssignSlot},
+
+  
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
