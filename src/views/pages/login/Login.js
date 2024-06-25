@@ -70,7 +70,7 @@ const Login = () => {
                     </CInputGroup>
                     <CRow>
                       <CCol className="d-flex justify-content-center mb-3">
-                        <CButton color="primary" className="px-4">
+                        <CButton className="px-4"  style={{ width: '100%', maxWidth: '320px', backgroundColor:'rgb(20,129,208)',color:'white' }}>
                           Login
                         </CButton>
                       </CCol>
