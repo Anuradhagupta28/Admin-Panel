@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   CButton,
   CCard,
@@ -17,6 +17,22 @@ import CIcon from '@coreui/icons-react';
 import { cilLockLocked, cilUser } from '@coreui/icons';
 
 const Login = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    if (username === 'solvedudar@gmail.com' && password === 'ygp@1586YGP') {
+console.log('username')
+console.log('password')
+      navigate('/');
+    } else {
+      console.log(username)
+console.log(password)
+      alert('Invalid username or password');
+    }
+  };
+
   return (
     <div
       className="min-vh-100 d-flex flex-row align-items-center"
@@ -35,19 +51,18 @@ const Login = () => {
                 }}
               >
                 <CCardBody className="d-flex flex-column align-items-center">
-                <img
+                  <img
                     src="https://dev-v1.solvedudar.com/assets/web/images/logo/logo.png"
                     alt="Logo"
                     height={50}
                     style={{ width: 'auto', marginBottom: '1.5rem' }}
                   />
-                  <h2 className="text-center" >
+                  <h2 className="text-center">
                     Admin - Login
                   </h2>
-                 
                   <p
                     className="text-body-secondary text-center"
-                    style={{ color: '#6c757d', marginBottom: '2rem',marginTop: '-0.3rem' }} 
+                    style={{ color: '#6c757d', marginBottom: '2rem', marginTop: '-0.3rem' }}
                   >
                     Sign in to your account
                   </p>
@@ -56,7 +71,12 @@ const Login = () => {
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput
+                        placeholder="Username"
+                        autoComplete="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                      />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -66,11 +86,17 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol className="d-flex justify-content-center mb-3">
-                        <CButton className="px-4"  style={{ width: '100%', maxWidth: '320px', backgroundColor:'rgb(20,129,208)',color:'white' }}>
+                        <CButton
+                          className="px-4"
+                          style={{ width: '100%', maxWidth: '320px', backgroundColor: 'rgb(20,129,208)', color: 'white' }}
+                          onClick={handleLogin}
+                        >
                           Login
                         </CButton>
                       </CCol>
@@ -81,15 +107,13 @@ const Login = () => {
                           Forgot password?
                         </CButton>
                       </CCol>
-                     
                     </CRow>
                     <p
-                    className="text-body-secondary text-center"
-                    style={{ fontSize:'13px', color: '#6c757d', marginBottom: '2rem' }}
-                  >
-                   ©2024 Dudar Tech Pvt. Ltd. All Rights Reserved.
-                  </p>
-             
+                      className="text-body-secondary text-center"
+                      style={{ fontSize: '13px', color: '#6c757d', marginBottom: '2rem' }}
+                    >
+                      ©2024 Dudar Tech Pvt. Ltd. All Rights Reserved.
+                    </p>
                   </CForm>
                 </CCardBody>
               </CCard>
