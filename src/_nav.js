@@ -131,7 +131,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Blogs',
-        to: '/managementComp/ContentManagement/Subject',
+        to: '/managementComp/BlogManagement/Blogs',
       },
       
     
@@ -141,13 +141,13 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Student Management',
-    to: '/managementComp/SchoolManagement/Branch',
+    to: '/managementComp/StudentManagement',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Teacher Management',
-    to: '/managementComp/SchoolManagement/Branch',
+    to: '/managementComp/TeacherManagement',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
@@ -159,13 +159,13 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Message Management',
-    to: '/managementComp/SchoolManagement/Branch',
+    to: '/managementComp/SchoolManagement/TeacherCode',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Review question',
-    to: '/managementComp/SchoolManagement/Branch',
+    to:  '/managementComp/RoleManagement/UserRole',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
@@ -218,7 +218,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Newsletter',
-        to: '/managementComp/SchoolManagement/StudentCode',
+        to:  '/managementComp/RoleManagement/UserRole',
       },
       {
         component: CNavItem,
@@ -238,13 +238,13 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Teacher Quiz management',
-    to: '/managementComp/SchoolManagement/Branch',
+    to: '/managementComp/ContentManagement/Chapter',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Student quiz component',
-    to: '/managementComp/SchoolManagement/Branch',
+    to: '/managementComp/RoleManagement/SystemUser',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
 

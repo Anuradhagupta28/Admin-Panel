@@ -1,6 +1,10 @@
 import React from 'react'
 
 
+const StudentManagements = React.lazy(() => import('./views/managementComp/StudentManagement'))
+const TeacherManagement = React.lazy(() => import('./views/managementComp/TeacherManagement'))
+
+const Blogs = React.lazy(() => import('./views/managementComp/BlogManagement/Blogs'))
 
 // const Login = React.lazy(() => import('./views/pages/login/Login'))
 const TeacherCode = React.lazy(() => import('./views/managementComp/SchoolManagement/TeacherCode'))
@@ -90,8 +94,11 @@ const routes = [
   {path: '/managementComp/SchoolManagement/AssignSlot', name: 'AssignSlot', element:AssignSlot},
   {path: '/managementComp/SchoolManagement/SchoolGroup', name: 'SchoolGroup', element:SchoolGroup},
   {path: '/managementComp/BlogManagement/Author', name: 'Author', element:AuthorCom},
+  {path: '/managementComp/BlogManagement/Blogs', name: 'Blogs', element:Blogs},
 
-  
+  {path: '/managementComp/StudentManagements', name: 'StudentManagements', element:StudentManagements},
+  {path: '/managementComp/TeacherManagement', name: 'TeacherManagement', element:TeacherManagement},
+
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },

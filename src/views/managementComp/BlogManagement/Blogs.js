@@ -32,6 +32,8 @@ import { cilAddressBook, cilTrash, cilColorBorder, cilSearch, cilPlus } from '@c
 // import TextField from '@mui/material/TextField';
 // import MenuItem from '@mui/material/MenuItem';
 
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import {
   Dialog,
   DialogTitle,
@@ -43,7 +45,12 @@ import {
   Button,
   FormControl,
   InputLabel,
-  Select
+  Select,
+  RadioGroup,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  Box
 } from '@mui/material';
 
 const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData }) => {
@@ -58,6 +65,10 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
         title: '',
         tags: '',
         photo:'',
+        content:'',
+        fbRoot:'',
+        fbcomments:'',
+        post:'',
       });
     }
   }, [initialData]);
@@ -90,52 +101,55 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Author data</DialogTitle>
+      <DialogTitle>Blogs data</DialogTitle>
       <form onSubmit={onSubmit}>
         <DialogContent>
-          
+        <FormControl fullWidth margin="dense" required>
+            <InputLabel id="role-label"> Author</InputLabel>
+            <Select
+              labelId="role-label"
+               name="author"
+              value={formData.author}
+              onChange={handleChange}
+              label="Author"
+            >
+              <MenuItem value=""><em>--select Author--</em></MenuItem>
+              <MenuItem value="B-Tier2">Vivek Rai</MenuItem>
+
+            </Select>
+          </FormControl>
           <TextField
             margin="dense"
-            name="name"
-            label="Name"
+            name="author"
+            label="Author"
             type="text"
             fullWidth
             required
-            value={formData.name}
+            value={formData.author}
             onChange={handleChange}
           />
           <TextField
             margin="dense"
-            name="email"
-            label="Email"
-            type="email"
+            name="title"
+            label="Title"
+            type="text"
             fullWidth
             required
-            value={formData.email}
+            value={formData.title}
             onChange={handleChange}
           />
            
 <TextField
             margin="dense"
-            name="linkedin"
-            label="LinkedIn"
-            type="url"
-            fullWidth
-            required
-            value={formData.linkedin}
-            onChange={handleChange}
-          />
-<TextField
-            margin="dense"
-            name="about"
-            label="About"
+            name="tags"
+            label="Tags"
             type="text"
             fullWidth
             required
-            multiline
-            value={formData.about}
+            value={formData.tags}
             onChange={handleChange}
           />
+
           <input
             accept="image/*"
             style={{ display: 'none' }}
@@ -144,7 +158,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
             type="file"
             name="image"
             required
-            value={formData.profilePic}
+            value={formData.photo}
             onChange={handleFileChange}
           />
           <label htmlFor="raised-button-file" style={{margin: "8px 12px 6px 0"}}>
@@ -153,21 +167,45 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
             </Button>
           </label>
           <span>{selectedFileName ? `${selectedFileName}` : '*No file chosen'}</span>
-
+          <ReactQuill value={formData.content} onChange={handleChange} />
           <TextField
             margin="dense"
-            name="status"
-            label="Status"
+            name="fbRoot"
+            label="FB Root"
             type="text"
             fullWidth
-            select
             required
-            value={formData.status}
+            value={formData.fbRoot}
             onChange={handleChange}
-          >
-            <MenuItem value="Active">Active</MenuItem>
-            <MenuItem value="Inactive">Inactive</MenuItem>
-          </TextField>
+          />
+          <TextField
+            margin="dense"
+            name="fbcomments"
+            label="FB Comments"
+            type="text"
+            fullWidth
+            required
+            value={formData.fbcomments}
+            onChange={handleChange}
+          />
+
+<FormControl fullWidth margin="dense" required>
+            <FormLabel component="legend">Call Send To *</FormLabel>
+            <RadioGroup
+              aria-label="callSendTo"
+              name="post"
+              value={formData.post}
+              onChange={handleChange}
+              row // Add this to make the radio buttons appear in a row
+            >
+              <Box display="flex" justifyContent="space-between" width="100%">
+                <FormControlLabel value="allTeacher" control={<Radio />} label="All Teacher" />
+                <FormControlLabel value="premiumTeacher" control={<Radio />} label="Premium Teacher" />
+                <FormControlLabel value="schoolTeacher" control={<Radio />} label="School Teacher" />
+              </Box>
+            </RadioGroup>
+          </FormControl>
+         
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
@@ -190,6 +228,10 @@ const Blogs = () => {
     title: '',
     tags: '',
     photo:'',
+    content:'',
+    fbRoot:'',
+    fbcomments:'',
+    post:'',
   
   });
 
@@ -277,7 +319,7 @@ const Blogs = () => {
             <CRow >
               <CCol>
                 <CIcon icon={cilAddressBook} height={25} />
-                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Author</strong> <small style={{ fontSize: '17px' }}>List</small>
+                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Blogs</strong> <small style={{ fontSize: '17px' }}>List</small>
               </CCol>
 
               <CCol md="auto">

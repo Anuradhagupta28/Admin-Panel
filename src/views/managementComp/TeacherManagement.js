@@ -224,7 +224,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   );
 };
 
-const StudentManagements = () => {
+const TeacherManagement = () => {
   const [open, setOpen] = useState(false);
   const [dialogData, setDialogData] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
@@ -250,7 +250,7 @@ const StudentManagements = () => {
       SclName: 'International Demo',
       SclCode: 'INTE3311',
       email: 'internationaldemo@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 2,
@@ -258,7 +258,7 @@ const StudentManagements = () => {
       SclName: 'SBS CONVENT',
       SclCode: 'SBSC4956',
       email: 'cbsconvent@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 3,
@@ -266,7 +266,7 @@ const StudentManagements = () => {
       SclName: 'K.V. RAE BARELI',
       SclCode: 'KEND2875',
       email: 'kv@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 4,
@@ -274,7 +274,7 @@ const StudentManagements = () => {
       SclName: 'K N Public School',
       SclCode: 'KNPU2876',
       email: 'knpublicschool@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 5,
@@ -282,7 +282,7 @@ const StudentManagements = () => {
       SclName: 'MM Public School',
       SclCode: 'MMPU2138',
       email: 'mmpublic@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 6,
@@ -290,7 +290,7 @@ const StudentManagements = () => {
       SclName: 'Student Public School',
       SclCode: 'STUD3424',
       email: 'studentpublic@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 7,
@@ -298,7 +298,7 @@ const StudentManagements = () => {
       SclName: 'D.A.V',
       SclCode: 'DAVP9150',
       email: 'dav@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 8,
@@ -306,7 +306,7 @@ const StudentManagements = () => {
       SclName: 'Manav Rachna School',
       SclCode: 'MANA2327',
       email: 'manav@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 9,
@@ -314,7 +314,7 @@ const StudentManagements = () => {
       SclName: 'St. Paul Public School',
       SclCode: 'STPA4149',
       email: 'st@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 10,
@@ -322,7 +322,7 @@ const StudentManagements = () => {
       SclName: 'Bright Future School',
       SclCode: 'BRIG1234',
       email: 'brightfuture@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 11,
@@ -330,7 +330,7 @@ const StudentManagements = () => {
       SclName: 'Sunrise Academy',
       SclCode: 'SUNR5678',
       email: 'sunriseacademy@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 12,
@@ -338,7 +338,7 @@ const StudentManagements = () => {
       SclName: 'Green Valley School',
       SclCode: 'GREE9101',
       email: 'greenvalley@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 13,
@@ -346,7 +346,7 @@ const StudentManagements = () => {
       SclName: 'Blue Ridge School',
       SclCode: 'BLUE1123',
       email: 'blueridge@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 14,
@@ -354,7 +354,7 @@ const StudentManagements = () => {
       SclName: 'Happy Days School',
       SclCode: 'HAPP1415',
       email: 'happydays@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 15,
@@ -362,7 +362,7 @@ const StudentManagements = () => {
       SclName: 'Rainbow International',
       SclCode: 'RAIN1617',
       email: 'rainbowintl@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 16,
@@ -370,7 +370,7 @@ const StudentManagements = () => {
       SclName: 'Springfield School',
       SclCode: 'SPRI1819',
       email: 'springfield@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 17,
@@ -378,7 +378,7 @@ const StudentManagements = () => {
       SclName: 'Crescent Public School',
       SclCode: 'CRES2021',
       email: 'crescentpublic@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 18,
@@ -386,7 +386,7 @@ const StudentManagements = () => {
       SclName: 'Glory Heights School',
       SclCode: 'GLOR2223',
       email: 'gloryheights@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 19,
@@ -394,7 +394,7 @@ const StudentManagements = () => {
       SclName: 'Elite Scholars School',
       SclCode: 'ELIT2425',
       email: 'elitescholars@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     },
     {
       id: 20,
@@ -402,7 +402,7 @@ const StudentManagements = () => {
       SclName: 'Heritage International School',
       SclCode: 'HERI2627',
       email: 'heritageintl@gmail.com',
-      image: 'https://imgs.search.brave.com/vW7wXS-3rSJEZgd2oyhkqs3fAonp7uyLP9ptoCTJs7s/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9yZWQtYnJpY2st/c2Nob29sLWJ1aWxk/aW5nLXdpdGgteWVs/bG93LXNjaG9vbC1i/dXMtZnJvbnQtcmVh/ZHktdHJhbnNwb3J0/aW5nLXN0dWRlbnRz/LWhvbWUtZHJvcC1v/ZmZfOTc0NzI5LTEy/MDI3OS5qcGc_c2l6/ZT02MjYmZXh0PWpw/Zw'
+      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
     }
 
   ]);
@@ -467,7 +467,7 @@ const StudentManagements = () => {
             <CRow >
               <CCol>
                 <CIcon icon={cilAddressBook} height={25} />
-                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Student Management</strong> <small style={{ fontSize: '17px' }}>List</small>
+                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Teacher Management</strong> <small style={{ fontSize: '17px' }}>List</small>
               </CCol>
 
               <CCol md="auto">
@@ -516,7 +516,7 @@ const StudentManagements = () => {
                   <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Email</CTableHeaderCell>
 
 
-                  {/* <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Image</CTableHeaderCell> */}
+                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Image</CTableHeaderCell>
 
                 </CTableRow>
               </CTableHead>
@@ -529,10 +529,10 @@ const StudentManagements = () => {
                     <CTableDataCell style={{ padding: '20px' }}>{row.SclCode}</CTableDataCell>
                     <CTableDataCell style={{ padding: '20px' }}>{row.email}</CTableDataCell>
 
-                    {/* <CTableDataCell style={{ padding: '20px' }}>
+                    <CTableDataCell style={{ padding: '20px' }}>
                       <CImage rounded thumbnail src={row.image} width={100} height={100} />
 
-                    </CTableDataCell> */}
+                    </CTableDataCell>
 
                   </CTableRow>
                 ))}
@@ -552,4 +552,4 @@ const StudentManagements = () => {
   );
 }
 
-export default StudentManagements;
+export default TeacherManagement;
