@@ -23,8 +23,7 @@ const Login = () => {
 
   const handleLogin = () => {
     if (username === 'solvedudar@gmail.com' && password === 'ygp@1586YGP') {
-console.log('username')
-console.log('password')
+
       navigate('/');
     } else {
       console.log(username)

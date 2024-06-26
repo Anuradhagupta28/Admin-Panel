@@ -87,7 +87,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'School Group',
-        to: '/managementComp/ContentManagement/Exam',
+        to: '/managementComp/SchoolManagement/SchoolGroup',
         
       },
       {
@@ -125,7 +125,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Author',
-        to: '/managementComp/ContentManagement/Exam',
+        to: '/managementComp/BlogManagement/Author',
         
       },
       {

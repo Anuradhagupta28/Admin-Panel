@@ -6,6 +6,9 @@ const Login = React.lazy(() => import('./views/pages/login/Login'))
 const TeacherCode = React.lazy(() => import('./views/managementComp/SchoolManagement/TeacherCode'))
 const AssignSlot = React.lazy(() => import('./views/managementComp/SchoolManagement/AssignSlot'))
 
+const SchoolGroup = React.lazy(() => import('./views/managementComp/SchoolManagement/SchoolGroup'))
+const AuthorCom = React.lazy(() => import('./views/managementComp/BlogManagement/Author'))
+
 const MenuPermission = React.lazy(() => import('./views/managementComp/RoleManagement/MenuPermission'))
 const Branch = React.lazy(() => import('./views/managementComp/SchoolManagement/Branch'))
 const StudentCode = React.lazy(() => import('./views/managementComp/SchoolManagement/StudentCode'))
@@ -85,6 +88,8 @@ const routes = [
   {path: '/managementComp/SchoolManagement/StudentCode', name: 'StudentCode', element:StudentCode},
   {path: '/managementComp/SchoolManagement/TeacherCode', name: 'TeacherCode', element:TeacherCode},
   {path: '/managementComp/SchoolManagement/AssignSlot', name: 'AssignSlot', element:AssignSlot},
+  {path: '/managementComp/SchoolManagement/SchoolGroup', name: 'SchoolGroup', element:SchoolGroup},
+  {path: '/managementComp/BlogManagement/Author', name: 'Author', element:AuthorCom},
 
   
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
