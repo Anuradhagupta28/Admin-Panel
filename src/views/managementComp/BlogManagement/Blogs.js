@@ -54,12 +54,10 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
       setFormData(initialData);
     } else {
       setFormData({
-        name: '',
-        email: '',
-        profilePic: '',
-        about:'',
-        linkedin: '',
-        status: '',
+        author: '',
+        title: '',
+        tags: '',
+        photo:'',
       });
     }
   }, [initialData]);
@@ -182,32 +180,41 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   );
 };
 
-const AuthorCom = () => {
+const Blogs = () => {
   const [open, setOpen] = useState(false);
   const [dialogData, setDialogData] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    profilePic: '',
-    about:'',
-    linkedin: '',
-    status: '',
+    author: '',
+    title: '',
+    tags: '',
+    photo:'',
+  
   });
 
   const [tableData, setTableData] = useState([  
     {
-        id: 1,
-        name: 'Vivek Rai',
-        email: 'vvekrai@gmail.com',
-        profilePic: 'https://dev-v1.solvedudar.com/uploads/blog/author/b3252d64ff9843ec9e41da1315130317.jpg',
-        about: 'about me',
-        linkedin: 'https://www.linkedin.com/in/vvekrai/',
-        status: 'Active'
-      }
-      
-    
+      id: 1,
+      author: 'Vivek Rai',
+      title: 'Refinement In Tutor\'s Onboarding Process',
+      tags: 'https://dev-v1.solvedudar.com/uploads/blog/author/b3252d64ff9843ec9e41da1315130317.jpg',
+      photo: 'https://dev-v1.solvedudar.com/uploads/blog/8b88537b5a0bf73453bb3ed3c8abf414.jpg'
+  },
+  {
+      id: 2,
+      author: 'Vivek Rai',
+      title: 'New Updates Are Rolling Out Soon',
+      tags: 'Exciting Times Ahead: Sneak Peek into Upcoming Dudar App Updates for Students and Tutors!',
+      photo: 'https://dev-v1.solvedudar.com/uploads/blog/f9cf90bf7955daffeeed658d84fd364b.jpg'
+  },
+  {
+      id: 3,
+      author: 'Vivek Rai',
+      title: 'Dudar Making Learning Hassle Free',
+      tags: 'Dudar: Making learning Hassle free',
+      photo: 'https://dev-v1.solvedudar.com/uploads/blog/72c3f7ee4ee1b13ec0a58b5e9b69e74e.jpg'
+  }
   ]);
   
   
@@ -357,4 +364,4 @@ const AuthorCom = () => {
   );
 }
 
-export default AuthorCom;
+export default Blogs;

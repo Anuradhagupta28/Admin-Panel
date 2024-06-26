@@ -24,7 +24,7 @@ const Login = () => {
   const handleLogin = () => {
     if (username === 'solvedudar@gmail.com' && password === 'ygp@1586YGP') {
 
-      navigate('/');
+      navigate('/*');
     } else {
       console.log(username)
 console.log(password)

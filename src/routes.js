@@ -2,7 +2,7 @@ import React from 'react'
 
 
 
-const Login = React.lazy(() => import('./views/pages/login/Login'))
+// const Login = React.lazy(() => import('./views/pages/login/Login'))
 const TeacherCode = React.lazy(() => import('./views/managementComp/SchoolManagement/TeacherCode'))
 const AssignSlot = React.lazy(() => import('./views/managementComp/SchoolManagement/AssignSlot'))
 
@@ -72,7 +72,7 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 const routes = [
-  { path: '/', exact: true, name: 'Home' },
+  { path: '/', exact: true, name: 'Login' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   {path: '/managementComp/ContentManagement/Exam', name: 'Exam', element:Exam},
   {path: '/managementComp/ContentManagement/Author', name: 'Author', element:Author},
@@ -84,7 +84,7 @@ const routes = [
   {path: '/managementComp/RoleManagement/SystemUser', name: 'SystemUser', element:SystemUser},
   {path: '/managementComp/SchoolManagement/School', name: 'School', element:School},
   {path: '/managementComp/SchoolManagement/Branch', name: 'Branch', element:Branch},
-  {path: 'pages/login/Login', name: 'Branch', element:Login},
+  // {path: 'pages/login/Login', name: 'Branch', element:Login},
   {path: '/managementComp/SchoolManagement/StudentCode', name: 'StudentCode', element:StudentCode},
   {path: '/managementComp/SchoolManagement/TeacherCode', name: 'TeacherCode', element:TeacherCode},
   {path: '/managementComp/SchoolManagement/AssignSlot', name: 'AssignSlot', element:AssignSlot},
