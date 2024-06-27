@@ -98,7 +98,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>School Group data</DialogTitle>
+      <DialogTitle>Online Teachers data</DialogTitle>
       <form onSubmit={onSubmit}>
         <DialogContent>
           <FormControl fullWidth margin="dense" required>
@@ -224,7 +224,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   );
 };
 
-const SchoolGroup = () => {
+const OnlineTeachers = () => {
   const [open, setOpen] = useState(false);
   const [dialogData, setDialogData] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
@@ -250,7 +250,7 @@ const SchoolGroup = () => {
       SclName: 'International Demo',
       SclCode: 'INTE3311',
       email: 'internationaldemo@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 2,
@@ -258,7 +258,7 @@ const SchoolGroup = () => {
       SclName: 'SBS CONVENT',
       SclCode: 'SBSC4956',
       email: 'cbsconvent@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 3,
@@ -266,7 +266,7 @@ const SchoolGroup = () => {
       SclName: 'K.V. RAE BARELI',
       SclCode: 'KEND2875',
       email: 'kv@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 4,
@@ -274,7 +274,7 @@ const SchoolGroup = () => {
       SclName: 'K N Public School',
       SclCode: 'KNPU2876',
       email: 'knpublicschool@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 5,
@@ -282,7 +282,7 @@ const SchoolGroup = () => {
       SclName: 'MM Public School',
       SclCode: 'MMPU2138',
       email: 'mmpublic@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 6,
@@ -290,7 +290,7 @@ const SchoolGroup = () => {
       SclName: 'Student Public School',
       SclCode: 'STUD3424',
       email: 'studentpublic@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 7,
@@ -298,7 +298,7 @@ const SchoolGroup = () => {
       SclName: 'D.A.V',
       SclCode: 'DAVP9150',
       email: 'dav@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 8,
@@ -306,7 +306,7 @@ const SchoolGroup = () => {
       SclName: 'Manav Rachna School',
       SclCode: 'MANA2327',
       email: 'manav@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 9,
@@ -314,7 +314,7 @@ const SchoolGroup = () => {
       SclName: 'St. Paul Public School',
       SclCode: 'STPA4149',
       email: 'st@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 10,
@@ -322,7 +322,7 @@ const SchoolGroup = () => {
       SclName: 'Bright Future School',
       SclCode: 'BRIG1234',
       email: 'brightfuture@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 11,
@@ -330,7 +330,7 @@ const SchoolGroup = () => {
       SclName: 'Sunrise Academy',
       SclCode: 'SUNR5678',
       email: 'sunriseacademy@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 12,
@@ -338,7 +338,7 @@ const SchoolGroup = () => {
       SclName: 'Green Valley School',
       SclCode: 'GREE9101',
       email: 'greenvalley@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 13,
@@ -346,7 +346,7 @@ const SchoolGroup = () => {
       SclName: 'Blue Ridge School',
       SclCode: 'BLUE1123',
       email: 'blueridge@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 14,
@@ -354,7 +354,7 @@ const SchoolGroup = () => {
       SclName: 'Happy Days School',
       SclCode: 'HAPP1415',
       email: 'happydays@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 15,
@@ -362,7 +362,7 @@ const SchoolGroup = () => {
       SclName: 'Rainbow International',
       SclCode: 'RAIN1617',
       email: 'rainbowintl@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 16,
@@ -370,7 +370,7 @@ const SchoolGroup = () => {
       SclName: 'Springfield School',
       SclCode: 'SPRI1819',
       email: 'springfield@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 17,
@@ -378,7 +378,7 @@ const SchoolGroup = () => {
       SclName: 'Crescent Public School',
       SclCode: 'CRES2021',
       email: 'crescentpublic@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 18,
@@ -386,7 +386,7 @@ const SchoolGroup = () => {
       SclName: 'Glory Heights School',
       SclCode: 'GLOR2223',
       email: 'gloryheights@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 19,
@@ -394,7 +394,7 @@ const SchoolGroup = () => {
       SclName: 'Elite Scholars School',
       SclCode: 'ELIT2425',
       email: 'elitescholars@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     },
     {
       id: 20,
@@ -402,7 +402,7 @@ const SchoolGroup = () => {
       SclName: 'Heritage International School',
       SclCode: 'HERI2627',
       email: 'heritageintl@gmail.com',
-      image: 'https://imgs.search.brave.com/8Oec2yWLZzE0pj9sdlqlZ-IN08FxAe9GaGPCyXXTGFs/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNDc2/NjAwNTcyL3Bob3Rv/L2phcGFuZXNlLWhp/Z2gtc2Nob29sLWNs/YXNzLXBob3RvLmpw/Zz9zPTYxMng2MTIm/dz0wJms9MjAmYz1Z/OG9FcnJleTlxa3Fn/aXU2VEZNc19iMVpf/MVdWV05QdEQ5a01y/c2ZsX28wPQ'
+      image: 'https://dev-v1.solvedudar.com/uploads/teacher/5c76c1dcb8710fdba088c783db3a4ee3.png'
     }
 
   ]);
@@ -467,7 +467,7 @@ const SchoolGroup = () => {
             <CRow >
               <CCol>
                 <CIcon icon={cilAddressBook} height={25} />
-                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>School Group</strong> <small style={{ fontSize: '17px' }}>List</small>
+                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Online Teachers</strong> <small style={{ fontSize: '17px' }}>List</small>
               </CCol>
 
               <CCol md="auto">
@@ -552,4 +552,4 @@ const SchoolGroup = () => {
   );
 }
 
-export default SchoolGroup;
+export default OnlineTeachers;

@@ -1,6 +1,12 @@
 import React from 'react'
 
 
+const ReviewQuestion = React.lazy(() => import('./views/managementComp/ReviewQuestion'))
+
+const MessageManagements = React.lazy(() => import('./views/managementComp/MesaageManagement'))
+const OnlineTeachers = React.lazy(() => import('./views/managementComp/OnlineTeachers'))
+
+
 const StudentManagements = React.lazy(() => import('./views/managementComp/StudentManagement'))
 const TeacherManagement = React.lazy(() => import('./views/managementComp/TeacherManagement'))
 
@@ -98,8 +104,13 @@ const routes = [
 
   {path: '/managementComp/StudentManagements', name: 'StudentManagements', element:StudentManagements},
   {path: '/managementComp/TeacherManagement', name: 'TeacherManagement', element:TeacherManagement},
+  {path: '/managementComp/OnlineTeachers', name: 'OnlineTeachers', element:OnlineTeachers},
+ 
+  {path: '/managementComp/MesaageManagement', name: 'MessageManagements', element:MessageManagements},
+  {path: '/managementComp/ReviewQuestion', name: 'ReviewQuestion', element:ReviewQuestion},
 
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
+  
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
   { path: '/base', name: 'Base', element: Cards, exact: true },

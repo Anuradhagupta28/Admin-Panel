@@ -153,19 +153,19 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Online Teacher',
-    to: '/managementComp/SchoolManagement/Branch',
+    to: '/managementComp/OnlineTeachers',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Message Management',
-    to: '/managementComp/SchoolManagement/TeacherCode',
+    to: '/managementComp/MesaageManagement',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Review question',
-    to:  '/managementComp/RoleManagement/UserRole',
+    to:  '/managementComp/ReviewQuestion',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
