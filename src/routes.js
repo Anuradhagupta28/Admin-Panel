@@ -1,7 +1,12 @@
 import React from 'react'
 
 
+
+const SclDoubt = React.lazy(() => import('./views/managementComp/DoubtHistory/SclDoubt'))
+const AllDoubt = React.lazy(() => import('./views/managementComp/DoubtHistory/All'))
+
 const ReviewQuestion = React.lazy(() => import('./views/managementComp/ReviewQuestion'))
+const Doubt = React.lazy(() => import('./views/managementComp/Doubt'))
 
 const MessageManagements = React.lazy(() => import('./views/managementComp/MesaageManagement'))
 const OnlineTeachers = React.lazy(() => import('./views/managementComp/OnlineTeachers'))
@@ -108,6 +113,9 @@ const routes = [
  
   {path: '/managementComp/MesaageManagement', name: 'MessageManagements', element:MessageManagements},
   {path: '/managementComp/ReviewQuestion', name: 'ReviewQuestion', element:ReviewQuestion},
+  {path: '/managementComp/Doubt', name: 'Doubt', element:Doubt},
+  {path: '/managementComp/DoubtHistory/SclDoubt', name: 'Doubt', element:SclDoubt},
+  {path: '/managementComp/DoubtHistory/All', name: 'Doubt', element:AllDoubt},
 
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   

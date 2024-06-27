@@ -171,7 +171,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'View Today Doubts',
-    to: '/managementComp/SchoolManagement/Branch',
+    to: '/managementComp/Doubt',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
@@ -182,13 +182,13 @@ const _nav = [
       {
         component: CNavItem,
         name: 'All',
-        to: '/managementComp/ContentManagement/Exam',
+        to: '/managementComp/DoubtHistory/All',
         
       },
       {
         component: CNavItem,
         name: 'School Group',
-        to: '/managementComp/ContentManagement/Subject',
+        to: '/managementComp/DoubtHistory/SclDoubt',
       },
       
     
