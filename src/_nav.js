@@ -202,13 +202,13 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Collabrate with us',
-        to: '/managementComp/ContentManagement/Exam',
+        to: '/managementComp/ViewWebsite/Collab',
         
       },
       {
         component: CNavItem,
         name: 'Contact Us',
-        to: '/managementComp/SchoolManagement/School',
+        to: '/managementComp/ViewWebsite/Contact',
       },
       {
         component: CNavItem,

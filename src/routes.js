@@ -2,6 +2,10 @@ import React from 'react'
 
 
 
+const Contact = React.lazy(() => import('./views/managementComp/ViewWebsite/Contact'))
+
+const Collab = React.lazy(() => import('./views/managementComp/ViewWebsite/Collab'))
+
 const SclDoubt = React.lazy(() => import('./views/managementComp/DoubtHistory/SclDoubt'))
 const AllDoubt = React.lazy(() => import('./views/managementComp/DoubtHistory/All'))
 
@@ -116,7 +120,8 @@ const routes = [
   {path: '/managementComp/Doubt', name: 'Doubt', element:Doubt},
   {path: '/managementComp/DoubtHistory/SclDoubt', name: 'Doubt', element:SclDoubt},
   {path: '/managementComp/DoubtHistory/All', name: 'Doubt', element:AllDoubt},
-
+  {path: '/managementComp/ViewWebsite/Collab', name: 'Collab', element:Collab},
+  {path: '/managementComp/ViewWebsite/Contact', name: 'Contact', element:Contact},
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   
   { path: '/theme/colors', name: 'Colors', element: Colors },
