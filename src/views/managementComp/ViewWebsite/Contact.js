@@ -298,39 +298,39 @@ const Contact = () => {
           </DialogActions>
         </Dialog>
   
-        <CCardBody>
+        <CCardBody  style={{ maxwidth: '100%', overflowX: 'auto' }}>
           <CTable striped hover>
             <CTableHead>
               <CTableRow>
-                <CTableHeaderCell scope="col" style={{ padding: '15px' }}>Sr.No.</CTableHeaderCell>
-                <CTableHeaderCell scope="col" style={{ padding: '15px' }}>School Name</CTableHeaderCell>
-                <CTableHeaderCell scope="col" style={{ padding: '15px' }}>City</CTableHeaderCell>
-                <CTableHeaderCell scope="col" style={{ padding: '15px' }}>Address</CTableHeaderCell>
-                <CTableHeaderCell scope="col" style={{ padding: '15px' }}>Name</CTableHeaderCell>
-                <CTableHeaderCell scope="col" style={{ padding: '15px' }}>Designation</CTableHeaderCell>
-                <CTableHeaderCell scope="col" style={{ padding: '15px' }}>Phone</CTableHeaderCell>
-                <CTableHeaderCell scope="col" style={{ padding: '15px' }}>Email</CTableHeaderCell>
-                <CTableHeaderCell scope="col" style={{ padding: '15px' }}>No. of Students</CTableHeaderCell>
-                <CTableHeaderCell scope="col" style={{ padding: '15px' }}>Medium</CTableHeaderCell>
-                <CTableHeaderCell scope="col" style={{ padding: '15px' }}>Demo Date</CTableHeaderCell>
-                <CTableHeaderCell scope="col" style={{ padding: '15px' }}>Entry Date</CTableHeaderCell>
+                <CTableHeaderCell scope="col"  style={{ padding: '20px', whiteSpace: 'nowrap' }}>Sr.No.</CTableHeaderCell>
+                <CTableHeaderCell scope="col"  style={{ padding: '20px', whiteSpace: 'nowrap' }}>School Name</CTableHeaderCell>
+                <CTableHeaderCell scope="col"  style={{ padding: '20px', whiteSpace: 'nowrap' }}>City</CTableHeaderCell>
+                <CTableHeaderCell scope="col"  style={{ padding: '20px', whiteSpace: 'nowrap' }}>Address</CTableHeaderCell>
+                <CTableHeaderCell scope="col"  style={{ padding: '20px', whiteSpace: 'nowrap' }}>Name</CTableHeaderCell>
+                <CTableHeaderCell scope="col"  style={{ padding: '20px', whiteSpace: 'nowrap' }}>Designation</CTableHeaderCell>
+                <CTableHeaderCell scope="col"  style={{ padding: '20px', whiteSpace: 'nowrap' }}>Phone</CTableHeaderCell>
+                <CTableHeaderCell scope="col"  style={{ padding: '20px', whiteSpace: 'nowrap' }}>Email</CTableHeaderCell>
+                <CTableHeaderCell scope="col"  style={{ padding: '20px', whiteSpace: 'nowrap' }}>No. of Students</CTableHeaderCell>
+                <CTableHeaderCell scope="col"  style={{ padding: '20px', whiteSpace: 'nowrap' }}>Medium</CTableHeaderCell>
+                <CTableHeaderCell scope="col"  style={{ padding: '20px', whiteSpace: 'nowrap' }}>Demo Date</CTableHeaderCell>
+                <CTableHeaderCell scope="col"  style={{ padding: '20px', whiteSpace: 'nowrap' }}>Entry Date</CTableHeaderCell>
               </CTableRow>
             </CTableHead>
             <CTableBody>
               {currentItems.map((row, index) => (
                 <CTableRow key={row.id}>
-                  <CTableHeaderCell scope="row" style={{ padding: '10px', whiteSpace: 'nowrap', fontSize: '12px' }}>{index + 1 + (currentPage - 1) * itemsPerPage}</CTableHeaderCell>
-                  <CTableDataCell style={{ padding: '15px' }}>{row.sclName}</CTableDataCell>
-                  <CTableDataCell style={{ padding: '15px' }}>{row.city}</CTableDataCell>
-                  <CTableDataCell style={{ padding: '15px' }}>{row.Address}</CTableDataCell>
-                  <CTableDataCell style={{ padding: '15px' }}>{row.name}</CTableDataCell>
-                  <CTableDataCell style={{ padding: '15px' }}>{row.designation}</CTableDataCell>
-                  <CTableDataCell style={{ padding: '15px' }}>{row.phone}</CTableDataCell>
-                  <CTableDataCell style={{ padding: '15px' }}>{row.email}</CTableDataCell>
-                  <CTableDataCell style={{ padding: '15px' }}>{row.student}</CTableDataCell>
-                  <CTableDataCell style={{ padding: '15px' }}>{row.medium}</CTableDataCell>
-                  <CTableDataCell style={{ padding: '15px' }}>{row.demoDate}</CTableDataCell>
-                  <CTableDataCell style={{ padding: '15px' }}>{row.entryDate}</CTableDataCell>
+                  <CTableHeaderCell scope="row" style={{ padding: '20px', whiteSpace: 'nowrap' }}>{index + 1 + (currentPage - 1) * itemsPerPage}</CTableHeaderCell>
+                  <CTableDataCell  style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.sclName}</CTableDataCell>
+                  <CTableDataCell  style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.city}</CTableDataCell>
+                  <CTableDataCell  style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.Address}</CTableDataCell>
+                  <CTableDataCell  style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.name}</CTableDataCell>
+                  <CTableDataCell  style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.designation}</CTableDataCell>
+                  <CTableDataCell  style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.phone}</CTableDataCell>
+                  <CTableDataCell  style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.email}</CTableDataCell>
+                  <CTableDataCell  style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.student}</CTableDataCell>
+                  <CTableDataCell  style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.medium}</CTableDataCell>
+                  <CTableDataCell  style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.demoDate}</CTableDataCell>
+                  <CTableDataCell  style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.entryDate}</CTableDataCell>
                 </CTableRow>
               ))}
             </CTableBody>
