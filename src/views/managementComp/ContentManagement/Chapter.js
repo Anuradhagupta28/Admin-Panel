@@ -281,7 +281,7 @@ const Chapter = () => {
   return (
     <CRow>
       <CCol xs={12} >
-        <CCard className="mb-4" style={{ width: '90rem', marginLeft:'-5rem'}}> 
+        <CCard className="mb-4" > 
           <CCardHeader style={{ padding: '10px' }}>
             <CRow >
               <CCol>
