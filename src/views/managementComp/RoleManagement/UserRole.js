@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import {
   CCard,
   CCardBody,
@@ -22,25 +22,31 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilAddressBook, cilTrash, cilColorBorder, cilSearch, cilPlus } from '@coreui/icons'
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,formData }) => {
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  DialogContentText,
+  MenuItem,
+  Button,
+  FormControlLabel,
+  Checkbox,
+  FormGroup,
+  FormControl,
+  FormLabel,
+} from '@mui/material';
 
-
+const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, setData, data, getData,currentPage }) => {
+  console.log("initialData", initialData, 'formData', formData, 'data', data)
   React.useEffect(() => {
     if (initialData) {
       setFormData(initialData);
     } else {
       setFormData({
-        role: '',
+        role_name: '',
         access: '',
-        action: '',
       });
     }
   }, [initialData]);
@@ -53,56 +59,80 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
     });
   };
 
-  const onSubmit = () => {
-    handleSubmit(formData);
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      access: checked ? prevData.access + name + ' ' : prevData.access.replace(name + ' ', ''),
+    }));
+  };
+
+  const onSubmit = async () => {
+    await handleSubmit(formData);
+    getData(currentPage); // Fetch the updated data
     handleClose();
   };
 
+
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Exam Form</DialogTitle>
+      <DialogTitle>Role Name Form</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin="dense"
-          name="examName"
-          label="Exam Name *"
+          name="role_name"
+          label="Role Name *"
           type="text"
           fullWidth
-          value={formData.examName}
+          value={formData.role_name}
           onChange={handleChange}
         />
-        <TextField
-          margin="dense"
-          name="description"
-          label="Description *"
-          type="text"
-          fullWidth
-          value={formData.description}
-          onChange={handleChange}
-        />
-        <TextField
-          margin="dense"
-          name="passingPercentage"
-          label="Passing Percentage *"
-          type="number"
-          fullWidth
-          value={formData.passingPercentage}
-          onChange={handleChange}
-        />
-        <TextField
-          margin="dense"
-          name="status"
-          label="Status"
-          type="text"
-          fullWidth
-          select
-          value={formData.status}
-          onChange={handleChange}
-        >
-          <MenuItem value="Active">Active</MenuItem>
-          <MenuItem value="Inactive">Inactive</MenuItem>
-        </TextField>
+        <FormControl component="fieldset" margin="dense" fullWidth>
+          <FormLabel component="legend">Access Permission *</FormLabel>
+          <FormGroup row>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.access.includes('view')}
+                  onChange={handleCheckboxChange}
+                  name="view"
+                />
+              }
+              label="View"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.access.includes('add')}
+                  onChange={handleCheckboxChange}
+                  name="add"
+                />
+              }
+              label="Add"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.access.includes('edit')}
+                  onChange={handleCheckboxChange}
+                  name="edit"
+                />
+              }
+              label="Edit"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formData.access.includes('delete')}
+                  onChange={handleCheckboxChange}
+                  name="delete"
+                />
+              }
+              label="Delete"
+            />
+          </FormGroup>
+        </FormControl>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
@@ -114,70 +144,108 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
   );
 };
 
-
 const UserRole = () => {
+
+  const [data, setData] = useState(null);
+  const [totalRecords, setTotalRecords] = useState(0);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [dialogData, setDialogData] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState('');
   const [formData, setFormData] = useState({
-    role: '',
+    role_name: '',
     access: '',
-    action: '',
-   
   });
+  const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
 
+  const getData = async (currentPage) => {
+    console.log('page', currentPage)
+    const url = `https://dev-api.solvedudar.com/api/admin/userRole?page=${currentPage}`; // Replace with your API endpoint
+    setLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
 
-  const [tableData, setTableData] = useState([
-    {
-      id: 1,
-      role: 'admin',
-      access: 'view,add,edit,delete'
-    },
-    {
-      id: 2,
-      role: 'sub admin',
-      access: 'view,add,edit,delete'
-    },
-    {
-      id: 3,
-      role: 'staff',
-      access: 'view,add'
-    },
-    {
-      id: 4,
-      role: 'teacher',
-      access: 'view,add,edit,delete'
-    },
-    {
-      id: 5,
-      role: 'student',
-      access: 'view'
-    },
-    {
-      id: 6,
-      role: 'librarian',
-      access: 'view,add,edit'
-    },
-    {
-      id: 7,
-      role: 'guest',
-      access: 'view'
+      if (response.ok) {
+        const json = await response.json();
+        setLoading(false);
+        // console.log(json.totalRecords);
+        setTotalPages(json.totalPages)
+        setTotalRecords(json.totalRecords);
+
+        console.log(json);
+        setData(json.data); // Update state with response data
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
     }
-  ]);
+  };
+
+  useEffect(() => {
+    getData(currentPage);
+  }, [currentPage]);
+
+  const searchData = async (searchQuery) => {
+    const url = `http://localhost:3000/api/admin/userRole?search=${encodeURIComponent(searchQuery)}`;
+    setLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setData(json.data); // Directly set the data without pagination
+        setLoading(false);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+      setLoading(false);
+    }
+  };
   
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const handleDeleteRole = async (id) => {
+    try {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/userRole/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-  const handleClickOpen = (data = null) => {
-    setDialogData(data);
-    setOpen(true);
+      if (response.ok) {
+        setData((prevData) => prevData.filter((item) => item.id !== id));
+        console.log('Role deleted:', id);
+        getData(currentPage)
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error deleting role:', error.message);
+    }
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setDialogData(null);
-  };
+  
 
   const handleOpenAlert = (id) => {
     setDeleteId(id);
@@ -189,34 +257,104 @@ const UserRole = () => {
     setDeleteId(null);
   };
 
-  const handleConfirmDelete = () => {
-    setTableData((prevData) => prevData.filter((item) => item.id !== deleteId));
+  const handleConfirmDelete = async () => {
+    await handleDeleteRole(deleteId);
     handleCloseAlert();
   };
 
-  const handleSubmit = (formData) => {
-    if (dialogData) {
-      // Update existing item
-      setTableData((prevData) =>
-        prevData.map((item) => (item.id === dialogData.id ? { ...item, ...formData } : item))
-      );
-    } else {
-      // Add new item
-      setTableData((prevData) => [
-        ...prevData,
-        { id: prevData.length + 1, ...formData },
-      ]);
+
+  const handleAddRole = async (formData) => {
+    const { role_name, access } = formData;
+
+    try {
+      const response = await fetch('https://dev-api.solvedudar.com/api/admin/userRole/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ role_name, access }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result.data
+        console.log('Role added:', result);
+        setFormData('')
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error adding role:', error.message);
+    }
+  };
+  const handleEditRole = async (id, formData) => {
+    const { role_name, access } = formData;
+
+    try {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/userRole/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ role_name, access }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("current page in edit", currentPage)
+
+        // setData((prevData) =>
+        //   prevData.map((item) => (item.id === id ? result : item))
+        // );
+        setData((prevData) => [...prevData, result]);
+        console.log('Role updated:', result);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error updating role:', error.message);
     }
   };
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+
+  const handleSubmit = async (formData) => {
+    console.log("formdata in handlesubmit", formData, "dialogData", dialogData)
+    if (dialogData) {
+      console.log('handleEditRole')
+      await handleEditRole(dialogData.id, formData);
+
+    } else {
+      console.log('handleAddRole')
+      await handleAddRole(formData);
+    }
+    handleClose(); // Close the dialog after submission
   };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = tableData.slice(indexOfFirstItem, indexOfLastItem);
+  const handleClickOpen = (data = null) => {
+    setDialogData(data);
+    setOpen(true);
+  };
 
+  const handleClose = () => {
+    setOpen(false);
+    setDialogData(null);
+  };
+
+  const handlePageChange = (newPage) => {
+    console.log("newPage in handlePAge Changne", newPage)
+    setCurrentPage(newPage);
+    getData(newPage)
+  };
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+    searchData(search)
+    
+  };
+
+  const itemsPerPage = 10;
   return (
     <CRow>
       <CCol xs={12}>
@@ -237,11 +375,13 @@ const UserRole = () => {
                     placeholder="search"
                     aria-label="Username"
                     aria-describedby="basic-addon1"
+                    value={search}
+                    onChange={handleSearch}
                   />
                 </CInputGroup>
               </CCol>
               <CCol xs lg={1}>
-                <CButton color='secondary' onClick={() => handleClickOpen()} className='pt-1 pb-1'>Add
+                <CButton color='secondary' onClick={() => handleClickOpen()} className='d-flex align-items-center' style={{ padding: '4px 8px' }}>Add
                   <CIcon icon={cilPlus} height={16} />
                 </CButton>
               </CCol>
@@ -261,43 +401,49 @@ const UserRole = () => {
             </DialogActions>
           </Dialog>
 
-          <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData}  formData={formData}/>
+          <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} setdata={setData} data={data} getData={getData} currentPage={currentPage}/>
 
-          <CCardBody>
-            <CTable striped hover>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Role</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Access</CTableHeaderCell>
-                  
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Action</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {currentItems.map((row, index) => (
-                  <CTableRow key={row.id}>
-                    <CTableHeaderCell scope="row" style={{ padding: '20px' }}>{index + 1 + (currentPage - 1) * itemsPerPage}</CTableHeaderCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.role}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.access}</CTableDataCell>
-                    
-                    <CTableDataCell style={{ padding: '20px' }}>
-                        <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} />
-                          <CIcon icon={cilTrash} height={20} onClick={() => handleOpenAlert(row.id)} />
-                    
-                    </CTableDataCell>
+
+          {!loading ? (
+            <CCardBody>
+              <CTable striped hover>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Role</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Access</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Action</CTableHeaderCell>
                   </CTableRow>
-                ))}
-              </CTableBody>
-              <CTableCaption>List of Exam {tableData.length}</CTableCaption>
-            </CTable>
+                </CTableHead>
+                <CTableBody>
+                  {data.map((row, index) => (
+                    <CTableRow key={row.id}>
+                      <CTableHeaderCell scope="row" style={{ padding: '20px' }}>
+                        {(currentPage - 1) * itemsPerPage + index + 1}
 
-            <CPagination className="justify-content-center" aria-label="Page navigation example">
-              <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
-              <CPaginationItem active>{currentPage}</CPaginationItem>
-              <CPaginationItem disabled={currentPage === Math.ceil(tableData.length / itemsPerPage)} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
-            </CPagination>
-          </CCardBody>
+                      </CTableHeaderCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.role_name}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.access}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>
+                        <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} />
+                        <CIcon icon={cilTrash} height={20} onClick={() => handleOpenAlert(row.id)} />
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+                <CTableCaption>List of user Roles {totalRecords}</CTableCaption>
+              </CTable>
+              <CPagination className="justify-content-center" aria-label="Page navigation example">
+                <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
+                <CPaginationItem active>{currentPage}</CPaginationItem>
+                <CPaginationItem disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
+              </CPagination>
+            </CCardBody>
+          ) : (
+            <div>Loading...</div>
+          )}
+
+
         </CCard>
       </CCol>
     </CRow>

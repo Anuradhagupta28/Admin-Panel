@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import {
   CCard,
   CCardBody,
@@ -32,7 +32,8 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
 
-const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,formData }) => {
+const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, setData, data, getData,currentPage }) => {
+  console.log("initialData", initialData, 'formData', formData, 'data', data)
 
 
   React.useEffect(() => {
@@ -40,10 +41,11 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
       setFormData(initialData);
     } else {
       setFormData({
-        role: '',
-        access: '',
-        action: '',
-        url: '',
+        
+        role_id: '',
+        menu_id: '',
+        submenu_id: '',
+        
       });
     }
   }, [initialData]);
@@ -56,8 +58,9 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
     });
   };
 
-  const onSubmit = () => {
-    handleSubmit(formData);
+  const onSubmit = async() => {
+    await handleSubmit(formData);
+    getData(currentPage);
     handleClose();
   };
 
@@ -66,46 +69,46 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
       <DialogTitle>Add Menu</DialogTitle>
       <DialogContent>
         <TextField
-          
+          autoFocus
           margin="dense"
-          name="role"
+          name="role_id"
           label="Select Role*"
           type="text"
           fullWidth
           select
-          value={formData.role}
+          value={formData. role_id}
           onChange={handleChange}
           >
-          <MenuItem value="admin">Admin</MenuItem>
-          <MenuItem value="subadmin">Sub Admin</MenuItem>
-          <MenuItem value="staff">Staff</MenuItem>
-          <MenuItem value="teacher">Teacher</MenuItem>
+          <MenuItem value="1">Admin</MenuItem>
+          <MenuItem value="2">Sub Admin</MenuItem>
+          <MenuItem value="3">Staff</MenuItem>
+          <MenuItem value="4">Teacher</MenuItem>
         </TextField>
         <TextField
 
           margin="dense"
-          name="menu"
+          name="menu_id"
           label="Select Menu *"
           type="text"
           fullWidth
           select
-          value={formData.menu}
+          value={formData.menu_id}
           onChange={handleChange}
           >
-          <MenuItem value="content">Content</MenuItem>
-          <MenuItem value="role">Role</MenuItem>
-          <MenuItem value="student">Student</MenuItem>
-          <MenuItem value="teacher">Teacher</MenuItem>
+          <MenuItem value="Content">Content</MenuItem>
+          <MenuItem value="Role">Role</MenuItem>
+          <MenuItem value="Student">Student</MenuItem>
+          <MenuItem value="Teacher">Teacher</MenuItem>
         </TextField>
         <TextField
         
           margin="dense"
-          name="submenu"
+          name="submenu_id"
           label="Select Submenu*"
           type="number"
           fullWidth
-       select
-          value={formData.submenu}
+          select
+          value={formData.submenu_id}
           onChange={handleChange}
           >
           <MenuItem value="admin/exam">Admin/Exam</MenuItem>
@@ -113,15 +116,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
           <MenuItem value="admin/student">Admin/Student</MenuItem>
           <MenuItem value="admin/teacher">Admin/Teacher</MenuItem>
         </TextField>
-        <TextField
-          margin="dense"
-          name="url"
-          label="URL *"
-          type="text"
-          fullWidth
-          value={formData.url}
-          onChange={handleChange}
-        />
+       
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
@@ -134,86 +129,108 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit,setFormData,f
 };
 
 const MenuPermission = () => {
+ 
+  const [data, setData] = useState(null);
+  const [totalRecords, setTotalRecords] = useState(0);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [dialogData, setDialogData] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState('');
   const [formData, setFormData] = useState({
-    role: '',
-    access: '',
-    action: '',
-    url: '',
-   
+    role_id: '',
+    menu_id: '',
+    submenu_id: '',
   });
+  const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
 
+  const getData = async (currentPage) => {
+    console.log('page', currentPage)
+    const url = `https://dev-api.solvedudar.com/api/admin/menuPermissions?page=${currentPage}`; // Replace with your API endpoint
+    setLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
 
- 
+      if (response.ok) {
+        const json = await response.json();
+        setLoading(false);
+        // console.log(json.totalRecords);
+        setTotalPages(json.totalPages)
+        setTotalRecords(json.totalRecords);
 
-  const [tableData, setTableData] = useState([
-    {
-      id: 1,
-      role: 'sub admin',
-      menu: 'Teacher Management',
-      submenu: 'admin/teacher',
-      url: 'path/to/teacher-management'
-    },
-    {
-      id: 2,
-      role: 'admin',
-      menu: 'Student Management',
-      submenu: 'admin/student',
-      url: 'path/to/student-management'
-    },
-    {
-      id: 3,
-      role: 'sub admin',
-      menu: 'Class Management',
-      submenu: 'admin/class',
-      url: 'path/to/class-management'
-    },
-    {
-      id: 4,
-      role: 'admin',
-      menu: 'Exam Management',
-      submenu: 'admin/exam',
-      url: 'path/to/exam-management'
-    },
-    {
-      id: 5,
-      role: 'teacher',
-      menu: 'Assignment Management',
-      submenu: 'teacher/assignment',
-      url: 'path/to/assignment-management'
-    },
-    {
-      id: 6,
-      role: 'admin',
-      menu: 'Library Management',
-      submenu: 'admin/library',
-      url: 'path/to/library-management'
-    },
-    {
-      id: 7,
-      role: 'sub admin',
-      menu: 'Attendance Management',
-      submenu: 'admin/attendance',
-      url: 'path/to/attendance-management'
+        console.log(json);
+        setData(json.data); // Update state with response data
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
     }
-  ]);
-  
-  
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const handleClickOpen = (data = null) => {
-    setDialogData(data);
-    setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setDialogData(null);
+  useEffect(() => {
+    getData(currentPage);
+  }, [currentPage]);
+
+  const searchData = async (searchQuery) => {
+    const url = `http://localhost:3000/api/admin/menuPermissions?search=${encodeURIComponent(searchQuery)}`;
+    setLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setData(json.data); // Directly set the data without pagination
+        setLoading(false);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+      setLoading(false);
+    }
   };
+  
+  const handleDeleteRole = async (id) => {
+    try {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/menuPermissions/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        setData((prevData) => prevData.filter((item) => item.id !== id));
+        console.log('Role deleted:', id);
+        getData(currentPage)
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error deleting role:', error.message);
+    }
+  };
+
+  
 
   const handleOpenAlert = (id) => {
     setDeleteId(id);
@@ -225,34 +242,105 @@ const MenuPermission = () => {
     setDeleteId(null);
   };
 
-  const handleConfirmDelete = () => {
-    setTableData((prevData) => prevData.filter((item) => item.id !== deleteId));
+  const handleConfirmDelete = async () => {
+    await handleDeleteRole(deleteId);
     handleCloseAlert();
   };
 
-  const handleSubmit = (formData) => {
-    if (dialogData) {
-      // Update existing item
-      setTableData((prevData) =>
-        prevData.map((item) => (item.id === dialogData.id ? { ...item, ...formData } : item))
-      );
-    } else {
-      // Add new item
-      setTableData((prevData) => [
-        ...prevData,
-        { id: prevData.length + 1, ...formData },
-      ]);
+
+  const handleAddRole = async (formData) => {
+    const {  role_id , menu_id, submenu_id } = formData;
+
+    try {
+      const response = await fetch('https://dev-api.solvedudar.com/api/admin/menuPermissions/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ role_id , menu_id, submenu_id  }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result.data
+        console.log('Role added:', result);
+        setFormData('')
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error adding role:', error.message);
+    }
+  };
+  const handleEditRole = async (id, formData) => {
+    const { role_id , menu_id, submenu_id  } = formData;
+
+    try {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/menuPermissions/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({role_id , menu_id, submenu_id  }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("current page in edit", currentPage)
+
+        setData((prevData) =>
+          prevData.map((item) => (item.id === id ? result : item))
+        );
+        // setData((prevData) => [...prevData, result]);
+        console.log('Role updated:', result);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error updating role:', error.message);
     }
   };
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+
+  const handleSubmit = async (formData) => {
+    console.log("formdata in handlesubmit", formData, "dialogData", dialogData)
+    if (dialogData) {
+      console.log('handleEditRole')
+      await handleEditRole(dialogData.id, formData);
+
+    } else {
+      console.log('handleAddRole')
+      await handleAddRole(formData);
+    }
+    handleClose(); // Close the dialog after submission
   };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = tableData.slice(indexOfFirstItem, indexOfLastItem);
+  const handleClickOpen = (data = null) => {
+    setDialogData(data);
+    setOpen(true);
+  };
 
+  const handleClose = () => {
+    setOpen(false);
+    setDialogData(null);
+  };
+
+  const handlePageChange = (newPage) => {
+    console.log("newPage in handlePAge Changne", newPage)
+    setCurrentPage(newPage);
+    getData(newPage)
+  };
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+    searchData(search)
+    
+  };
+
+  const itemsPerPage = 10;
+ 
   return (
     <CRow>
       <CCol xs={12}>
@@ -273,11 +361,13 @@ const MenuPermission = () => {
                     placeholder="search"
                     aria-label="Username"
                     aria-describedby="basic-addon1"
+                    value={search}
+                    onChange={handleSearch}
                   />
                 </CInputGroup>
               </CCol>
               <CCol xs lg={1}>
-                <CButton color='secondary' onClick={() => handleClickOpen()} className='pt-1 pb-1'>Add
+                <CButton color='secondary' onClick={() => handleClickOpen()} className='d-flex align-items-center'style={{ padding: '4px 8px' }}>Add
                   <CIcon icon={cilPlus} height={16} />
                 </CButton>
               </CCol>
@@ -297,45 +387,50 @@ const MenuPermission = () => {
             </DialogActions>
           </Dialog>
 
-          <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData}  formData={formData}/>
+          <ExamDialog   open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} setdata={setData} data={data} getData={getData} currentPage={currentPage}/>
 
-          <CCardBody>
-            <CTable striped hover>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Role</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Menu</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Submenu</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Url</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Action</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {currentItems.map((row, index) => (
-                  <CTableRow key={row.id}>
-                    <CTableHeaderCell scope="row" style={{ padding: '20px' }}>{index + 1 + (currentPage - 1) * itemsPerPage}</CTableHeaderCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.role}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.menu}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.submenu}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.url}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>
-                        <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} />
-                          <CIcon icon={cilTrash} height={20} onClick={() => handleOpenAlert(row.id)} />
-                    
-                    </CTableDataCell>
+          {!loading ? (
+              <CCardBody>
+              <CTable striped hover>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Role</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Menu</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Submenu</CTableHeaderCell>
+                 
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Action</CTableHeaderCell>
                   </CTableRow>
-                ))}
-              </CTableBody>
-              <CTableCaption>List of Exam {tableData.length}</CTableCaption>
-            </CTable>
+                </CTableHead>
+                <CTableBody>
+                  {data.map((row, index) => (
+                    <CTableRow key={row.id}>
+                      <CTableHeaderCell scope="row" style={{ padding: '20px' }}>{(currentPage - 1) * itemsPerPage + index + 1}</CTableHeaderCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.role_id}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.menu_id}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.submenu_id}</CTableDataCell>
+                    
+                      <CTableDataCell style={{ padding: '20px' }}>
+                          <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} />
+                            <CIcon icon={cilTrash} height={20} onClick={() => handleOpenAlert(row.id)} />
+                      
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+                <CTableCaption>List of Exam {totalRecords}</CTableCaption>
+              </CTable>
+  
+              <CPagination className="justify-content-center" aria-label="Page navigation example">
+                <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
+                <CPaginationItem active>{currentPage}</CPaginationItem>
+                <CPaginationItem disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
+              </CPagination>
+            </CCardBody>
+          ) : (
+            <div>Loading...</div>
+          )}
 
-            <CPagination className="justify-content-center" aria-label="Page navigation example">
-              <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
-              <CPaginationItem active>{currentPage}</CPaginationItem>
-              <CPaginationItem disabled={currentPage === Math.ceil(tableData.length / itemsPerPage)} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
-            </CPagination>
-          </CCardBody>
         </CCard>
       </CCol>
     </CRow>

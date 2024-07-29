@@ -16,7 +16,7 @@
     "build": "vite build",
     "lint": "eslint \"src/**/*.js\"",
     "serve": "vite preview",
-    "start": "vite"
+    "start": "vite --port 4000"
   },
   "dependencies": {
     "@coreui/chartjs": "^4.0.0",
@@ -31,6 +31,7 @@
     "@mui/material": "^5.15.20",
     "@mui/x-date-pickers": "^7.7.0",
     "@popperjs/core": "^2.11.8",
+    "browser-image-compression": "^2.0.2",
     "chart.js": "^4.4.2",
     "classnames": "^2.5.1",
     "core-js": "^3.36.1",

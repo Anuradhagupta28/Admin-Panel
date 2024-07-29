@@ -310,7 +310,7 @@ const Exam = () => {
                 </CInputGroup>
               </CCol>
               <CCol xs lg={1}>
-                <CButton color='secondary' onClick={() => handleClickOpen()} className='pt-1 pb-1'>Add
+                <CButton color='secondary' onClick={() => handleClickOpen()} className='d-flex align-items-center'style={{ padding: '4px 8px' }}>Add
                   <CIcon icon={cilPlus} height={16} />
                 </CButton>
               </CCol>
