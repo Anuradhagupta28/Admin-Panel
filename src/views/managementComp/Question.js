@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   CCard,
   CCardBody,
@@ -40,12 +40,12 @@ import {
   FormLabel,
   Box,
   DialogContentText,
-  Grid ,
+  Grid,
   Typography,
   styled,
   ToggleButtonGroup,
-   ToggleButton
-  
+  ToggleButton
+
 } from '@mui/material';
 
 
@@ -68,10 +68,10 @@ const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
   marginBottom: theme.spacing(2),
-  
+
 }));
 
-const StyledHeading= styled(Box)(({ theme }) => ({
+const StyledHeading = styled(Box)(({ theme }) => ({
   margin: theme.spacing(2, 0),
   padding: theme.spacing(1),
   backgroundColor: '#1976d2',  // Using the specified color
@@ -360,46 +360,116 @@ const topics = {
   // Add topics based on class, subject, and chapter
 };
 
-const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData }) => {
+const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, getData, setdata, data, currentPage }) => {
+
+ 
+  const [classData, setClassData] = useState([]);
+  const [subjectData, setSubjectData] = useState([]);
+  const [chapterData, setChapterData] = useState([]);
+  const [classLoading, setClassLoading] = useState(false);
+  const [subjectLoading, setSubjectLoading] = useState(false);
+  const [chapterLoading, setChapterLoading] = useState(false);
 
   useEffect(() => {
-    if (initialData) {
-      setFormData(initialData);
-    } else {
-      setFormData({
-        question: '',
-        solution: '',
-        option: [],
-        correctOption: [],
-        questionType: '',
-        class: '',
-        subject: '',
-        chapter: '',
-        topic: '',
-        exam: '',
-        status:'',
-        difficultyLevel:'',
-       
-      });
+    if (open) {
+      getClass();
     }
-  }, [initialData, setFormData]);
+  }, [open]);
 
-  const [theme, setTheme] = React.useState('custom');
+  const teacherId = 2;
 
-  const handleThemeChange = (event, newTheme) => {
-    if (newTheme !== null) {
-      setTheme(newTheme);
+  const getClass = async () => {
+    const url = `http://localhost:3000/api/admin/teacher/${teacherId}/class`;
+    setClassLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setClassData(json.data);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      setClassLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (initialData) {
-      setFormData({
-        ...initialData,
-        correctOption: initialData.correctOption || []
+  const getSubject = async (classId) => {
+    const url = `http://localhost:3000/api/admin/teacher/${classId}/subjects`;
+    setSubjectLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
       });
+
+      if (response.ok) {
+        const json = await response.json();
+        setSubjectData(json.data);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      setSubjectLoading(false);
     }
-  }, [initialData]);
+  };
+  const getChapter = async (subjectId) => {
+    const url = `http://localhost:3000/api/admin/teacher/${subjectId}/chapters`;
+    setChapterLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setChapterData(json.data);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      setChapterLoading(false);
+    }
+  };
+  const handleSubjectChange = (event) => {
+    const selectedSubjectId = event.target.value;
+    setFormData(prevData => ({
+      ...prevData,
+      subjectId: selectedSubjectId,
+      chapterId: '', // Reset chapter when subject changes
+    }));
+    getChapter(selectedSubjectId);
+  };
+
+  const handleClassChange = (event) => {
+    const selectedClassId = event.target.value;
+    setFormData(prevData => ({
+      ...prevData,
+      classId: selectedClassId,
+      subjectId: '', // Reset subject when class changes
+    }));
+    getSubject(selectedClassId);
+  };
+
+  // useEffect(() => {
+  //   if (initialData) {
+  //     setFormData({
+  //       ...initialData,
+  //       correctOption: initialData.correctOption || []
+  //     });
+  //   }
+  // }, [initialData]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -411,10 +481,10 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   };
 
   const handleCorrectOptionChange = (event, newOptions) => {
-    const updatedOptions = formData.questionType === 'single choice' 
+    const updatedOptions = formData.questionType === 'single choice'
       ? newOptions.slice(-1) // Only keep the last selected option for single choice
       : newOptions;
-    
+
     setFormData(prevData => ({
       ...prevData,
       correctOption: updatedOptions,
@@ -424,115 +494,123 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   const onSubmit = (event) => {
     event.preventDefault();
     handleSubmit(formData);
+    getData(currentPage);
     handleClose();
   };
 
-  const getSubjects = () => {
-    if (formData.class && ncertData[formData.class]) {
-      return ncertData[formData.class].subjects;
-    }
-    return [];
-  };
-
-  const getChapters = () => {
-    if (formData.class && formData.subject && ncertData[formData.class]) {
-      return ncertData[formData.class].chapters[formData.subject] || [];
-    }
-    return [];
-  };
-
-  const getTopics = () => {
-    if (formData.class && formData.subject && formData.chapter) {
-      return topics[formData.class][formData.subject][formData.chapter] || [];
-    }
-    return [];
-  };
+  
 
 
   return (
     <StyledDialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-    <StyledDialogTitle>Add Questions</StyledDialogTitle>
-   
-    <form onSubmit={onSubmit}>
-      <StyledDialogContent>
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
-            <StyledFormControl fullWidth required>
-              <InputLabel id="class-label">Select Class</InputLabel>
-              <Select
-                labelId="class-label"
-                name="class"
-                value={formData.class}
-                onChange={handleChange}
-                label="Select Class"
-              >
-                <MenuItem value=""><em>-- Select Class --</em></MenuItem>
-                {Object.keys(ncertData).map(cls => (
-                  <MenuItem key={cls} value={cls}>{cls}</MenuItem>
-                ))}
-              </Select>
-            </StyledFormControl>
-          </Grid>
+      <StyledDialogTitle>Add Questions</StyledDialogTitle>
 
-          <Grid item xs={4}>
+      <form onSubmit={onSubmit}>
+        <StyledDialogContent>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={4}>
+              <StyledFormControl fullWidth required>
+                <InputLabel id="class-label">Select Class</InputLabel>
+                <Select
+                  labelId="class-label"
+                  name="classId"
+                  value={formData.classId}
+                  onChange={handleClassChange}
+                  label="Select Class"
+                >
+                  <MenuItem  disabled><em>-- Select Class --</em></MenuItem>
+
+
+                  {!classLoading ? (
+                    classData && classData.length > 0 ? (
+                      classData.map((i) => (
+                        <MenuItem key={i.id} value={i.id}>{i.name}</MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem disabled>No classes available</MenuItem>
+                    )
+                  ) : (
+                    <MenuItem disabled>Loading...</MenuItem>
+                  )}
+                </Select>
+              </StyledFormControl>
+            </Grid>
+
+
+            <Grid item xs={4}>
               <FormControl fullWidth required>
-                <InputLabel id="subject-label">Select Subject</InputLabel>
+              <InputLabel id="subject-label">Select Subject</InputLabel>
                 <Select
                   labelId="subject-label"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
+                  name="subjectId"
+                  value={formData.subjectId}
+                  onChange={handleSubjectChange}
                   label="Select Subject"
-                  disabled={!formData.class}
+                  disabled={!formData.classId}
                 >
-                  <MenuItem value=""><em>-- Select Subject --</em></MenuItem>
-                  {getSubjects().map(subject => (
-                    <MenuItem key={subject} value={subject}>{subject}</MenuItem>
-                  ))}
+                  <MenuItem value="" disabled><em>-- Select Subject --</em></MenuItem>
+                  {!subjectLoading ? (
+                    subjectData.length > 0 ? (
+                      subjectData.map((i) => (
+                        <MenuItem key={i.id} value={i.id}>{i.name}</MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem disabled>No subjects available</MenuItem>
+                    )
+                  ) : (
+                    <MenuItem disabled>Loading...</MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </Grid>
 
             {/* chapter */}
             <Grid item xs={4}>
-              <FormControl fullWidth  required>
-                <InputLabel id="chapter-label">Select Chapter</InputLabel>
+              <FormControl fullWidth required>
+              <InputLabel id="chapter-label">Select Chapter</InputLabel>
                 <Select
                   labelId="chapter-label"
-                  name="chapter"
-                  value={formData.chapter}
+                  name="chapterId"
+                  value={formData.chapterId}
                   onChange={handleChange}
                   label="Select Chapter"
-                  disabled={!formData.subject}
+                  disabled={!formData.subjectId}
                 >
-                  <MenuItem value=""><em>-- Select Chapter --</em></MenuItem>
-                  {getChapters().map(chapter => (
-                    <MenuItem key={chapter} value={chapter}>{chapter}</MenuItem>
-                  ))}
+                  <MenuItem value="" disabled><em>-- Select Chapter --</em></MenuItem>
+                  {!chapterLoading ? (
+                    chapterData.length > 0 ? (
+                      chapterData.map((i) => (
+                        <MenuItem key={i.id} value={i.id}>{i.name}</MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem disabled>No chapters available</MenuItem>
+                    )
+                  ) : (
+                    <MenuItem disabled>Loading...</MenuItem>
+                  )}
                 </Select>
               </FormControl>
             </Grid>
-        </Grid>
-        {/* topics */}
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={4}>
-            <StyledFormControl fullWidth required>
-              <InputLabel id="class-label">Select Topics</InputLabel>
-              <Select
-                labelId="class-label"
-                name="class"
-                value={formData.class}
-                onChange={handleChange}
-                label="Select Class"
-              >
-                <MenuItem value=""><em>-- Select topics --</em></MenuItem>
-                {Object.keys(ncertData).map(cls => (
-                  <MenuItem key={cls} value={cls}>{cls}</MenuItem>
-                ))}
-              </Select>
-            </StyledFormControl>
           </Grid>
-          <Grid item xs={4}>
+          {/* topics */}
+          
+          {/* <Grid container spacing={3}>
+            <Grid item xs={12} sm={4}>
+              <StyledFormControl fullWidth required>
+                <InputLabel id="class-label">Select Topics</InputLabel>
+                <Select
+                  labelId="class-label"
+                  name="class"
+                  value={formData.class}
+                  onChange={handleChange}
+                  label="Select Class"
+                >
+                  <MenuItem value=""><em>-- Select topics --</em></MenuItem>
+                
+                </Select>
+              </StyledFormControl>
+            </Grid>
+            <Grid item xs={4}>
               <FormControl fullWidth required>
                 <InputLabel id="subject-label">Select Exam</InputLabel>
                 <Select
@@ -544,28 +622,26 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
                   disabled={!formData.class}
                 >
                   <MenuItem value=""><em>-- Select exam --</em></MenuItem>
-                  {getSubjects().map(subject => (
-                    <MenuItem key={subject} value={subject}>{subject}</MenuItem>
-                  ))}
+                
                 </Select>
               </FormControl>
             </Grid>
 
-            
-            
-           
-        </Grid>
 
-      
-        
-                <StyledHeading>
-          <Typography variant="body2" style={{ color: '#ffffff' }}>
-            Please Enter Correct Data
-          </Typography>
-        </StyledHeading>
 
-        <Grid container spacing={2}>
-        <Grid item xs={6}>
+
+          </Grid> */}
+
+
+
+          <StyledHeading>
+            <Typography variant="body2" style={{ color: '#ffffff' }}>
+              Please Enter Correct Data
+            </Typography>
+          </StyledHeading>
+
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
               <StyledFormControl fullWidth required>
                 <InputLabel id="questionType-label">Select Question Type</InputLabel>
                 <Select
@@ -616,13 +692,13 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
               </FormControl>
             </Grid>
 
-            
-         
+
+
           </Grid>
 
 
-          <Typography  variant="subtitle1" sx={{  margin:'10px 0'}}>Write Question:</Typography>
-          <CKEditor  editorUrl="https://cdn.ckeditor.com/4.18.0/standard-all/ckeditor.js" />
+          <Typography variant="subtitle1" sx={{ margin: '10px 0' }}>Write Question:</Typography>
+          <CKEditor editorUrl="https://cdn.ckeditor.com/4.18.0/standard-all/ckeditor.js" />
 
 
           <Grid container spacing={4}>
@@ -651,156 +727,134 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
             </Grid>
           </Grid>
           <Typography variant="subtitle1">Option</Typography>
-       <CKEditor/>
-    <Typography variant="subtitle1">Solution</Typography>
-       <CKEditor/>
-      </StyledDialogContent>
-      <StyledDialogActions>
-        <Button onClick={handleClose} color="secondary">Cancel</Button>
-        <StyledSubmitButton type="submit" variant="contained" color="primary">
-          Submit
-        </StyledSubmitButton>
-      </StyledDialogActions>
-    </form>
-  </StyledDialog>
+          <CKEditor />
+          <Typography variant="subtitle1">Solution</Typography>
+          <CKEditor />
+        </StyledDialogContent>
+        <StyledDialogActions>
+          <Button onClick={handleClose} color="secondary">Cancel</Button>
+          <StyledSubmitButton type="submit" variant="contained" color="primary">
+            Submit
+          </StyledSubmitButton>
+        </StyledDialogActions>
+      </form>
+    </StyledDialog>
   );
 };
 
 const Question = () => {
+  const [data, setData] = useState(null);
+  const [totalRecords, setTotalRecords] = useState(0);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [dialogData, setDialogData] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState('');
 
   const [formData, setFormData] = useState({
-    question: '',
+    classId: '',
+    subjectId: '',
+    chapterId: '',
+    teacherId: '',
+    targetExams: '',
+    difficulty: '',
+    duration: '',
+    e_question: '',
     solution: '',
-    option: [],
-    correctOption: [],
-    questionType: '',
-    class: '',
-    subject: '',
-    chapter: '',
-    topic: '',
-    exam: '',
-    status:'',
-    difficultyLevel:''
+    options: [],
   });
+  const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
 
-  const [tableData, setTableData] = useState([
-    {
-      id: 1,
-      question: "What is the capital of France?",
-      solution: "Paris is the capital of France.",
-      option: ["Paris", "London", "Berlin", "Madrid"],
-      correctOption: ["Paris", "London"],
-      questionType: "Geography",
-      class: "5",
-      subject: "Social Studies",
-      chapter: "Countries and Capitals",
-      topic: "Europe",
-      exam: "Mid-term",
-      status:"pending"
-    },
-    {
-      id: 2,
-      question: "What is 2 + 2?",
-      solution: "2 + 2 equals 4.",
-      option: ["3", "4", "5", "6"],
-      correctOption: ["4"],
-      questionType: "Math",
-      class: "3",
-      subject: "Mathematics",
-      chapter: "Basic Arithmetic",
-      topic: "Addition",
-      exam: "Unit Test",
-      status:"pending"
-    },
-    {
-      id: 3,
-      question: "What is the chemical symbol for water?",
-      solution: "The chemical symbol for water is H2O.",
-      option: ["H2O", "O2", "CO2", "NaCl"],
-      correctOption: ["H2O"],
-      questionType: "Science",
-      class: "6",
-      subject: "Chemistry",
-      chapter: "Basics of Chemistry",
-      topic: "Chemical Formulas",
-      exam: "Final Exam",
-      status:"pending"
-    },
-    {
-      id: 4,
-      question: "Who wrote '1984'?",
-      solution: "'1984' was written by George Orwell.",
-      option: ["George Orwell", "Aldous Huxley", "Ernest Hemingway", "F. Scott Fitzgerald"],
-      correctOption: ["George Orwell"],
-      questionType: "Literature",
-      class: "8",
-      subject: "English",
-      chapter: "Famous Authors",
-      topic: "Dystopian Novels",
-      exam: "Literature Exam",
-      status:"pending"
-    },
-    {
-      id: 5,
-      question: "What is the largest planet in our Solar System?",
-      solution: "Jupiter is the largest planet in our Solar System.",
-      option: ["Earth", "Mars", "Jupiter", "Saturn"],
-      correctOption: ["Jupiter"],
-      questionType: "Astronomy",
-      class: "7",
-      subject: "Science",
-      chapter: "The Solar System",
-      topic: "Planets",
-      exam: "Astronomy Quiz",
-      status:"pending"
-    },
-    {
-      id: 6,
-      question: "What is the boiling point of water?",
-      solution: "The boiling point of water is 100°C.",
-      option: ["90°C", "100°C", "110°C", "120°C"],
-      correctOption: ["100°C"],
-      questionType: "Science",
-      class: "6",
-      subject: "Physics",
-      chapter: "States of Matter",
-      topic: "Boiling and Melting Points",
-      exam: "Physics Test",
-      status:"pending"
-    },
-    {
-      id: 7,
-      question: "Who painted the Mona Lisa?",
-      solution: "The Mona Lisa was painted by Leonardo da Vinci.",
-      option: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Claude Monet"],
-      correctOption:["Leonardo da Vinci"],
-      questionType: "Art",
-      class: "7",
-      subject: "Art History",
-      chapter: "Renaissance Art",
-      topic: "Famous Paintings",
-      exam: "Art History Exam",
-      status:"pending"
+  const getData = async (currentPage, teacherId = 1) => {
+    console.log('page', currentPage)
+    const url = `http://localhost:3000/api/admin/teacher/${teacherId}/questions?page=${currentPage}`; // Replace with your API endpoint
+    setLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setLoading(false);
+        // console.log(json.totalRecords);
+        setTotalPages(json.totalPages)
+        setTotalRecords(json.totalRecords);
+
+        console.log("json", json.questions.data);
+        setData(json.questions.data); // Update state with response data
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
     }
-  ]);
-
- 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const handleClickOpen = (data = null) => {
-    setDialogData(data);
-    setOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setDialogData(null);
+  useEffect(() => {
+    getData(currentPage);
+  }, [currentPage]);
+
+  const searchData = async (searchQuery, teacherId = 1) => {
+    const url = `http://localhost:3000/api/admin/teacher/${teacherId}/questions?search=${encodeURIComponent(searchQuery)}`;
+    setLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setData(json.questions.data); // Directly set the data without pagination
+        setLoading(false);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+      setLoading(false);
+    }
   };
+
+
+
+
+  const handleDeleteRole = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/admin/teacher/question/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        setData((prevData) => prevData.filter((item) => item.id !== id));
+        console.log('Role deleted:', id);
+        getData(currentPage)
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error deleting role:', error.message);
+    }
+  };
+
+
 
   const handleOpenAlert = (id) => {
     setDeleteId(id);
@@ -812,33 +866,109 @@ const Question = () => {
     setDeleteId(null);
   };
 
-  const handleConfirmDelete = () => {
-    setTableData((prevData) => prevData.filter((item) => item.id !== deleteId));
+  const handleConfirmDelete = async () => {
+    await handleDeleteRole(deleteId);
     handleCloseAlert();
   };
 
-  const handleSubmit = (formData) => {
-    if (dialogData) {
-      // Update existing item
-      setTableData((prevData) =>
-        prevData.map((item) => (item.id === dialogData.id ? { ...item, ...formData } : item))
-      );
-    } else {
-      // Add new item
-      setTableData((prevData) => [
-        ...prevData,
-        { id: prevData.length + 1, ...formData },
-      ]);
+
+  const handleAddRole = async (formData) => {
+    const { classId, subjectId, chapterId, teacherId, targetExams, difficulty, duration, e_question, solution, options } = formData;
+
+    try {
+      const response = await fetch('http://localhost:3000/api/admin/teacher/question', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ classId, subjectId, chapterId, teacherId, targetExams, difficulty, duration, e_question, solution, options }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result.data
+        console.log('Role added:', result, "formData", formData);
+
+        setFormData('')
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error adding role:', error.message);
+    }
+  };
+  const handleEditRole = async (id, formData) => {
+    const { classId, subjectId, chapterId, teacherId, targetExams, difficulty, duration, e_question, solution, options } = formData;
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/admin/userRole/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ classId, subjectId, chapterId, teacherId, targetExams, difficulty, duration, e_question, solution, options }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("current page in edit", currentPage)
+
+        // setData((prevData) =>
+        //   prevData.map((item) => (item.id === id ? result : item))
+        // );
+        setData((prevData) => [...prevData, result]);
+        console.log('Role updated:', result);
+        getData(currentPage)
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error updating role:', error.message);
     }
   };
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+
+  const handleSubmit = async (formData) => {
+    console.log("formdata in handlesubmit", formData, "dialogData", dialogData)
+    if (dialogData) {
+      console.log('handleEditRole')
+      await handleEditRole(dialogData.id, formData);
+
+    } else {
+      console.log('handleAddRole')
+      await handleAddRole(formData);
+    }
+    handleClose(); // Close the dialog after submission
   };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = tableData.slice(indexOfFirstItem, indexOfLastItem);
+  const handleClickOpen = (data = null) => {
+    setDialogData(data);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setDialogData(null);
+  };
+
+  const handlePageChange = (newPage) => {
+    console.log("newPage in handlePAge Changne", newPage)
+    setCurrentPage(newPage);
+    getData(newPage)
+  };
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+    searchData(search)
+
+  };
+
+
+  const itemsPerPage = 10;
+
+
 
   return (
     <CRow>
@@ -859,11 +989,13 @@ const Question = () => {
                     placeholder="search"
                     aria-label="Username"
                     aria-describedby="basic-addon1"
+                    value={search}
+                    onChange={handleSearch}
                   />
                 </CInputGroup>
               </CCol>
               <CCol xs lg={2}>
-                <CButton color='primary' onClick={() => handleClickOpen()} className='d-flex align-items-center'style={{ padding: '4px 8px' }}>Add Question
+                <CButton color='primary' onClick={() => handleClickOpen()} className='d-flex align-items-center' style={{ padding: '4px 8px' }}>Add Question
                   <CIcon icon={cilPlus} height={16} />
                 </CButton>
               </CCol>
@@ -883,47 +1015,50 @@ const Question = () => {
             </DialogActions>
           </Dialog>
 
-          <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} />
+          <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} setdata={setData} data={data} getData={getData} currentPage={currentPage} />
+          {!loading ? (
+            <CCardBody>
+              <CTable striped hover>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Question </CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Status</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Action</CTableHeaderCell>
 
-          <CCardBody>
-            <CTable striped hover>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Question </CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Status</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Action</CTableHeaderCell>
-               
-            
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {currentItems.map((row, index) => (
-                  <CTableRow key={row.id}>
-                    <CTableHeaderCell scope="row" style={{ padding: '20px' }}>{index + 1 + (currentPage - 1) * itemsPerPage}</CTableHeaderCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.question}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>
-                      <CButton color={row.status === 'Active' ? 'success' : 'warning'} size="sm" style={{ color: 'white' }}>
-                        {row.status}
-                      </CButton>
-                    </CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>
-                      <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} />
-                      <CIcon icon={cilTrash} height={20} onClick={() => handleOpenAlert(row.id)} />
-                    </CTableDataCell>
-                  
+
                   </CTableRow>
-                ))}
-              </CTableBody>
-              <CTableCaption>List of Exam {tableData.length}</CTableCaption>
-            </CTable>
+                </CTableHead>
+                <CTableBody>
+                  {data.map((row, index) => (
+                    <CTableRow key={row.id}>
+                      <CTableHeaderCell scope="row" style={{ padding: '20px' }}>  {(currentPage - 1) * itemsPerPage + index + 1}</CTableHeaderCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.e_question}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>
+                        <CButton color={row.status === 'Active' ? 'success' : 'warning'} size="sm" style={{ color: 'white' }}>
+                          {row.status}
+                        </CButton>
+                      </CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>
+                        <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} />
+                        <CIcon icon={cilTrash} height={20} onClick={() => handleOpenAlert(row.id)} />
+                      </CTableDataCell>
 
-            <CPagination className="justify-content-center" aria-label="Page navigation example">
-              <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
-              <CPaginationItem active>{currentPage}</CPaginationItem>
-              <CPaginationItem disabled={currentPage === Math.ceil(tableData.length / itemsPerPage)} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
-            </CPagination>
-          </CCardBody>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+                <CTableCaption>List of Exam {totalRecords}</CTableCaption>
+              </CTable>
+
+              <CPagination className="justify-content-center" aria-label="Page navigation example">
+                <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
+                <CPaginationItem active>{currentPage}</CPaginationItem>
+                <CPaginationItem disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
+              </CPagination>
+            </CCardBody>
+          ) : (
+            <div>Loading...</div>
+          )}
         </CCard>
       </CCol>
     </CRow>
