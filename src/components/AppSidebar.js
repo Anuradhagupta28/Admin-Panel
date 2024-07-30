@@ -1,4 +1,4 @@
-import React from 'react'
+import React , { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import {
@@ -17,12 +17,15 @@ import { logo } from 'src/assets/brand/logo'
 import { sygnet } from 'src/assets/brand/sygnet'
 
 // sidebar nav config
-import navigation from '../_nav'
+// import navigation from '../_nav'
+import { limitedNav } from './../_nav';
+import { _nav } from './../_nav'
 
 const AppSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
+  const [userType, setUserType] = useState(true);
 
   return (
     <CSidebar
@@ -50,7 +53,7 @@ const AppSidebar = () => {
           onClick={() => dispatch({ type: 'set', sidebarShow: false })}
         />
       </CSidebarHeader>
-      <AppSidebarNav items={navigation} />
+      <AppSidebarNav items={userType? limitedNav :_nav } />
       <CSidebarFooter className="border-top d-none d-lg-flex">
         <CSidebarToggler
           onClick={() => dispatch({ type: 'set', sidebarUnfoldable: !unfoldable })}

@@ -106,7 +106,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
           name="submenu_id"
           label="Select Submenu*"
           type="number"
-          fullWidth
+          fullWidth6
           select
           value={formData.submenu_id}
           onChange={handleChange}

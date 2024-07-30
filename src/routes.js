@@ -1,5 +1,6 @@
 import React from 'react'
 
+const Question = React.lazy(() => import('./views/managementComp/Question'))
 
 
 const Contact = React.lazy(() => import('./views/managementComp/ViewWebsite/Contact'))
@@ -123,7 +124,8 @@ const routes = [
   {path: '/managementComp/ViewWebsite/Collab', name: 'Collab', element:Collab},
   {path: '/managementComp/ViewWebsite/Contact', name: 'Contact', element:Contact},
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
-  
+  {path: '/managementComp/Question', name: 'Question', element:Question},
+
   { path: '/theme/colors', name: 'Colors', element: Colors },
   { path: '/theme/typography', name: 'Typography', element: Typography },
   { path: '/base', name: 'Base', element: Cards, exact: true },
