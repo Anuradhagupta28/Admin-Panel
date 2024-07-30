@@ -38,8 +38,9 @@ import {
   FormLabel,
 } from '@mui/material';
 
-const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, setData, data, getData,currentPage }) => {
-  console.log("initialData", initialData, 'formData', formData, 'data', data)
+const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, getData, currentPage }) => {
+  console.log("initialData", initialData, 'formData', formData);
+
   React.useEffect(() => {
     if (initialData) {
       setFormData(initialData);
@@ -49,7 +50,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
         access: '',
       });
     }
-  }, [initialData]);
+  }, [initialData, setFormData]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -61,10 +62,21 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      access: checked ? prevData.access + name + ' ' : prevData.access.replace(name + ' ', ''),
-    }));
+    setFormData((prevData) => {
+      const accessArray = (prevData.access || '').split(',').filter(Boolean);
+      if (checked) {
+        accessArray.push(name);
+      } else {
+        const index = accessArray.indexOf(name);
+        if (index > -1) {
+          accessArray.splice(index, 1);
+        }
+      }
+      return {
+        ...prevData,
+        access: accessArray.join(','),
+      };
+    });
   };
 
   const onSubmit = async () => {
@@ -73,6 +85,9 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     handleClose();
   };
 
+  const isChecked = (name) => {
+    return formData.access ? formData.access.split(',').includes(name) : false;
+  };
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -94,7 +109,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={formData.access.includes('view')}
+                  checked={isChecked('view')}
                   onChange={handleCheckboxChange}
                   name="view"
                 />
@@ -104,7 +119,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={formData.access.includes('add')}
+                  checked={isChecked('add')}
                   onChange={handleCheckboxChange}
                   name="add"
                 />
@@ -114,7 +129,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={formData.access.includes('edit')}
+                  checked={isChecked('edit')}
                   onChange={handleCheckboxChange}
                   name="edit"
                 />
@@ -124,7 +139,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={formData.access.includes('delete')}
+                  checked={isChecked('delete')}
                   onChange={handleCheckboxChange}
                   name="delete"
                 />
@@ -143,6 +158,8 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     </Dialog>
   );
 };
+
+
 
 const UserRole = () => {
 
@@ -166,7 +183,7 @@ const UserRole = () => {
 
   const getData = async (currentPage) => {
     console.log('page', currentPage)
-    const url = `https://dev-api.solvedudar.com/api/admin/userRole?page=${currentPage}`; // Replace with your API endpoint
+    const url = `http://localhost:3000/api/admin/userRole?page=${currentPage}`; // Replace with your API endpoint
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -222,10 +239,10 @@ const UserRole = () => {
       setLoading(false);
     }
   };
-  
+
   const handleDeleteRole = async (id) => {
     try {
-      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/userRole/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/admin/userRole/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -245,7 +262,7 @@ const UserRole = () => {
     }
   };
 
-  
+
 
   const handleOpenAlert = (id) => {
     setDeleteId(id);
@@ -267,7 +284,7 @@ const UserRole = () => {
     const { role_name, access } = formData;
 
     try {
-      const response = await fetch('https://dev-api.solvedudar.com/api/admin/userRole/add', {
+      const response = await fetch('http://localhost:3000/api/admin/userRole/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -279,7 +296,8 @@ const UserRole = () => {
       if (response.ok) {
         const result = await response.json();
         setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result.data
-        console.log('Role added:', result);
+        console.log('Role added:', result, "formData", formData);
+      
         setFormData('')
       } else {
         throw new Error(`Response status: ${response.status}`);
@@ -292,7 +310,7 @@ const UserRole = () => {
     const { role_name, access } = formData;
 
     try {
-      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/userRole/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/admin/userRole/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -310,6 +328,7 @@ const UserRole = () => {
         // );
         setData((prevData) => [...prevData, result]);
         console.log('Role updated:', result);
+        getData(currentPage)
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -351,7 +370,7 @@ const UserRole = () => {
   const handleSearch = (event) => {
     setSearch(event.target.value);
     searchData(search)
-    
+
   };
 
   const itemsPerPage = 10;
@@ -401,7 +420,7 @@ const UserRole = () => {
             </DialogActions>
           </Dialog>
 
-          <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} setdata={setData} data={data} getData={getData} currentPage={currentPage}/>
+          <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} setdata={setData} data={data} getData={getData} currentPage={currentPage} />
 
 
           {!loading ? (
