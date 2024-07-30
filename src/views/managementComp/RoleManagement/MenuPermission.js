@@ -32,23 +32,58 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
 
-const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, setData, data, getData,currentPage }) => {
-  console.log("initialData", initialData, 'formData', formData, 'data', data)
+const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, getData, currentPage, token }) => {
+  console.log("initialData", initialData, 'formData', formData);
 
+  const [roleData, setRoleData] = useState([]);
+  const [roleLoading, setRoleLoading] = useState(false);
 
-  React.useEffect(() => {
+  const [menuData, setMenuData] = useState(null);
+
+  useEffect(() => {
     if (initialData) {
       setFormData(initialData);
     } else {
       setFormData({
-        
         role_id: '',
         menu_id: '',
         submenu_id: '',
-        
+        url: '',
       });
     }
-  }, [initialData]);
+  }, [initialData, setFormData]);
+
+  useEffect(() => {
+    if (open) {
+      getRole();
+    }
+  }, [open]);
+
+  const getRole = async () => {
+    const url = `http://localhost:3000/api/admin/userRole`; // Replace with your API endpoint
+    setRoleLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setRoleData(json.data);
+        setRoleLoading(false);
+        console.log(json.data);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+      setRoleLoading(false);
+    }
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -58,7 +93,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     });
   };
 
-  const onSubmit = async() => {
+  const onSubmit = async () => {
     await handleSubmit(formData);
     getData(currentPage);
     handleClose();
@@ -76,16 +111,21 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
           type="text"
           fullWidth
           select
-          value={formData. role_id}
+          value={formData.role_id}
           onChange={handleChange}
-          >
-          <MenuItem value="1">Admin</MenuItem>
-          <MenuItem value="2">Sub Admin</MenuItem>
-          <MenuItem value="3">Staff</MenuItem>
-          <MenuItem value="4">Teacher</MenuItem>
+          disabled={roleLoading}
+        >
+          {!roleLoading ? (
+            roleData.map((i) => (
+              <MenuItem key={i.id} value={i.id}>
+                {i.role_name}
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem disabled>Loading...</MenuItem>
+          )}
         </TextField>
         <TextField
-
           margin="dense"
           name="menu_id"
           label="Select Menu *"
@@ -94,14 +134,13 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
           select
           value={formData.menu_id}
           onChange={handleChange}
-          >
+        >
           <MenuItem value="Content">Content</MenuItem>
           <MenuItem value="Role">Role</MenuItem>
           <MenuItem value="Student">Student</MenuItem>
           <MenuItem value="Teacher">Teacher</MenuItem>
         </TextField>
         <TextField
-        
           margin="dense"
           name="submenu_id"
           label="Select Submenu*"
@@ -110,13 +149,12 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
           select
           value={formData.submenu_id}
           onChange={handleChange}
-          >
+        >
           <MenuItem value="admin/exam">Admin/Exam</MenuItem>
           <MenuItem value="admin/class">Admin/Class</MenuItem>
           <MenuItem value="admin/student">Admin/Student</MenuItem>
           <MenuItem value="admin/teacher">Admin/Teacher</MenuItem>
         </TextField>
-       
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
@@ -127,6 +165,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     </Dialog>
   );
 };
+
 
 const MenuPermission = () => {
  
@@ -146,12 +185,13 @@ const MenuPermission = () => {
     role_id: '',
     menu_id: '',
     submenu_id: '',
+    url: '',
   });
   const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
 
   const getData = async (currentPage) => {
     console.log('page', currentPage)
-    const url = `https://dev-api.solvedudar.com/api/admin/menuPermissions?page=${currentPage}`; // Replace with your API endpoint
+    const url = `http://localhost:3000/api/admin/menuPermissions?page=${currentPage}`; // Replace with your API endpoint
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -210,7 +250,7 @@ const MenuPermission = () => {
   
   const handleDeleteRole = async (id) => {
     try {
-      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/menuPermissions/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/admin/menuPermissions/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -249,16 +289,16 @@ const MenuPermission = () => {
 
 
   const handleAddRole = async (formData) => {
-    const {  role_id , menu_id, submenu_id } = formData;
+    const {  role_id , menu_id, submenu_id, url } = formData;
 
     try {
-      const response = await fetch('https://dev-api.solvedudar.com/api/admin/menuPermissions/add', {
+      const response = await fetch('http://localhost:3000/api/admin/menuPermissions/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ role_id , menu_id, submenu_id  }),
+        body: JSON.stringify({ role_id , menu_id, submenu_id , url }),
       });
 
       if (response.ok) {
@@ -274,16 +314,16 @@ const MenuPermission = () => {
     }
   };
   const handleEditRole = async (id, formData) => {
-    const { role_id , menu_id, submenu_id  } = formData;
+    const { role_id , menu_id, submenu_id, url  } = formData;
 
     try {
-      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/menuPermissions/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/admin/menuPermissions/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({role_id , menu_id, submenu_id  }),
+        body: JSON.stringify({role_id , menu_id, submenu_id , url }),
       });
 
       if (response.ok) {
@@ -387,7 +427,7 @@ const MenuPermission = () => {
             </DialogActions>
           </Dialog>
 
-          <ExamDialog   open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} setdata={setData} data={data} getData={getData} currentPage={currentPage}/>
+          <ExamDialog   open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} setdata={setData} data={data} getData={getData} currentPage={currentPage} token={token}/>
 
           {!loading ? (
               <CCardBody>
@@ -398,7 +438,7 @@ const MenuPermission = () => {
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Role</CTableHeaderCell>
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Menu</CTableHeaderCell>
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Submenu</CTableHeaderCell>
-                 
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Url</CTableHeaderCell>
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Action</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
@@ -409,6 +449,7 @@ const MenuPermission = () => {
                       <CTableDataCell style={{ padding: '20px' }}>{row.role_id}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>{row.menu_id}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>{row.submenu_id}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.url}</CTableDataCell>
                     
                       <CTableDataCell style={{ padding: '20px' }}>
                           <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} />
