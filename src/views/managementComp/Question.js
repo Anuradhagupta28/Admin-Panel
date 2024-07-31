@@ -369,6 +369,9 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   const [classLoading, setClassLoading] = useState(false);
   const [subjectLoading, setSubjectLoading] = useState(false);
   const [chapterLoading, setChapterLoading] = useState(false);
+  const [topicsData, setTopicsData] = useState(null);
+  const [topicsLoading, setTopicsLoading] = useState(true);
+
 
   useEffect(() => {
     if (open) {
@@ -442,6 +445,26 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
       setChapterLoading(false);
     }
   };
+
+  const getTopics = async (chapterId) => {
+    const url = `http://localhost:3000/api/admin/chapter/${chapterId}/topics`; // Replace with your API endpoint
+   
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        const json = await response.json();
+        setTopicsData(json.data);
+        console.log("topic data ",json.data)
+        setTopicsLoading(false);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+      setTopicsLoading(true);
+    }
+  };
+  
   const handleSubjectChange = (event) => {
     const selectedSubjectId = event.target.value;
     setFormData(prevData => ({
@@ -460,6 +483,15 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
       subjectId: '', // Reset subject when class changes
     }));
     getSubject(selectedClassId);
+  };
+  const handleChapterChange = (event) => {
+    const selectedChapterId = event.target.value;
+    setFormData(prevData => ({
+      ...prevData,
+      chapterId: selectedChapterId,
+      topicId: '', // Reset topic when chapter changes
+    }));
+    getTopics(7); // Use selectedChapterId instead of selectedClassId
   };
 
   // useEffect(() => {
@@ -499,7 +531,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   };
 
   
-
+console.log("topicsData",topicsData,"topicsLoading",topicsLoading)
 
   return (
     <StyledDialog open={open} onClose={handleClose} fullWidth maxWidth="md">
@@ -572,7 +604,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
                   labelId="chapter-label"
                   name="chapterId"
                   value={formData.chapterId}
-                  onChange={handleChange}
+                  onChange={handleChapterChange}
                   label="Select Chapter"
                   disabled={!formData.subjectId}
                 >
@@ -593,20 +625,35 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
             </Grid>
           </Grid>
           {/* topics */}
+
           
-          {/* <Grid container spacing={3}>
+          
+         <Grid container spacing={3}>
             <Grid item xs={12} sm={4}>
               <StyledFormControl fullWidth required>
                 <InputLabel id="class-label">Select Topics</InputLabel>
                 <Select
-                  labelId="class-label"
-                  name="class"
-                  value={formData.class}
+                  labelId="topic-label"
+                  name="topicId"
+                  value={formData.topicId}
                   onChange={handleChange}
-                  label="Select Class"
+                  label="Select Topic"
+                  disabled={!formData.chapterId}
                 >
-                  <MenuItem value=""><em>-- Select topics --</em></MenuItem>
-                
+                   <MenuItem disabled><em>-- Select Topic --</em></MenuItem>
+                   
+                   {!topicsLoading ? (
+                    topicsData.length > 0 ? (
+                      topicsData.map((i) => (
+                        <MenuItem key={i.id} value={i.id}>{i.name}</MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem disabled>No topics available</MenuItem>
+                    )
+                  ) : (
+                    <MenuItem disabled>Loading...</MenuItem>
+                  )}
+              
                 </Select>
               </StyledFormControl>
             </Grid>
@@ -630,7 +677,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
 
 
 
-          </Grid> */}
+          </Grid> 
 
 
 
@@ -761,6 +808,7 @@ const Question = () => {
     subjectId: '',
     chapterId: '',
     teacherId: '',
+    topicId: '',
     targetExams: '',
     difficulty: '',
     duration: '',
