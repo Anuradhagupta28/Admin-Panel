@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import {
   CCard,
   CCardBody,
@@ -18,45 +18,37 @@ import {
   CInputGroupText,
   CFormInput,
   CButton,
+  CCardText,
+  CImage,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilAddressBook, cilSearch, cilPlus } from '@coreui/icons'
-
+import { cilAddressBook, cilTrash, cilColorBorder, cilSearch, cilPlus } from '@coreui/icons'
 import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    DialogContentText,
-    TextField,
-    MenuItem,
-    Button,
-    FormControl,
-    InputLabel,
-    Select,
-    RadioGroup,
-    FormControlLabel,
-    FormLabel,
-    Radio,
-    Box
-  } from '@mui/material';
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  DialogContentText,
+  MenuItem,
+  Button,
+  FormControlLabel,
+  Checkbox,
+  FormGroup,
+  FormControl,
+  FormLabel,
+} from '@mui/material';
 
-const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData }) => {
-  const [selectedFileName, setSelectedFileName] = useState('');
+const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, getData, currentPage }) => {
+  console.log("initialData", initialData, 'formData', formData);
 
   React.useEffect(() => {
     if (initialData) {
       setFormData(initialData);
     } else {
       setFormData({
-        school: '',
-        branch: '',
-        startTime: '',
-        endTime: '',
-        trial: '',
-        discount: '',
-        subscription: '',
-        status: '',
+        role_name: '',
+        access: '',
       });
     }
   }, [initialData, setFormData]);
@@ -69,254 +61,209 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     });
   };
 
-  const onSubmit = (event) => {
-    event.preventDefault();
-    handleSubmit(formData);
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    setFormData((prevData) => {
+      const accessArray = (prevData.access || '').split(',').filter(Boolean);
+      if (checked) {
+        accessArray.push(name);
+      } else {
+        const index = accessArray.indexOf(name);
+        if (index > -1) {
+          accessArray.splice(index, 1);
+        }
+      }
+      return {
+        ...prevData,
+        access: accessArray.join(','),
+      };
+    });
+  };
+
+  const onSubmit = async () => {
+    await handleSubmit(formData);
+    getData(currentPage); // Fetch the updated data
     handleClose();
+  };
+
+  const isChecked = (name) => {
+    return formData.access ? formData.access.split(',').includes(name) : false;
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Review Question data</DialogTitle>
-      <form onSubmit={onSubmit}>
-        <DialogContent>
-          <FormControl fullWidth margin="dense" required>
-            <InputLabel id="school-label">Select school</InputLabel>
-            <Select
-              labelId="school-label"
-              name="school"
-              value={formData.school}
-              onChange={handleChange}
-              label="Select school"
-            >
-              <MenuItem value=""><em>--select school --</em></MenuItem>
-              <MenuItem value="B-Tier2">Saraswati vidya mandir</MenuItem>
-            </Select>
-          </FormControl>
-          
-          <TextField
-            margin="dense"
-            name="branch"
-            label="Branch"
-            type="text"
-            fullWidth
-            required
-            value={formData.branch}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="startTime"
-            label="Start Time"
-            type="time"
-            fullWidth
-            required
-            value={formData.startTime}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="endTime"
-            label="End Time"
-            type="time"
-            fullWidth
-            required
-            value={formData.endTime}
-            onChange={handleChange}
-          />
-          <FormControl fullWidth margin="dense" required>
-            <InputLabel id="trial-label">Select trial</InputLabel>
-            <Select
-              labelId="trial-label"
-              name="trial"
-              value={formData.trial}
-              onChange={handleChange}
-              label="Trial"
-            >
-              <MenuItem value=""><em>N/A</em></MenuItem>
-              <MenuItem value="3 Days">3 Days</MenuItem>
-              <MenuItem value="7 Days">7 Days</MenuItem>
-              <MenuItem value="15 Days">15 Days</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="dense" required>
-            <InputLabel id="discount-label">Select discount</InputLabel>
-            <Select
-              labelId="discount-label"
-              name="discount"
-              value={formData.discount}
-              onChange={handleChange}
-              label="Discount"
-            >
-              <MenuItem value=""><em>N/A</em></MenuItem>
-              <MenuItem value="5%">5%</MenuItem>
-              <MenuItem value="10%">10%</MenuItem>
-              <MenuItem value="15%">15%</MenuItem>
-              <MenuItem value="20%">20%</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth margin="dense" required>
-            <InputLabel id="subscription-label">Select subscription</InputLabel>
-            <Select
-              labelId="subscription-label"
-              name="subscription"
-              value={formData.subscription}
-              onChange={handleChange}
-              label="Subscription"
-            >
-              <MenuItem value=""><em>N/A</em></MenuItem>
-              <MenuItem value="3 Month">3 Month</MenuItem>
-              <MenuItem value="7 Month">7 Month</MenuItem>
-              <MenuItem value="15 Month">15 Month</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth margin="dense" required>
-            <FormLabel component="legend">Call Send To *</FormLabel>
-            <RadioGroup
-              aria-label="callSendTo"
-              name="callSendTo"
-              value={formData.callSendTo}
-              onChange={handleChange}
-              row // Add this to make the radio buttons appear in a row
-            >
-              <Box display="flex" justifyContent="space-between" width="100%">
-                <FormControlLabel value="allTeacher" control={<Radio />} label="All Teacher" />
-                <FormControlLabel value="premiumTeacher" control={<Radio />} label="Premium Teacher" />
-                <FormControlLabel value="schoolTeacher" control={<Radio />} label="School Teacher" />
-              </Box>
-            </RadioGroup>
-          </FormControl>
-
-          <TextField
-            margin="dense"
-            name="status"
-            label="Status"
-            type="text"
-            fullWidth
-            select
-            required
-            value={formData.status}
-            onChange={handleChange}
-          >
-            <MenuItem value="Active">Active</MenuItem>
-            <MenuItem value="Inactive">Inactive</MenuItem>
-          </TextField>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" variant="contained" color="primary">
-            Submit
-          </Button>
-        </DialogActions>
-      </form>
+      <DialogTitle>Role Name Form</DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          margin="dense"
+          name="role_name"
+          label="Role Name *"
+          type="text"
+          fullWidth
+          value={formData.role_name}
+          onChange={handleChange}
+        />
+        <FormControl component="fieldset" margin="dense" fullWidth>
+          <FormLabel component="legend">Access Permission *</FormLabel>
+          <FormGroup row>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isChecked('view')}
+                  onChange={handleCheckboxChange}
+                  name="view"
+                />
+              }
+              label="View"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isChecked('add')}
+                  onChange={handleCheckboxChange}
+                  name="add"
+                />
+              }
+              label="Add"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isChecked('edit')}
+                  onChange={handleCheckboxChange}
+                  name="edit"
+                />
+              }
+              label="Edit"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={isChecked('delete')}
+                  onChange={handleCheckboxChange}
+                  name="delete"
+                />
+              }
+              label="Delete"
+            />
+          </FormGroup>
+        </FormControl>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={onSubmit} variant="contained" color="primary">
+          Submit
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };
 
+
+
 const ReviewQuestion = () => {
+
+  const [data, setData] = useState(null);
+  const [totalRecords, setTotalRecords] = useState(0);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [dialogData, setDialogData] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState('');
   const [formData, setFormData] = useState({
-    school: '',
-    branch: '',
-    startTime: '',
-    endTime: '',
-    trial: '',
-    discount: '',
-    subscription: '',
-    status: '',
+    role_name: '',
+    access: '',
   });
+  const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
 
-  const [tableData, setTableData] = useState([
-  
-    {
-        id: 1,
-        school: "Springfield High",
-        branch: "North Campus",
-        startTime: "08:00",
-        endTime: "14:00",
-        trial: "N/A",
-        discount: "N/A",
-        subscription: "N/A"
-      },
-      {
-        id: 2,
-        school: "Riverside Elementary",
-        branch: "Main Campus",
-        startTime: "09:00",
-        endTime: "15:00",
-        trial: "N/A",
-        discount: "N/A",
-        subscription: "N/A"
-      },
-      {
-        id: 3,
-        school: "Greenwood Academy",
-        branch: "West Wing",
-        startTime: "07:30",
-        endTime: "13:30",
-        trial: "N/A",
-        discount: "N/A",
-        subscription: "N/A"
-      },
-      {
-        id: 4,
-        school: "Lakeside High",
-        branch: "East Campus",
-        startTime: "08:30",
-        endTime: "14:30",
-        trial: "N/A",
-        discount: "N/A",
-        subscription: "N/A"
-      },
-      {
-        id: 5,
-        school: "Mountainview Middle",
-        branch: "South Campus",
-        startTime: "09:30",
-        endTime: "15:30",
-        trial: "N/A",
-        discount: "N/A",
-        subscription: "N/A"
-      },
-      {
-        id: 6,
-        school: "Pinecrest High",
-        branch: "Central Campus",
-        startTime: "08:45",
-        endTime: "14:45",
-        trial: "N/A",
-        discount: "N/A",
-        subscription: "N/A"
-      },
-      {
-        id: 7,
-        school: "Sunset Elementary",
-        branch: "North Wing",
-        startTime: "09:15",
-        endTime: "15:15",
-        trial: "N/A",
-        discount: "N/A",
-        subscription: "N/A"
+  const getData = async (currentPage, teacherId) => {
+    console.log('page', currentPage)
+    const url = `http://localhost:3000/api/admin/teacher/${teacherId}/review-question?page=${currentPage}`; // Replace with your API endpoint
+    setLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setLoading(false);
+        // console.log(json.totalRecords);
+        setTotalPages(json.questions.totalPages)
+        setTotalRecords(json.questions.totalRecords);
+
+        console.log("json", json.questions.data);
+        setData(json.questions.data); // Update state with response data
+      } else {
+        throw new Error(`Response status: ${response.status}`);
       }
-    // ... (other table data)
-  ]);
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const handleClickOpen = (data = null) => {
-    setDialogData(data);
-    setOpen(true);
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setDialogData(null);
+  useEffect(() => {
+    getData(currentPage);
+  }, [currentPage]);
+
+  const searchData = async (searchQuery, teacherId = 1) => {
+    const url = `http://localhost:3000/api/admin/teacher/${teacherId}/review-question?search=${encodeURIComponent(searchQuery)}`;
+    setLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setData(json.questions.data); // Directly set the data without pagination
+        setLoading(false);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+      setLoading(false);
+    }
   };
+
+  // const handleDeleteRole = async (id) => {
+  //   try {
+  //     const response = await fetch(`http://localhost:3000/api/admin/userRole/${id}`, {
+  //       method: 'DELETE',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${token}`,
+  //       },
+  //     });
+
+  //     if (response.ok) {
+  //       setData((prevData) => prevData.filter((item) => item.id !== id));
+  //       console.log('Role deleted:', id);
+  //       getData(currentPage)
+  //     } else {
+  //       throw new Error(`Response status: ${response.status}`);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error deleting role:', error.message);
+  //   }
+  // };
+
+
 
   const handleOpenAlert = (id) => {
     setDeleteId(id);
@@ -328,44 +275,117 @@ const ReviewQuestion = () => {
     setDeleteId(null);
   };
 
-  const handleConfirmDelete = () => {
-    setTableData((prevData) => prevData.filter((item) => item.id !== deleteId));
-    handleCloseAlert();
+  // const handleConfirmDelete = async () => {
+  //   await handleDeleteRole(deleteId);
+  //   handleCloseAlert();
+  // };
+
+
+  // const handleAddRole = async (formData) => {
+  //   const { role_name, access } = formData;
+
+  //   try {
+  //     const response = await fetch('http://localhost:3000/api/admin/userRole/add', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify({ role_name, access }),
+  //     });
+
+  //     if (response.ok) {
+  //       const result = await response.json();
+  //       setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result.data
+  //       console.log('Role added:', result, "formData", formData);
+      
+  //       setFormData('')
+  //     } else {
+  //       throw new Error(`Response status: ${response.status}`);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error adding role:', error.message);
+  //   }
+  // };
+  // const handleEditRole = async (id, formData) => {
+  //   const { role_name, access } = formData;
+
+  //   try {
+  //     const response = await fetch(`http://localhost:3000/api/admin/userRole/${id}`, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify({ role_name, access }),
+  //     });
+
+  //     if (response.ok) {
+  //       const result = await response.json();
+  //       console.log("current page in edit", currentPage)
+
+  //       // setData((prevData) =>
+  //       //   prevData.map((item) => (item.id === id ? result : item))
+  //       // );
+  //       setData((prevData) => [...prevData, result]);
+  //       console.log('Role updated:', result);
+  //       getData(currentPage)
+  //     } else {
+  //       throw new Error(`Response status: ${response.status}`);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error updating role:', error.message);
+  //   }
+  // };
+
+
+  // const handleSubmit = async (formData) => {
+  //   console.log("formdata in handlesubmit", formData, "dialogData", dialogData)
+  //   if (dialogData) {
+  //     console.log('handleEditRole')
+  //     await handleEditRole(dialogData.id, formData);
+
+  //   } else {
+  //     console.log('handleAddRole')
+  //     await handleAddRole(formData);
+  //   }
+  //   handleClose(); // Close the dialog after submission
+  // };
+
+  const handleClickOpen = (data = null) => {
+    setDialogData(data);
+    setOpen(true);
   };
 
-  const handleSubmit = (formData) => {
-    if (dialogData) {
-      // Update existing item
-      setTableData((prevData) =>
-        prevData.map((item) => (item.id === dialogData.id ? { ...item, ...formData } : item))
-      );
-    } else {
-      // Add new item
-      setTableData((prevData) => [
-        ...prevData,
-        { id: prevData.length + 1, ...formData },
-      ]);
-    }
+  const handleClose = () => {
+    setOpen(false);
+    setDialogData(null);
   };
 
   const handlePageChange = (newPage) => {
+    console.log("newPage in handlePAge Changne", newPage)
     setCurrentPage(newPage);
+    getData(newPage)
   };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = tableData.slice(indexOfFirstItem, indexOfLastItem);
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+    searchData(search)
 
+  };
+
+  const itemsPerPage = 10;
   return (
     <CRow>
       <CCol xs={12}>
-        <CCard className="mb-4" >
+        <CCard className="mb-4">
           <CCardHeader style={{ padding: '10px' }}>
-            <CRow>
+            <CRow >
               <CCol>
                 <CIcon icon={cilAddressBook} height={25} />
-                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Review Question</strong> <small style={{ fontSize: '17px' }}>List</small>
+                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Review Question</strong> 
               </CCol>
+
               <CCol md="auto">
                 <CInputGroup className="mb-3" style={{ width: '200px' }}>
                   <CInputGroupText id="basic-addon1">
@@ -375,18 +395,20 @@ const ReviewQuestion = () => {
                     placeholder="search"
                     aria-label="Username"
                     aria-describedby="basic-addon1"
+                    value={search}
+                    onChange={handleSearch}
                   />
                 </CInputGroup>
               </CCol>
               <CCol xs lg={1}>
-                <CButton color='secondary' onClick={() => handleClickOpen()} className='pt-1 pb-1'>Add
+                <CButton color='secondary' onClick={() => handleClickOpen()} className='d-flex align-items-center' style={{ padding: '4px 8px' }}>Add
                   <CIcon icon={cilPlus} height={16} />
                 </CButton>
               </CCol>
             </CRow>
           </CCardHeader>
 
-          <Dialog open={openAlert} onClose={handleCloseAlert}>
+          {/* <Dialog open={openAlert} onClose={handleCloseAlert}>
             <DialogTitle>Confirm Delete</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -395,57 +417,65 @@ const ReviewQuestion = () => {
             </DialogContent>
             <DialogActions>
               <Button onClick={handleCloseAlert}>Cancel</Button>
-              <Button onClick={handleConfirmDelete}>Confirm</Button>
+              <Button onClick={handleConfirmDelete} >Confirm</Button>
             </DialogActions>
-          </Dialog>
+          </Dialog> */}
 
-          <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} />
+          {/* <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} setdata={setData} data={data} getData={getData} currentPage={currentPage} />
+ */}
 
-          <CCardBody>
-            <CTable striped hover>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>School </CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Branch</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Start Time </CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>End Time</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Trial</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Discount </CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Subscription</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Status</CTableHeaderCell>
-            
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {currentItems.map((row, index) => (
-                  <CTableRow key={row.id}>
-                    <CTableHeaderCell scope="row" style={{ padding: '20px' }}>{index + 1 + (currentPage - 1) * itemsPerPage}</CTableHeaderCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.school}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.branch}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.startTime}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.endTime}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.trial}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.discount}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.subscription}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>
-                      <CButton color='success' size="sm" style={{ color: 'white' }}>
-                        Yes
-                      </CButton>
-                    </CTableDataCell>
-                  
+          {!loading ? (
+            <CCardBody>
+              <CTable striped hover>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Question</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Solution</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Created By</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>View Question/status</CTableHeaderCell>
                   </CTableRow>
-                ))}
-              </CTableBody>
-              <CTableCaption>List of Exam {tableData.length}</CTableCaption>
-            </CTable>
+                </CTableHead>
+                <CTableBody>
+                  {data.map((row, index) => (
+                    <CTableRow key={row.id}>
+                      <CTableHeaderCell scope="row" style={{ padding: '20px' }}>
+                        {(currentPage - 1) * itemsPerPage + index + 1}
 
-            <CPagination className="justify-content-center" aria-label="Page navigation example">
-              <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
-              <CPaginationItem active>{currentPage}</CPaginationItem>
-              <CPaginationItem disabled={currentPage === Math.ceil(tableData.length / itemsPerPage)} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
-            </CPagination>
-          </CCardBody>
+                      </CTableHeaderCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.role_name}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.access}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>
+                   
+                      </CTableDataCell>
+                      <CTableDataCell>
+                      <CImage
+        src="https://imgs.search.brave.com/-NUAJ4R6-LN9-UVLQcs7fTrxjm9TTNWeXLdaA5_Jy9o/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzA4LzEzLzk1LzQ2/LzM2MF9GXzgxMzk1/NDY0OV9vNjlSbXVS/WWl3eGFhbFliS3NZ/Sm1sOXpwNW1XSGhD/Yy5qcGc" // Replace with your image URL
+        alt="Sample Image"
+        fluid // This will make the image responsive
+        width={50} // Set custom width
+        height={50} // Set custom height
+        thumbnail
+        onClick={() => handleClickOpen(row)}
+      />
+                      </CTableDataCell>
+                 
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+                <CTableCaption>List of user Roles {totalRecords}</CTableCaption>
+              </CTable>
+              <CPagination className="justify-content-center" aria-label="Page navigation example">
+                <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
+                <CPaginationItem active>{currentPage}</CPaginationItem>
+                <CPaginationItem disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
+              </CPagination>
+            </CCardBody>
+          ) : (
+            <div>Loading...</div>
+          )}
+
+
         </CCard>
       </CCol>
     </CRow>

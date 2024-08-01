@@ -324,6 +324,7 @@ const ExamDialog = ({
 
   useEffect(() => {
     if (initialData) {
+      console.log("formData in useEffect",formData)
       setFormData(initialData);
     } else {
       setFormData({
