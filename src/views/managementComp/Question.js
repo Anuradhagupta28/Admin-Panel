@@ -159,7 +159,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     difficulty: '',
     duration: '',
     type: '',
-    question: '',
+    e_question: '',
     solution: '',
     options: [
       { option: '', correct: false },
@@ -683,13 +683,13 @@ const Question = () => {
     difficulty: '',
     duration: '',
     type: '',
-    question: '',
+    e_question: '',
     solution: '',
     options: [
-      { option: '', correct: false },
-      { option: '', correct: false },
-      { option: '', correct: false },
-      { option: '', correct: false },
+      { option: '', correct: 0 },
+      { option: '', correct: 0 },
+      { option: '', correct: 0 },
+      { option: '', correct: 0 },
     ]
   });
   const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
@@ -729,30 +729,7 @@ const Question = () => {
     getData(currentPage, teacherId);
   }, [currentPage]);
 
-  const searchData = async (searchQuery, teacherId = 1) => {
-    const url = `http://localhost:3000/api/admin/teacher/${teacherId}/questions?search=${encodeURIComponent(searchQuery)}`;
-    setLoading(true);
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      });
 
-      if (response.ok) {
-        const json = await response.json();
-        setData(json.questions.data); // Directly set the data without pagination
-        setLoading(false);
-      } else {
-        throw new Error(`Response status: ${response.status}`);
-      }
-    } catch (error) {
-      console.error(error.message);
-      setLoading(false);
-    }
-  };
 
 
 
@@ -798,7 +775,7 @@ const Question = () => {
 
 
   const handleAddRole = async (formData) => {
-    const { class_id, subject_id, chapter_id, teacher_id, topic_id, question, target_exams, difficulty, type, duration, solution, options } = formData;
+    const { class_id, subject_id, chapter_id, teacher_id, topic_id, e_question, target_exams, difficulty, type, duration, solution, options } = formData;
 
     try {
       const response = await fetch('http://localhost:3000/api/admin/teacher/question', {
@@ -807,7 +784,7 @@ const Question = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ class_id, subject_id, chapter_id, teacher_id, topic_id, question, target_exams, difficulty, type, duration, solution, options }),
+        body: JSON.stringify({ class_id, subject_id, chapter_id, teacher_id, topic_id, e_question, target_exams, difficulty, type, duration, solution, options }),
       });
 
       if (response.ok) {
@@ -823,17 +800,17 @@ const Question = () => {
       console.error('Error adding role:', error.message);
     }
   };
-  const handleEditRole = async (id, formData) => {
-    const { class_id, subject_id, chapter_id, teacher_id, topic_id, question, target_exams, difficulty, type, duration, solution, options } = formData;
+  const handleEditRole = async (questionId, formData) => {
+    const { class_id, subject_id, chapter_id, teacher_id, topic_id, e_question, target_exams, difficulty, type, duration, solution, options } = formData;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/teacher/question/${id}`, {
+      const response = await fetch(`http://localhost:3000/api/admin/teacher/question`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ class_id, subject_id, chapter_id, teacher_id, topic_id, question, target_exams, difficulty, type, duration, solution, options }),
+        body: JSON.stringify({ questionId,class_id, subject_id, chapter_id, teacher_id, topic_id, e_question, target_exams, difficulty, type, duration, solution, options }),
       });
 
       if (response.ok) {
@@ -955,7 +932,7 @@ const Question = () => {
                   {data.map((row, index) => (
                     <CTableRow key={row.id}>
                       <CTableHeaderCell scope="row" style={{ padding: '20px' }}>  {(currentPage - 1) * itemsPerPage + index + 1}</CTableHeaderCell>
-                      <CTableDataCell style={{ padding: '20px' }}>{row.question}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.e_question}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>
                         <CButton color={row.status === 'Active' ? 'success' : 'warning'} size="sm" style={{ color: 'white' }}>
                           {row.status}

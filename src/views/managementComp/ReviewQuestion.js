@@ -265,8 +265,8 @@ const ReviewQuestion = () => {
 
 
 
-  const handleOpenAlert = (id) => {
-    setDeleteId(id);
+  const handleOpenAlert = (row) => {
+    setDeleteId(row);
     setOpenAlert(true);
   };
 
@@ -274,11 +274,11 @@ const ReviewQuestion = () => {
     setOpenAlert(false);
     setDeleteId(null);
   };
-
-  // const handleConfirmDelete = async () => {
-  //   await handleDeleteRole(deleteId);
-  //   handleCloseAlert();
-  // };
+ju
+  const handleConfirmDelete = async () => {
+    await handleDeleteRole(deleteId);
+    handleCloseAlert();
+  };
 
 
   // const handleAddRole = async (formData) => {
@@ -408,7 +408,7 @@ const ReviewQuestion = () => {
             </CRow>
           </CCardHeader>
 
-          {/* <Dialog open={openAlert} onClose={handleCloseAlert}>
+          <Dialog open={openAlert} onClose={handleCloseAlert}>
             <DialogTitle>Confirm Delete</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -419,7 +419,7 @@ const ReviewQuestion = () => {
               <Button onClick={handleCloseAlert}>Cancel</Button>
               <Button onClick={handleConfirmDelete} >Confirm</Button>
             </DialogActions>
-          </Dialog> */}
+          </Dialog>
 
           {/* <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} setdata={setData} data={data} getData={getData} currentPage={currentPage} />
  */}
@@ -443,11 +443,9 @@ const ReviewQuestion = () => {
                         {(currentPage - 1) * itemsPerPage + index + 1}
 
                       </CTableHeaderCell>
-                      <CTableDataCell style={{ padding: '20px' }}>{row.role_name}</CTableDataCell>
-                      <CTableDataCell style={{ padding: '20px' }}>{row.access}</CTableDataCell>
-                      <CTableDataCell style={{ padding: '20px' }}>
-                   
-                      </CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.e_question}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.solution}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.teacher_name}</CTableDataCell>
                       <CTableDataCell>
                       <CImage
         src="https://imgs.search.brave.com/-NUAJ4R6-LN9-UVLQcs7fTrxjm9TTNWeXLdaA5_Jy9o/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzA4LzEzLzk1LzQ2/LzM2MF9GXzgxMzk1/NDY0OV9vNjlSbXVS/WWl3eGFhbFliS3NZ/Sm1sOXpwNW1XSGhD/Yy5qcGc" // Replace with your image URL
@@ -456,7 +454,7 @@ const ReviewQuestion = () => {
         width={50} // Set custom width
         height={50} // Set custom height
         thumbnail
-        onClick={() => handleClickOpen(row)}
+        onClick={() => handleOpenAlert(row)}
       />
                       </CTableDataCell>
                  
