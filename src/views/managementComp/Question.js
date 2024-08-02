@@ -939,7 +939,7 @@ const Question = () => {
                         </CButton>
                       </CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>
-                        <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} />
+                        {/* <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} /> */}
                         <CIcon icon={cilTrash} height={20} onClick={() => handleOpenAlert(row.id)} />
                       </CTableDataCell>
 

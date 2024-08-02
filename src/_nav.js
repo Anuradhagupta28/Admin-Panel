@@ -25,18 +25,18 @@ export const limitedNav = [
   {
     component: CNavItem,
     name: 'Review question',
-    to:  '/managementComp/ReviewQuestion',
+    to: '/managementComp/ReviewQuestion',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
 ];
 
-export  const _nav = [
+export const _nav = [
   {
     component: CNavItem,
     name: 'Dashboard',
     to: '/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
-    
+
   },
   {
     component: CNavTitle,
@@ -49,9 +49,15 @@ export  const _nav = [
     items: [
       {
         component: CNavItem,
+        name: 'Class',
+        to: '/managementComp/ContentManagement/Class',
+
+      },
+      {
+        component: CNavItem,
         name: 'Exam',
         to: '/managementComp/ContentManagement/Exam',
-        
+
       },
       {
         component: CNavItem,
@@ -79,7 +85,7 @@ export  const _nav = [
         component: CNavItem,
         name: 'User Role',
         to: '/managementComp/RoleManagement/UserRole',
-        
+
       },
       {
         component: CNavItem,
@@ -91,7 +97,7 @@ export  const _nav = [
         name: 'Menu Permission',
         to: '/managementComp/RoleManagement/MenuPermission',
       },
-    
+
     ],
   },
   {
@@ -103,7 +109,7 @@ export  const _nav = [
         component: CNavItem,
         name: 'School Group',
         to: '/managementComp/SchoolManagement/SchoolGroup',
-        
+
       },
       {
         component: CNavItem,
@@ -141,15 +147,15 @@ export  const _nav = [
         component: CNavItem,
         name: 'Author',
         to: '/managementComp/BlogManagement/Author',
-        
+
       },
       {
         component: CNavItem,
         name: 'Blogs',
         to: '/managementComp/BlogManagement/Blogs',
       },
-      
-    
+
+
     ],
   },
 
@@ -180,7 +186,7 @@ export  const _nav = [
   {
     component: CNavItem,
     name: 'Review question',
-    to:  '/managementComp/ReviewQuestion',
+    to: '/managementComp/ReviewQuestion',
     icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
   },
   {
@@ -198,15 +204,15 @@ export  const _nav = [
         component: CNavItem,
         name: 'All',
         to: '/managementComp/DoubtHistory/All',
-        
+
       },
       {
         component: CNavItem,
         name: 'School Group',
         to: '/managementComp/DoubtHistory/SclDoubt',
       },
-      
-    
+
+
     ],
   },
   {
@@ -218,7 +224,7 @@ export  const _nav = [
         component: CNavItem,
         name: 'Collabrate with us',
         to: '/managementComp/ViewWebsite/Collab',
-        
+
       },
       {
         component: CNavItem,
@@ -233,14 +239,14 @@ export  const _nav = [
       {
         component: CNavItem,
         name: 'Newsletter',
-        to:  '/managementComp/RoleManagement/UserRole',
+        to: '/managementComp/RoleManagement/UserRole',
       },
       {
         component: CNavItem,
         name: 'work with us',
         to: '/managementComp/SchoolManagement/TeacherCode',
       },
-      
+
     ],
   },
   {

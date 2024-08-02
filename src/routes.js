@@ -1,8 +1,9 @@
 import React from 'react'
 
+
 const Question = React.lazy(() => import('./views/managementComp/Question'))
 
-
+const Class = React.lazy(() => import('./views/managementComp/ContentManagement/Class'))
 const Contact = React.lazy(() => import('./views/managementComp/ViewWebsite/Contact'))
 
 const Collab = React.lazy(() => import('./views/managementComp/ViewWebsite/Collab'))
@@ -98,6 +99,7 @@ const routes = [
   {path: '/managementComp/ContentManagement/Author', name: 'Author', element:Author},
   {path: '/managementComp/ContentManagement/Chapter', name: 'Chapter', element:Chapter},
   {path: '/managementComp/ContentManagement/Subject', name: 'Subject', element:Subject},
+  {path: '/managementComp/ContentManagement/Class', name: 'Class', element:Class},
   { path: '/managementComp/StudentManagement', name: 'StudentManagement', element: StudentManagement },
   {path: '/managementComp/RoleManagement/UserRole', name: 'UserRole', element:UserRole},
   {path: '/managementComp/RoleManagement/MenuPermission', name: 'MenuPermission', element:MenuPermission},
@@ -123,6 +125,7 @@ const routes = [
   {path: '/managementComp/DoubtHistory/All', name: 'Doubt', element:AllDoubt},
   {path: '/managementComp/ViewWebsite/Collab', name: 'Collab', element:Collab},
   {path: '/managementComp/ViewWebsite/Contact', name: 'Contact', element:Contact},
+  
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   {path: '/managementComp/Question', name: 'Question', element:Question},
 
