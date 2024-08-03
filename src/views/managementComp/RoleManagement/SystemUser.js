@@ -41,267 +41,6 @@ import {
   Select
 } from '@mui/material';
 
-// const ExamDialog = ({ open, handleClose, initialData, handleSubmit,selectedFileName,setSelectedFileName, setFormData, formData, setData, data, getData,currentPage }) => {
-
-// console.log("formData",formData)
-//   React.useEffect(() => {
-//     if (initialData) {
-//       setFormData(initialData);
-//     } else {
-//       setFormData({
-//         role_id: '',
-//         name: '',
-//         email: '',
-//         password: '',
-//         phone: '',
-//         user_type: '',
-//         user_type_id: '',
-//         status: '',
-//         profile_pic:'',
-
-
-//       });
-//     }
-//   }, [initialData]);
-
-//   const handleChange = (event) => {
-//     const { name, value } = event.target;
-//     setFormData({
-//       ...formData,
-//       [name]: value,
-//     });
-//   };
-
-
-//   const handleFileChange = (event) => {
-//     const { name, files } = event.target;
-//     if (files.length > 0) {
-//       const file = files[0];
-//       if (file.type.startsWith('image/')) {
-
-
-//         setFormData({
-//           ...formData,
-//           [name]: file.name,
-//         });
-//         setSelectedFileName(file.name);
-//       } else {
-//         alert('Please select an image file.');
-//         setSelectedFileName('');
-//       }
-//     }
-//   };
-
-
-//   // const handleFileChange1 =  async  (event) => {
-//   //   const { name, files } = event.target;
-//   //   if (files.length > 0) {
-//   //     const file = files[0];
-//   //     if (file.type.startsWith('image/')) {
-
-//   //         const options = {
-//   //           maxSizeMB: 1, // Target size in MB
-//   //           maxWidthOrHeight: Math.max(MAX_WIDTH, MAX_HEIGHT),
-//   //           useWebWorker: true,
-
-
-//   //       // Compress the image
-//   //       const compressedFile = await imageCompression(file, options);
-//   //       setSelectedFileName(file.name);
-
-//   //       // Use FileReader to read the file
-//   //       const reader = new FileReader();
-//   //       reader.onload = (e) => {
-//   //         setFormData(prevData => ({
-//   //           ...prevData,
-//   //           [name]: e.target.result, // This is the data URL of the image
-//   //         }));
-//   //       };
-//   //       reader.readAsDataURL(compressedFile);
-//   //     } else {
-//   //       alert('Please select an image file.');
-//   //       setSelectedFileName('');
-//   //     }
-//   //   }
-//   // };
-
-//   //  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-//   // const MAX_WIDTH = 1024;
-//   // const MAX_HEIGHT = 1024;
-//   // const handleFileChange = async (event) => {
-//   //   const { name, files } = event.target;
-
-
-//   //   if (files.length > 0) {
-//   //     const file = files[0];
-//   //     if (file.type.startsWith('image/')) {
-//   //     if (files.size > MAX_FILE_SIZE) {
-//   //      alert("file is bigger")
-
-//   //       return;
-//   //     }
-
-
-//   //     try {
-//   //       const options = {
-//   //         maxSizeMB: 0.5,
-//   //         maxWidthOrHeight: Math.max(MAX_WIDTH, MAX_HEIGHT),
-//   //         useWebWorker: true,
-//   //       };
-
-//   //       const compressedFile = await imageCompression(file, options);
-//   //       console.log("compressedFile",compressedFile);
-
-//   //       const reader = new FileReader();
-//   //       reader.onloadend = () => {
-//   //         const image=reader.result
-//   //         console.log("image",image)
-//   //         setFormData({
-//   //                   ...formData,
-//   //                   [name]: image,
-//   //                 });
-//   //                 setSelectedFileName(file.name);
-//   //       };
-//   //       reader.readAsDataURL(compressedFile);
-
-//   //     } catch (error) {
-//   //       alert('Please select an image file.');
-//   //             setSelectedFileName('');
-//   //     }
-//   //          } else {
-//   //       alert('Please select an image file.');
-//   //       setSelectedFileName('');
-//   //     }
-//   //   }
-//   // };
-//   const onSubmit = (event) => {
-//     event.preventDefault();
-//     handleSubmit(formData);
-//       getData(currentPage); 
-//     handleClose();
-//   };
-
-//   return (
-//     <Dialog open={open} onClose={handleClose}>
-//       <DialogTitle>User data</DialogTitle>
-//       <form onSubmit={onSubmit}>
-//         <DialogContent>
-//           <FormControl fullWidth margin="dense" required>
-//             <InputLabel id="role-label">Select Role</InputLabel>
-//             <Select
-//               labelId="role-label"
-//               name="role_id"
-//               value={formData.role_id}
-//               onChange={handleChange}
-//               label="Select Role"
-//             >
-
-//               <MenuItem value="1">Admin</MenuItem>
-//               <MenuItem value="2">Sub Admin</MenuItem>
-//               <MenuItem value="3">Staff</MenuItem>
-//               <MenuItem value="4">Teacher</MenuItem>
-//             </Select>
-//           </FormControl>
-//           {formData.role_id === '4' && (
-
-//             <CInputGroup className="mt-2 mb-2" style={{ height: '50px' }}>
-//             <CInputGroupText id="basic-addon1">
-//               <CIcon icon={cilSearch} height={17} />
-//             </CInputGroupText>
-//             <CFormInput
-//               placeholder="Search Teacher Name"
-//               aria-label="Username"
-//               aria-describedby="basic-addon1"
-//             />
-//           </CInputGroup>
-//           )}
-//           <TextField
-//             margin="dense"
-//             name="name"
-//             label="Name"
-//             type="text"
-//             fullWidth
-//             required
-//             value={formData.name}
-//             onChange={handleChange}
-//           />
-//           <TextField
-//             margin="dense"
-//             name="email"
-//             label="Email"
-//             type="email"
-//             fullWidth
-//             required
-//             value={formData.email}
-//             onChange={handleChange}
-//           />
-//           <TextField
-//             margin="dense"
-//             name="password"
-//             label="Password"
-//             type="password"
-//             fullWidth
-//             required
-//             value={formData.password}
-//             onChange={handleChange}
-//           />
-//           <TextField
-//             margin="dense"
-//             name="phone"
-//             label="Phone Number"
-//             type="tel"
-//             fullWidth
-//             required
-//             value={formData.phone}
-//             onChange={handleChange}
-//           />
-//          {['1', '2', '3'].includes(formData.role_id) && (
-//       <div>
-//         <input
-//           accept="image/*"
-//           style={{ display: 'none' }}
-//           id="raised-button-file"
-//           multiple
-//           type="file"
-//           name="profile_pic"
-//           onChange={handleFileChange}
-//         />
-//         <label htmlFor="raised-button-file" style={{ margin: '8px 12px 6px 0' }}>
-//           <Button variant="contained" component="span">
-//             Choose File
-//           </Button>
-//         </label>
-//         <span>{formData.profile_pic ? formData.profile_pic.name : '*No file chosen'}</span>
-//       </div>
-//     )}
-
-
-
-//           <TextField
-//             margin="dense"
-//             name="status"
-//             label="Status"
-//             type="text"
-//             fullWidth
-//             select
-//             required
-//             value={formData.status}
-//             onChange={handleChange}
-//           >
-//             <MenuItem value="1">Active</MenuItem>
-//             <MenuItem value="0">Inactive</MenuItem>
-//           </TextField>
-//         </DialogContent>
-//         <DialogActions>
-//           <Button onClick={handleClose}>Cancel</Button>
-//           <Button type="submit" variant="contained" color="primary">
-//             Submit
-//           </Button>
-//         </DialogActions>
-//       </form>
-//     </Dialog>
-//   );
-// };
 
 const ExamDialog = ({
   open,
@@ -324,11 +63,11 @@ const ExamDialog = ({
 
   useEffect(() => {
     if (initialData) {
-      console.log("formData in useEffect",formData)
+      console.log("formData in useEffect",formData,"initialData",initialData)
       setFormData(initialData);
     } else {
       setFormData({
-        role_id: '',
+        role: '',
         name: '',
         email: '',
         password: '',
@@ -336,7 +75,7 @@ const ExamDialog = ({
         user_type: '',
         user_type_id: '',
         status: '',
-        profile_pic: '',
+        userImage: null ,
       });
     }
   }, [initialData]);
@@ -353,8 +92,7 @@ const ExamDialog = ({
     const { name, files } = event.target;
     if (files.length > 0) {
       const file = files[0];
-      if (file.type.startsWith('image/')) {
-        setFormData({
+     setFormData({
           ...formData,
           [name]: file.name,
         });
@@ -364,7 +102,7 @@ const ExamDialog = ({
         setSelectedFileName('');
       }
     }
-  };
+  
 
 
   const handleSearchTeachers = (event) => {
@@ -374,7 +112,7 @@ const ExamDialog = ({
 
   const searchDataFunction = async (searchQuery) => {
     console.log("searchQuery", searchQuery);
-    const url = `http://localhost:3000/api/admin/teacherData?search=${encodeURIComponent(searchQuery)}`;
+    const url = `https://dev-api.solvedudar.com/api/admin/teacherData?search=${encodeURIComponent(searchQuery)}`;
     setTeacherLoading(true);
 
     try {
@@ -401,7 +139,7 @@ const ExamDialog = ({
   };
   const handleRowClick = (result) => {
     setFormData({
-      role_id:'4',
+      role:'4',
       name: result.name || '',
       email: result.email || '',
       password: result.password || '',
@@ -409,9 +147,9 @@ const ExamDialog = ({
       user_type:'0',
       user_type_id: result.id || '',
       status:'1',
-      profile_pic: result.image || '',
+      userImage: result.userImage || null ,
     });
-    setSelectedFileName(result.image || '');
+    setSelectedFileName(result.userImage || '');
   };
 
   const onSubmit = (event) => {
@@ -430,8 +168,8 @@ const ExamDialog = ({
             <InputLabel id="role-label">Select Role</InputLabel>
             <Select
               labelId="role-label"
-              name="role_id"
-              value={formData.role_id}
+              name="role"
+              value={formData.role}
               onChange={handleChange}
               label="Select Role"
             >
@@ -442,7 +180,7 @@ const ExamDialog = ({
             </Select>
           </FormControl>
 
-          {formData.role_id === '4' && (
+          {formData.role === '4' && (
             <div>
               <CInputGroup className="mt-2 mb-2" style={{ height: '50px' }}>
                 <CInputGroupText id="basic-addon1">
@@ -514,16 +252,19 @@ const ExamDialog = ({
             value={formData.email}
             onChange={handleChange}
           />
-          <TextField
-            margin="dense"
-            name="password"
-            label="Password"
-            type="password"
-            fullWidth
-            required
-            value={formData.password}
-            onChange={handleChange}
-          />
+          {initialData === null && (
+        <TextField
+          margin="dense"
+          name="password"
+          label="Password"
+          type="password"
+          fullWidth
+          required
+          value={formData.password}
+          onChange={handleChange}
+        />
+      )}
+          
           <TextField
             margin="dense"
             name="phone"
@@ -535,7 +276,7 @@ const ExamDialog = ({
             onChange={handleChange}
           />
 
-          {['1', '2', '3'].includes(formData.role_id) && (
+          {['1', '2', '3'].includes(formData.role) && (
             <div>
               <input
                 accept="image/*"
@@ -543,7 +284,28 @@ const ExamDialog = ({
                 id="raised-button-file"
                 multiple
                 type="file"
-                name="profile_pic"
+                name="userImage"
+                
+                onChange={handleFileChange}
+              />
+              <label htmlFor="raised-button-file" style={{ margin: '8px 12px 6px 0' }}>
+                <Button variant="contained" component="span">
+                  Choose File
+                </Button>
+              </label>
+              <span>{selectedFileName || '*No file chosen'}</span>
+            </div>
+          )}
+           {initialData && (
+            <div>
+              <input
+                accept="image/*"
+                style={{ display: 'none' }}
+                id="raised-button-file"
+                multiple
+                type="file"
+                name="userImage"
+                
                 onChange={handleFileChange}
               />
               <label htmlFor="raised-button-file" style={{ margin: '8px 12px 6px 0' }}>
@@ -594,7 +356,7 @@ const SystemUser = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
   const [formData, setFormData] = useState({
-    role_id: '',
+    role: '',
     name: '',
     email: '',
     password: '',
@@ -602,7 +364,7 @@ const SystemUser = () => {
     user_type: '',
     user_type_id: '',
     status: '',
-    profile_pic: '',
+    userImage: '',
   });
   const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
 
@@ -642,7 +404,7 @@ const SystemUser = () => {
   }, [currentPage]);
 
   const searchData = async (searchQuery) => {
-    const url = `http://localhost:3000/api/admin/systemUser?search=${encodeURIComponent(searchQuery)}`;
+    const url = `https://dev-api.solvedudar.com/api/admin/systemUser?search=${encodeURIComponent(searchQuery)}`;
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -668,7 +430,7 @@ const SystemUser = () => {
 
   const handleDeleteRole = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/systemUser/${id}`, {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/systemUser/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -707,64 +469,118 @@ const SystemUser = () => {
 
 
   const handleAddRole = async (formData) => {
-    const { role_id, name, email, password, phone, user_type, user_type_id, status, profile_pic } = formData;
-    console.log("formData", formData)
+    const { role, name, email, password, phone, user_type, user_type_id, userImage,status } = formData;
+    console.log("formData in handleRole", formData);
+
+    const newFormData = new FormData();
+    newFormData.append('role_id', role);
+    newFormData.append('name', name);
+    newFormData.append('email', email);
+    newFormData.append('password', password);
+    newFormData.append('phone', phone);
+    newFormData.append('user_type_id', user_type_id);
+    newFormData.append('user_type', user_type);
+    newFormData.append('status', status);
+    
+    if (userImage instanceof File) {
+        newFormData.append('image', userImage);
+    }
 
     try {
-      const response = await fetch('http://localhost:3000/api/admin/systemUser/add', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ role_id, name, email, password, phone, user_type, user_type_id, status, profile_pic }),
-      });
+        const response = await fetch('http://localhost:3000/api/admin/systemUser/add', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                // Do not set Content-Type header when sending FormData
+            },
+            body: newFormData,
+        });
 
-      if (response.ok) {
-        const result = await response.json();
-        setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result.data
-        console.log('Role added:', result);
-        setFormData(" ")
-        setSelectedFileName('')
-      } else {
-        throw new Error(`Response status: ${response.status}`);
-      }
+        if (response.ok) {
+            const result = await response.json();
+            setData((prevData) => [...prevData, result]);
+            console.log('Role added:', result);
+        } else {
+            throw new Error(`Response status: ${response.status}`);
+        }
     } catch (error) {
-      console.error('Error adding role:', error.message);
+        console.error('Error adding role:', error.message);
     }
-  };
+};
+  // const handleEditRole = async (id, formData) => {
+  //   const { role, name, email, password, phone, user_type, user_type_id, status, userImage } = formData;
+  //   console.log("formData in edit role", formData)
+  //   try {
+  //     const response = await fetch(`https://dev-api.solvedudar.com/api/admin/systemUser/${id}`, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${token}`,
+  //       },
+  //       body: JSON.stringify({ role, name, email, password, phone, user_type, user_type_id, status, userImage }),
+  //     });
+
+  //     if (response.ok) {
+  //       const result = await response.json();
+  //       console.log("current page in edit", currentPage)
+
+  //       setData((prevData) =>
+  //         prevData.map((item) => (item.id === id ? result : item))
+  //       );
+
+
+  //       setFormData("")
+  //       setSelectedFileName('')
+  //       console.log('Role updated:', result);
+  //     } else {
+  //       throw new Error(`Response status: ${response.status}`);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error updating role:', error.message);
+  //   }
+  // };
   const handleEditRole = async (id, formData) => {
-    const { role_id, name, email, password, phone, user_type, user_type_id, status, profile_pic } = formData;
-    console.log("formData in edit role", formData)
+    const { role, name, email, phone,  status, userImage } = formData;
+    console.log("formData in edit role", formData);
+
+    const updatedFormData = new FormData();
+updatedFormData.append('role_id', role);
+updatedFormData.append('email', email);
+updatedFormData.append('name', name);
+updatedFormData.append('phone', phone);
+updatedFormData.append('status', status);
+if (userImage instanceof File) {
+    updatedFormData.append('image', userImage, userImage.name);
+}
+
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/systemUser/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ role_id, name, email, password, phone, user_type, user_type_id, status, profile_pic }),
-      });
+        const response = await fetch(`http://localhost:3000/api/admin/systemUser/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                // Do not set Content-Type header when sending FormData
+            },
+            body: updatedFormData,
+        });
 
-      if (response.ok) {
-        const result = await response.json();
-        console.log("current page in edit", currentPage)
+        if (response.ok) {
+            const result = await response.json();
+            console.log("current page in edit", currentPage);
 
-        setData((prevData) =>
-          prevData.map((item) => (item.id === id ? result : item))
-        );
+            setData((prevData) =>
+                prevData.map((item) => (item.id === id ? result : item))
+            );
 
-
-        setFormData("")
-        setSelectedFileName('')
-        console.log('Role updated:', result);
-      } else {
-        throw new Error(`Response status: ${response.status}`);
-      }
+            // setFormData("");
+            // setSelectedFileName('');
+            console.log('Role updated:', result);
+        } else {
+            throw new Error(`Response status: ${response.status}`);
+        }
     } catch (error) {
-      console.error('Error updating role:', error.message);
+        console.error('Error updating role:', error.message);
     }
-  };
+};
 
 
   const handleSubmit = async (formData) => {
@@ -806,7 +622,12 @@ const SystemUser = () => {
 
   const itemsPerPage = 10;
 
-
+  const roleMap = {
+    1: 'Admin',
+    2: 'Subadmin',
+    3: 'Staff',
+    4: 'Teacher'
+  };
   return (
     <CRow>
       <CCol xs={12} >
@@ -874,7 +695,7 @@ const SystemUser = () => {
                   {data.map((row, index) => (
                     <CTableRow key={row.id}>
                       <CTableHeaderCell scope="row" style={{ padding: '20px', whiteSpace: 'nowrap' }} >{(currentPage - 1) * itemsPerPage + index + 1}</CTableHeaderCell>
-                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }} >{row.role_id}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }} >{roleMap[row.role] || 'Unknown'}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }} >{row.name}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }} >{row.email}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }} >{row.phone}</CTableDataCell>
@@ -884,7 +705,7 @@ const SystemUser = () => {
                         </CButton>
                       </CTableDataCell>
                       <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }} >
-                        <CImage rounded thumbnail src={['', null].includes(row.profile_pic)?'https://dev-v1.solvedudar.com/assets/master/profile/default.png':row.profile_pic} width={80} height={80} />
+                        <CImage rounded thumbnail src={row.userImage} width={80} height={80} />
 
                       </CTableDataCell>
                       <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }} >

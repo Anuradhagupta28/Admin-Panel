@@ -171,7 +171,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   }}, [initialData]);
 
   const getClass = async () => {
-    const url = `http://localhost:3000/api/admin/teacher/${teacherId}/class`;
+    const url = `https://dev-api.solvedudar.com/api/admin/teacher/${teacherId}/class`;
     setClassLoading(true);
     try {
       const response = await fetch(url, {
@@ -193,7 +193,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   };
 
   const getSubject = async (classId) => {
-    const url = `http://localhost:3000/api/admin/teacher/${classId}/subjects`;
+    const url = `https://dev-api.solvedudar.com/api/admin/teacher/${classId}/subjects`;
     setSubjectLoading(true);
     try {
       const response = await fetch(url, {
@@ -214,7 +214,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     }
   };
   const getChapter = async (subjectId) => {
-    const url = `http://localhost:3000/api/admin/teacher/${subjectId}/chapters`;
+    const url = `https://dev-api.solvedudar.com/api/admin/teacher/${subjectId}/chapters`;
     setChapterLoading(true);
     try {
       const response = await fetch(url, {
@@ -236,7 +236,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   };
 
   const getTopics = async (chapterId) => {
-    const url = `http://localhost:3000/api/admin/chapter/${chapterId}/topics`; // Replace with your API endpoint
+    const url = `https://dev-api.solvedudar.com/api/admin/chapter/${chapterId}/topics`; // Replace with your API endpoint
 
     try {
       const response = await fetch(url);
@@ -254,7 +254,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     }
   };
   const getExam = async (classId) => {
-    const url = `http://localhost:3000/api/admin/teacher/${classId}/exams`;
+    const url = `https://dev-api.solvedudar.com/api/admin/teacher/${classId}/exams`;
 
     try {
       const response = await fetch(url, {
@@ -697,7 +697,7 @@ const Question = () => {
 
   const getData = async (currentPage, teacherId) => {
     console.log('page', currentPage)
-    const url = `http://localhost:3000/api/admin/teacher/${teacherId}/questions?page=${currentPage}`; // Replace with your API endpoint
+    const url = `https://dev-api.solvedudar.com/api/admin/teacher/${teacherId}/questions?page=${currentPage}`; // Replace with your API endpoint
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -736,7 +736,7 @@ const Question = () => {
 
   const handleDeleteRole = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/teacher/question/${id}`, {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/teacher/question/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -778,7 +778,7 @@ const Question = () => {
     const { class_id, subject_id, chapter_id, teacher_id, topic_id, e_question, target_exams, difficulty, type, duration, solution, options } = formData;
 
     try {
-      const response = await fetch('http://localhost:3000/api/admin/teacher/question', {
+      const response = await fetch('https://dev-api.solvedudar.com/api/admin/teacher/question', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -804,7 +804,7 @@ const Question = () => {
     const { class_id, subject_id, chapter_id, teacher_id, topic_id, e_question, target_exams, difficulty, type, duration, solution, options } = formData;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/teacher/question`, {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/teacher/question`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

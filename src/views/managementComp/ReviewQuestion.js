@@ -84,7 +84,7 @@ const ReviewQuestion = () => {
 
   const getData = async (currentPage, teacherId) => {
     console.log('page', currentPage)
-    const url = `http://localhost:3000/api/admin/teacher/${teacherId}/review-question?page=${currentPage}`; // Replace with your API endpoint
+    const url = `https://dev-api.solvedudar.com/api/admin/teacher/${teacherId}/review-question?page=${currentPage}`; // Replace with your API endpoint
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -117,7 +117,7 @@ const ReviewQuestion = () => {
   }, [currentPage]);
 
   const searchData = async (searchQuery, teacherId = 1) => {
-    const url = `http://localhost:3000/api/admin/teacher/${teacherId}/review-question?search=${encodeURIComponent(searchQuery)}`;
+    const url = `https://dev-api.solvedudar.com/api/admin/teacher/${teacherId}/review-question?search=${encodeURIComponent(searchQuery)}`;
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -143,7 +143,7 @@ const ReviewQuestion = () => {
 
   const handleDeleteRole = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/teacher/question/${id}`, {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/teacher/question/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ const ReviewQuestion = () => {
 
   const fetchOptions = async (questionId) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/question/options/${questionId}`, {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/question/options/${questionId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

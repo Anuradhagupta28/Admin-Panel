@@ -183,7 +183,7 @@ const UserRole = () => {
 
   const getData = async (currentPage) => {
     console.log('page', currentPage)
-    const url = `http://localhost:3000/api/admin/userRole?page=${currentPage}`; // Replace with your API endpoint
+    const url = `https://dev-api.solvedudar.com/api/admin/userRole?page=${currentPage}`; // Replace with your API endpoint
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -216,7 +216,7 @@ const UserRole = () => {
   }, [currentPage]);
 
   const searchData = async (searchQuery) => {
-    const url = `http://localhost:3000/api/admin/userRole?search=${encodeURIComponent(searchQuery)}`;
+    const url = `https://dev-api.solvedudar.com/api/admin/userRole?search=${encodeURIComponent(searchQuery)}`;
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -242,7 +242,7 @@ const UserRole = () => {
 
   const handleDeleteRole = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/userRole/${id}`, {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/userRole/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -284,7 +284,7 @@ const UserRole = () => {
     const { role_name, access } = formData;
 
     try {
-      const response = await fetch('http://localhost:3000/api/admin/userRole/add', {
+      const response = await fetch('https://dev-api.solvedudar.com/api/admin/userRole/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -310,7 +310,7 @@ const UserRole = () => {
     const { role_name, access } = formData;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/userRole/${id}`, {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/userRole/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

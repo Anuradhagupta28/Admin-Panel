@@ -60,7 +60,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   }, [open]);
 
   const getRole = async () => {
-    const url = `http://localhost:3000/api/admin/userRole`; // Replace with your API endpoint
+    const url = `https://dev-api.solvedudar.com/api/admin/userRole`; // Replace with your API endpoint
     setRoleLoading(true);
     try {
       const response = await fetch(url, {
@@ -191,7 +191,7 @@ const MenuPermission = () => {
 
   const getData = async (currentPage) => {
     console.log('page', currentPage)
-    const url = `http://localhost:3000/api/admin/menuPermissions?page=${currentPage}`; // Replace with your API endpoint
+    const url = `https://dev-api.solvedudar.com/api/admin/menuPermissions?page=${currentPage}`; // Replace with your API endpoint
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -224,7 +224,7 @@ const MenuPermission = () => {
   }, [currentPage]);
 
   const searchData = async (searchQuery) => {
-    const url = `http://localhost:3000/api/admin/menuPermissions?search=${encodeURIComponent(searchQuery)}`;
+    const url = `https://dev-api.solvedudar.com/api/admin/menuPermissions?search=${encodeURIComponent(searchQuery)}`;
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -250,7 +250,7 @@ const MenuPermission = () => {
   
   const handleDeleteRole = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/menuPermissions/${id}`, {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/menuPermissions/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -292,7 +292,7 @@ const MenuPermission = () => {
     const {  role_id , menu_id, submenu_id, url } = formData;
 
     try {
-      const response = await fetch('http://localhost:3000/api/admin/menuPermissions/add', {
+      const response = await fetch('https://dev-api.solvedudar.com/api/admin/menuPermissions/add', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -317,7 +317,7 @@ const MenuPermission = () => {
     const { role_id , menu_id, submenu_id, url  } = formData;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/admin/menuPermissions/${id}`, {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/menuPermissions/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
