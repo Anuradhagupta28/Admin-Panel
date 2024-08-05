@@ -823,6 +823,7 @@ const Question = () => {
         setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result.data
         console.log('Role added:', result, "formData", formData);
         getData(currentPage, teacherId);
+      
 
       } else {
         throw new Error(`Response status: ${response.status}`);
@@ -865,6 +866,7 @@ const Question = () => {
         );
         console.log('Question updated:', result);
         getData(currentPage, teacherId);
+      
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
