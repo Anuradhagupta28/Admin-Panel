@@ -110,7 +110,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 
 
 
-const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, getData, setdata, data, currentPage, teacherId }) => {
+const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, getData, setdata, data, currentPage, teacherId  }) => {
 
 
   const [classData, setClassData] = useState([]);
@@ -124,6 +124,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   const [topicsLoading, setTopicsLoading] = useState(true);
   const [examLoading, setExamLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
+
   console.log("formData", formData,"initialData",initialData)
 
   useEffect(() => {
@@ -134,41 +135,59 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
 
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData);
-
-      // Fetch related data (subjects, chapters, etc.) based on the initial data
-      if (initialData.class_id) {
-        getSubject(initialData.class_id);
-        getExam(initialData.class_id);
-      }
-      if (initialData.subject_id) {
-        getChapter(initialData.subject_id);
-      }
-      if (initialData.chapter_id) {
-        getTopics(initialData.chapter_id);
-      }
-    }
-    else{
       setFormData({
-      class_id: '',
-    subject_id: '',
-    chapter_id: '',
-    teacher_id: teacherId,
-    topic_id: '',
-    target_exams: '',
-    difficulty: '',
-    duration: '',
-    type: '',
-    e_question: '',
-    solution: '',
-    options: [
-      { option: '', correct: false },
-      { option: '', correct: false },
-      { option: '', correct: false },
-      { option: '', correct: false },
-    ]
-  });
-  }}, [initialData]);
+        class_id: initialData.classId,
+        subject_id: initialData.subjectId,
+        chapter_id: initialData.chapterId,
+        teacher_id: initialData.teacherId,
+        topic_id: initialData.topicId,
+        target_exams: initialData.targetExams[0], // Assuming it's a single exam
+        difficulty: initialData.difficulty,
+        duration: initialData.duration,
+        type: initialData.type,
+        e_question: initialData.question,
+        solution: initialData.solution,
+        options: initialData.options
+      });
+  
+      // Fetch related data (subjects, chapters, etc.) based on the initial data
+      localStorage.setItem('questionOptions', JSON.stringify(initialData.options));
+
+      if (initialData.classId) {
+        getSubject(initialData.classId);
+        getExam(initialData.classId);
+      }
+      if (initialData.subjectId) {
+        getChapter(initialData.subjectId);
+      }
+      if (initialData.chapterId) {
+        getTopics(initialData.chapterId);
+      }
+    } else {
+      setFormData({
+        class_id: '',
+        subject_id: '',
+        chapter_id: '',
+        teacher_id: teacherId,
+        topic_id: '',
+        target_exams: '',
+        difficulty: '',
+        duration: '',
+        type: '',
+        e_question: '',
+        solution: '',
+        options: [
+          { option: '', correct: 0 },
+          { option: '', correct: 0 },
+          { option: '', correct: 0 },
+          { option: '', correct: 0 },
+        ]
+      });
+      localStorage.removeItem('questionOptions');
+
+    }
+    
+  }, [initialData]);
 
   const getClass = async () => {
     const url = `https://dev-api.solvedudar.com/api/admin/teacher/${teacherId}/class`;
@@ -331,43 +350,55 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     const doc = parser.parseFromString(htmlData, 'text/html');
     let textData = doc.body.textContent || '';
     const cleanedText = textData.replace(/\n+/g, '');
+    const updatedOptions = [...formData.options];
+    updatedOptions[index] = { ...updatedOptions[index], option: cleanedText };
 
     setFormData(prevData => ({
       ...prevData,
-      options: prevData.options.map((opt, i) =>
-        i === index ? { ...opt, option: cleanedText } : opt
-      )
+      options: updatedOptions
     }));
+    localStorage.setItem('questionOptions', JSON.stringify(updatedOptions));
+
   };
 
+ 
   const handleCorrectOptionChange = (index) => (event) => {
+    const updatedOptions = formData.options.map((opt, i) =>
+      i === index ? { ...opt, correct: event.target.checked ? 1 : 0 } : opt
+    );
+
     setFormData(prevData => ({
       ...prevData,
-      options: prevData.options.map((opt, i) =>
-        i === index ? { ...opt, correct: event.target.checked } : opt
-      )
+      options: updatedOptions
     }));
+
+    // Update options in local storage
+    localStorage.setItem('questionOptions', JSON.stringify(updatedOptions));
   };
 
-  const handleEditorChange = (editorKey) => (event) => {
+  const handleEditorChange = (editorKey) =>      (event) => {
+    console.log("editorKey",editorKey)
     const htmlData = event.editor.getData();
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlData, 'text/html');
     let textData = doc.body.textContent || '';
     const cleanedText = textData.replace(/\n+/g, '');
+    console.log("cleanedText",cleanedText)
 
     setFormData(prev => ({ ...prev, [editorKey]: cleanedText }));
   };
 
   const onSubmit = (event) => {
     event.preventDefault();
-    handleSubmit(formData);
-    // getData(currentPage, teacherId);
+    if (initialData) {
+      handleSubmit({ ...formData, questionId: initialData.id });
+    } else {
+      handleSubmit(formData);
+    }
     handleClose();
   };
 
 
-  console.log("topicsData", topicsData, "topicsLoading", topicsLoading)
 
 
 
@@ -599,8 +630,8 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
 <StyledHeading>Write Question:</StyledHeading>
           <CKEditor
             editorUrl="https://cdn.ckeditor.com/4.18.0/standard-all/ckeditor.js"
-            data={formData.question}
-            onChange={handleEditorChange('question')}
+            data={formData.e_question}
+            onChange={handleEditorChange('e_question')}
           />
 
           <Grid container spacing={4}>
@@ -631,13 +662,13 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
                 onChange={handleOptionChange(selectedOption)}
               />
               <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={formData.options[selectedOption].correct}
-                    onChange={handleCorrectOptionChange(selectedOption)}
-                  />
-                }
-                label={`Option ${selectedOption + 1} is correct`}
+                 control={
+              <Checkbox
+                checked={formData.options[selectedOption].correct === 1}
+                onChange={handleCorrectOptionChange(selectedOption)}
+              />
+            }
+            label={`Option ${selectedOption + 1} is correct`}
               />
             </>
           )} 
@@ -672,7 +703,7 @@ const Question = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
-  const teacherId = 2;
+  const teacherId = 7;
   const [formData, setFormData] = useState({
     class_id: '',
     subject_id: '',
@@ -802,7 +833,7 @@ const Question = () => {
   };
   const handleEditRole = async (questionId, formData) => {
     const { class_id, subject_id, chapter_id, teacher_id, topic_id, e_question, target_exams, difficulty, type, duration, solution, options } = formData;
-
+  
     try {
       const response = await fetch(`https://dev-api.solvedudar.com/api/admin/teacher/question`, {
         method: 'PUT',
@@ -810,13 +841,27 @@ const Question = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ questionId,class_id, subject_id, chapter_id, teacher_id, topic_id, e_question, target_exams, difficulty, type, duration, solution, options }),
+        body: JSON.stringify({ 
+          questionId,
+          class_id, 
+          subject_id, 
+          chapter_id, 
+          teacher_id, 
+          topic_id, 
+          e_question, 
+          target_exams, 
+          difficulty, 
+          type, 
+          duration, 
+          solution, 
+          options 
+        }),
       });
-
+  
       if (response.ok) {
         const result = await response.json();
         setData((prevData) =>
-          prevData.map((item) => (item.id === id ? result.data : item))
+          prevData.map((item) => (item.id === questionId ? result.data : item))
         );
         console.log('Question updated:', result);
         getData(currentPage, teacherId);
@@ -827,7 +872,6 @@ const Question = () => {
       console.error('Error updating question:', error.message);
     }
   };
-
 
   const handleSubmit = async (formData) => {
     console.log("formdata in handlesubmit", formData, "dialogData", dialogData)
@@ -842,8 +886,26 @@ const Question = () => {
     handleClose(); // Close the dialog after submission
   };
 
-  const handleClickOpen = (data = null) => {
-    setDialogData(data);
+  const handleClickOpen = async (data = null) => {
+    if (data) {
+      try {
+        const response = await fetch(`https://dev-api.solvedudar.com/api/admin/teacher/questions/${data.id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        if (response.ok) {
+          const singleData = await response.json();
+          setDialogData(singleData.data);
+        } else {
+          console.error('Failed to fetch question data');
+        }
+      } catch (error) {
+        console.error('Error fetching question data:', error);
+      }
+    } else {
+      setDialogData(null);
+    }
     setOpen(true);
   };
 
@@ -939,7 +1001,7 @@ const Question = () => {
                         </CButton>
                       </CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>
-                        {/* <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} /> */}
+                        <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} /> 
                         <CIcon icon={cilTrash} height={20} onClick={() => handleOpenAlert(row.id)} />
                       </CTableDataCell>
 

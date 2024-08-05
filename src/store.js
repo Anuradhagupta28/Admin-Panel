@@ -3,12 +3,15 @@ import { legacy_createStore as createStore } from 'redux'
 const initialState = {
   sidebarShow: true,
   theme: 'light',
+  isValidUser: false,
 }
 
-const changeState = (state = initialState, { type, ...rest }) => {
+const changeState = (state = initialState, { type, payload }) => {
   switch (type) {
     case 'set':
-      return { ...state, ...rest }
+      return { ...state, ...payload }
+    case 'SET_VALID_USER':
+      return { ...state, isValidUser: payload }
     default:
       return state
   }

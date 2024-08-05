@@ -371,7 +371,7 @@ const SystemUser = () => {
 
   const getData = async (currentPage) => {
     console.log('page', currentPage)
-    const url = `http://localhost:3000/api/admin/systemUser?page=${currentPage}`; // Replace with your API endpoint
+    const url = `https://dev-api.solvedudar.com/api/admin/systemUser?page=${currentPage}`; // Replace with your API endpoint
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -487,7 +487,7 @@ const SystemUser = () => {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/admin/systemUser/add', {
+        const response = await fetch('https://dev-api.solvedudar.com/api/admin/systemUser/add', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -554,7 +554,7 @@ if (userImage instanceof File) {
 }
 
     try {
-        const response = await fetch(`http://localhost:3000/api/admin/systemUser/${id}`, {
+        const response = await fetch(`https://dev-api.solvedudar.com/api/admin/systemUser/${id}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,

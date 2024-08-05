@@ -289,7 +289,7 @@ const ReviewQuestion = () => {
             <DialogContent sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>Question</Typography>
               <Paper elevation={3} sx={{ p: 2, mb: 3, bgcolor: 'grey.100' }}>
-                <Typography>{particularData?.e_question}</Typography>
+                <Typography>{particularData?.question}</Typography>
               </Paper>
 
               <Typography variant="h6" gutterBottom>Options</Typography>
@@ -388,7 +388,7 @@ const ReviewQuestion = () => {
                         {(currentPage - 1) * itemsPerPage + index + 1}
 
                       </CTableHeaderCell>
-                      <CTableDataCell style={{ padding: '20px' }}>{row.e_question}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.question}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>{row.solution}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>{row.teacher_name}</CTableDataCell>
                       <CTableDataCell>

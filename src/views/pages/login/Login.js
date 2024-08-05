@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -12,25 +12,28 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
-} from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import { cilLockLocked, cilUser } from '@coreui/icons';
-
+} from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilLockLocked, cilUser } from '@coreui/icons'
+import { useDispatch } from 'react-redux'
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
   const handleLogin = () => {
     if (username === 'solvedudar@gmail.com' && password === 'ygp@1586YGP') {
-
-      navigate('/*');
+      dispatch({ type: 'SET_VALID_USER', payload: false })
+      navigate('/*')
+    } else if (username === 'anu@gmail.com' && password === '1234567') {
+      dispatch({ type: 'SET_VALID_USER', payload: true })
+      navigate('/*')
     } else {
       console.log(username)
-console.log(password)
-      alert('Invalid username or password');
+      console.log(password)
+      alert('Invalid username or password')
     }
-  };
+  }
 
   return (
     <div
@@ -56,9 +59,7 @@ console.log(password)
                     height={50}
                     style={{ width: 'auto', marginBottom: '1.5rem' }}
                   />
-                  <h2 className="text-center">
-                    Admin - Login
-                  </h2>
+                  <h2 className="text-center">Admin - Login</h2>
                   <p
                     className="text-body-secondary text-center"
                     style={{ color: '#6c757d', marginBottom: '2rem', marginTop: '-0.3rem' }}
@@ -93,7 +94,12 @@ console.log(password)
                       <CCol className="d-flex justify-content-center mb-3">
                         <CButton
                           className="px-4"
-                          style={{ width: '100%', maxWidth: '320px', backgroundColor: 'rgb(20,129,208)', color: 'white' }}
+                          style={{
+                            width: '100%',
+                            maxWidth: '320px',
+                            backgroundColor: 'rgb(20,129,208)',
+                            color: 'white',
+                          }}
                           onClick={handleLogin}
                         >
                           Login
@@ -137,7 +143,7 @@ console.log(password)
         </CRow>
       </CContainer>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
