@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback} from 'react';
+import { debounce } from 'lodash';
 import {
   CCard,
   CCardBody,
@@ -81,7 +82,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
 
   const onSubmit = async () => {
     await handleSubmit(formData);
-    getData(currentPage); // Fetch the updated data
+    getData(currentPage); 
     handleClose();
   };
 
@@ -91,19 +92,19 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Role Name Form</DialogTitle>
+      <DialogTitle>Class Form</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin="dense"
           name="class"
-          label="Role Name *"
+          label="Class *"
           type="text"
           fullWidth
           value={formData.class}
           onChange={handleChange}
         />
-         <TextField
+        <TextField
           margin="dense"
           name="status"
           label="Status"
@@ -184,7 +185,18 @@ const Class = () => {
   }, [currentPage]);
 
   const searchData = async (searchQuery) => {
-    const url = `https://dev-api.solvedudar.com/api/admin/class/data?search=${encodeURIComponent(searchQuery)}`;
+    console.log('searchQuery', searchQuery);
+    const statusMap = {
+      pending: 0,
+      active: 1,
+    };
+
+    // Check if searchQuery matches any keyword in statusMap
+    const transformedQuery = statusMap[searchQuery.toLowerCase()] !== undefined
+      ? statusMap[searchQuery.toLowerCase()]
+      : searchQuery;
+
+    const url = `https://dev-api.solvedudar.com/api/admin/class/data?search=${encodeURIComponent(transformedQuery)}`;
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -208,6 +220,15 @@ const Class = () => {
     }
   };
 
+  const debouncedFetchData = useCallback(debounce((query) => {
+    searchData(query);
+  }, 500), []); // 300ms debounce time
+
+  const handleSearchChange = (e) => {
+    const { value } = e.target;
+    setSearch(value);
+    debouncedFetchData(value);
+  };
   const handleDeleteRole = async (id) => {
     try {
       const response = await fetch(`https://dev-api.solvedudar.com/api/admin/class/${id}`, {
@@ -248,62 +269,68 @@ const Class = () => {
   };
 
 
-//   const handleAddRole = async (formData) => {
-//     const { class: status } = formData;
+  const handleAddRole = async (formData) => {
+    const { class: className, status } = formData; // Destructure class as className
 
-//     try {
-//       const response = await fetch('https://dev-api.solvedudar.com/api/admin/class', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Authorization': `Bearer ${token}`,
-//         },
-//         body: JSON.stringify({ class: status }),
-//       });
+    console.log('formData', formData);
 
-//       if (response.ok) {
-//         const result = await response.json();
-//         setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result.data
-//         console.log('Role added:', result, "formData", formData);
-      
-//         setFormData('')
-//       } else {
-//         throw new Error(`Response status: ${response.status}`);
-//       }
-//     } catch (error) {
-//       console.error('Error adding role:', error.message);
-//     }
-//   };
-//   const handleEditRole = async (id, formData) => {
-//     const { class, status } = formData;
+    try {
+      const response = await fetch('https://dev-api.solvedudar.com/api/admin/class', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ className, status }), // Correct JSON structure
+      });
 
-//     try {
-//       const response = await fetch(`https://dev-api.solvedudar.com/api/admin/userRole/${id}`, {
-//         method: 'PUT',
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Authorization': `Bearer ${token}`,
-//         },
-//         body: JSON.stringify({ class, status }),
-//       });
+      if (response.ok) {
+        const result = await response.json();
+        setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result
 
-//       if (response.ok) {
-//         const result = await response.json();
-//         console.log("current page in edit", currentPage)
+        console.log('Role added:', result, "formData", formData);
 
-//         // setData((prevData) =>
-//         //   prevData.map((item) => (item.id === id ? result : item))
-//         // );
-//         setData((prevData) => [...prevData, result]);
-//         console.log('Role updated:', result);
-//         getData(currentPage)
-//       } else {
-//         throw new Error(`Response status: ${response.status}`);
-//       }
-//     } catch (error) {
-//       console.error('Error updating role:', error.message);
-//     }
-//   };
+        setFormData({ class: '', status: 1 }); // Clear form data
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error adding role:', error.message);
+    }
+  };
+
+  const handleEditRole = async (id, formData) => {
+    const { class: className, status } = formData;
+
+    try {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/class`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ id, className, status }), // Ensure proper formatting
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("current page in edit", currentPage);
+
+        // Update the data properly
+        setData((prevData) =>
+          prevData.map((item) => (item.id === id ? result : item))
+        );
+
+        console.log('Role updated:', result);
+        getData(currentPage);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error updating role:', error.message);
+    }
+  };
+
 
 
   const handleSubmit = async (formData) => {
@@ -334,6 +361,11 @@ const Class = () => {
     setCurrentPage(newPage);
     getData(newPage)
   };
+  const pageNumbers = [];
+
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
 
   const handleSearch = (event) => {
     setSearch(event.target.value);
@@ -350,7 +382,7 @@ const Class = () => {
             <CRow >
               <CCol>
                 <CIcon icon={cilAddressBook} height={25} />
-                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Role</strong> <small style={{ fontSize: '17px' }}>List</small>
+                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Class</strong> <small style={{ fontSize: '17px' }}>List</small>
               </CCol>
 
               <CCol md="auto">
@@ -363,7 +395,7 @@ const Class = () => {
                     aria-label="Username"
                     aria-describedby="basic-addon1"
                     value={search}
-                    onChange={handleSearch}
+                    onChange={handleSearchChange}
                   />
                 </CInputGroup>
               </CCol>
@@ -411,10 +443,10 @@ const Class = () => {
                       </CTableHeaderCell>
                       <CTableDataCell style={{ padding: '20px' }}>{row.class}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>
-                      <CButton color={row.status === 1 ? 'success' : 'danger'} size="sm" style={{ color: 'white' }}>
-                        {row.status === 1 ?'Active' : 'Pending'}
-                      </CButton>
-                    </CTableDataCell>
+                        <CButton color={row.status === 1 ? 'success' : 'danger'} size="sm" style={{ color: 'white' }}>
+                          {row.status === 1 ? 'Active' : 'Pending'}
+                        </CButton>
+                      </CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>
                         <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} />
                         <CIcon icon={cilTrash} height={20} onClick={() => handleOpenAlert(row.id)} />
@@ -426,7 +458,15 @@ const Class = () => {
               </CTable>
               <CPagination className="justify-content-center" aria-label="Page navigation example">
                 <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
-                <CPaginationItem active>{currentPage}</CPaginationItem>
+                {pageNumbers.map((number) => (
+                  <CPaginationItem
+                    key={number}
+                    active={number === currentPage}
+                    onClick={() => handlePageChange(number)}
+                  >
+                    {number}
+                  </CPaginationItem>
+                ))}
                 <CPaginationItem disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
               </CPagination>
             </CCardBody>
