@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react';
+import { debounce } from 'lodash';
 import {
   CCard,
   CCardBody,
@@ -19,56 +20,47 @@ import {
   CFormInput,
   CButton,
   CCardText,
-  CImage,
+  CImage
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilAddressBook, cilTrash, cilColorBorder, cilSearch, cilPlus } from '@coreui/icons'
-// import Button from '@mui/material/Button';
-// import Dialog from '@mui/material/Dialog';
-// import DialogActions from '@mui/material/DialogActions';
-// import DialogContent from '@mui/material/DialogContent';
-// import DialogContentText from '@mui/material/DialogContentText';
-// import DialogTitle from '@mui/material/DialogTitle';
-// import TextField from '@mui/material/TextField';
-// import MenuItem from '@mui/material/MenuItem';
-
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  DialogContentText,
   TextField,
+  DialogContentText,
   MenuItem,
   Button,
+  FormControlLabel,
+  Checkbox,
+  FormGroup,
   FormControl,
-  InputLabel,
+  FormLabel,
   Select
 } from '@mui/material';
 
-const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData }) => {
-  const [selectedFileName, setSelectedFileName] = useState('');
+const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, getData, currentPage }) => {
+  console.log("initialData", initialData, 'formData', formData);
 
   React.useEffect(() => {
     if (initialData) {
       setFormData(initialData);
     } else {
       setFormData({
-        SclGroup: '',
         name: '',
-        sclName: '',
-        sclCode: '',
         email: '',
-        image: '',
-        password: '',
-        status: '',
-        instruction: '',
-        keyThings: '',
-        rewards: '',
-
+        phone: '',
+        location: '',
+        class: '',
+        target_exam: '',
+        subscription: '',
+        studentImage: '',
+        status: 1,
       });
     }
-  }, [initialData]);
+  }, [initialData, setFormData]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -78,348 +70,252 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     });
   };
 
-  const handleFileChange = (event) => {
-    const { name, files } = event.target;
-    if (files.length > 0) {
-      setFormData({
-        ...formData,
-        [name]: files[0],
-      });
-      setSelectedFileName(files[0].name);
-      console.log(files[0], formData);
-    }
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+    setFormData((prevData) => {
+      const accessArray = (prevData.access || '').split(',').filter(Boolean);
+      if (checked) {
+        accessArray.push(name);
+      } else {
+        const index = accessArray.indexOf(name);
+        if (index > -1) {
+          accessArray.splice(index, 1);
+        }
+      }
+      return {
+        ...prevData,
+        access: accessArray.join(','),
+      };
+    });
   };
 
-  const onSubmit = (event) => {
-    event.preventDefault();
-    handleSubmit(formData);
+  const onSubmit = async () => {
+    await handleSubmit(formData);
+    getData(currentPage);
     handleClose();
+  };
+
+  const isChecked = (name) => {
+    return formData.access ? formData.access.split(',').includes(name) : false;
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>User data</DialogTitle>
-      <form onSubmit={onSubmit}>
-        <DialogContent>
-          <FormControl fullWidth margin="dense" required>
-            <InputLabel id="role-label">Select Role</InputLabel>
-            <Select
-              labelId="role-label"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              label="Select Role"
-            >
-              <MenuItem value=""><em>--select school group--</em></MenuItem>
-              <MenuItem value="B-Tier2">B-Tier2</MenuItem>
-
-            </Select>
-          </FormControl>
-          <TextField
-            margin="dense"
-            name="name"
-            label="Name"
-            type="text"
-            fullWidth
-            required
-            value={formData.name}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="email"
-            label="Email"
-            type="email"
-            fullWidth
-            required
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="password"
-            label="Password"
-            type="password"
-            fullWidth
-            required
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="instruction"
-            label="Quiz instructions"
-            multiline
-            rows={2}
-            maxRows={Infinity}
-            fullWidth
-            required
-            value={formData.instruction}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="keyThings"
-            label="KeyThings"
-            multiline
-            rows={2}
-            maxRows={Infinity}
-            fullWidth
-            required
-            value={formData.keyThings}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="dense"
-            name="rewards"
-            label="Rewards"
-            multiline
-            rows={2}
-            maxRows={Infinity}
-            fullWidth
-            required
-            value={formData.rewards}
-            onChange={handleChange}
-          />
-          <input
-            accept="image/*"
-            style={{ display: 'none' }}
-            id="raised-button-file"
-            multiple
-            type="file"
-            name="image"
-            required
-            onChange={handleFileChange}
-          />
-          <label htmlFor="raised-button-file" style={{ margin: "8px 12px 6px 0" }}>
-            <Button variant="contained" component="span">
-              choose file
-            </Button>
-          </label>
-          <span>{selectedFileName ? `${selectedFileName}` : '*No file chosen'}</span>
-
-          <TextField
-            margin="dense"
-            name="status"
-            label="Status"
-            type="text"
-            fullWidth
-            select
-            required
-            value={formData.status}
-            onChange={handleChange}
-          >
-            <MenuItem value="Active">Active</MenuItem>
-            <MenuItem value="Inactive">Inactive</MenuItem>
-          </TextField>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button type="submit" variant="contained" color="primary">
-            Submit
-          </Button>
-        </DialogActions>
-      </form>
+      <DialogTitle>Class Form</DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          margin="dense"
+          name="class"
+          label="Class *"
+          type="text"
+          fullWidth
+          value={formData.class}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="dense"
+          name="status"
+          label="Status"
+          type="text"
+          fullWidth
+          select
+          value={formData.status}
+          onChange={handleChange}
+        >
+          <MenuItem value="1">Active</MenuItem>
+          <MenuItem value="0">Pending</MenuItem>
+        </TextField>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={onSubmit} variant="contained" color="primary">
+          Submit
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };
 
+
+
 const TeacherManagement = () => {
+
+  const [data, setData] = useState(null);
+  const [totalRecords, setTotalRecords] = useState(0);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const [dialogData, setDialogData] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState('');
   const [formData, setFormData] = useState({
-    SclGroup: '',
     name: '',
-    sclName: '',
-    sclCode: '',
     email: '',
-    image: '',
-    password: '',
+    phone: '',
+    location: '',
+    class: '',
+    target_exam: '',
+    subscription: '',
+    studentImage: '',
     status: '',
-    instruction: '',
-    keyThings: '',
-    rewards: '',
   });
+  const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState(false);
+  const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
+  const [planType, setPlanType] = useState('Monthly');
+  const [studentId, setStudentId] = useState('');
+  const [activeStudent, setActiveStudent] = useState(null);
+  const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
 
-  const [tableData, setTableData] = useState([
-    {
-      id: 1,
-      SclGroup: 'B-Tier2',
-      SclName: 'International Demo',
-      SclCode: 'INTE3311',
-      email: 'internationaldemo@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 2,
-      SclGroup: 'B-Tier2',
-      SclName: 'SBS CONVENT',
-      SclCode: 'SBSC4956',
-      email: 'cbsconvent@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 3,
-      SclGroup: 'B-Tier2',
-      SclName: 'K.V. RAE BARELI',
-      SclCode: 'KEND2875',
-      email: 'kv@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 4,
-      SclGroup: 'B-Tier2',
-      SclName: 'K N Public School',
-      SclCode: 'KNPU2876',
-      email: 'knpublicschool@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 5,
-      SclGroup: 'B-Tier2',
-      SclName: 'MM Public School',
-      SclCode: 'MMPU2138',
-      email: 'mmpublic@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 6,
-      SclGroup: 'B-Tier2',
-      SclName: 'Student Public School',
-      SclCode: 'STUD3424',
-      email: 'studentpublic@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 7,
-      SclGroup: 'B-Tier2',
-      SclName: 'D.A.V',
-      SclCode: 'DAVP9150',
-      email: 'dav@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 8,
-      SclGroup: 'B-Tier2',
-      SclName: 'Manav Rachna School',
-      SclCode: 'MANA2327',
-      email: 'manav@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 9,
-      SclGroup: 'B-Tier2',
-      SclName: 'St. Paul Public School',
-      SclCode: 'STPA4149',
-      email: 'st@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 10,
-      SclGroup: 'B-Tier2',
-      SclName: 'Bright Future School',
-      SclCode: 'BRIG1234',
-      email: 'brightfuture@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 11,
-      SclGroup: 'B-Tier2',
-      SclName: 'Sunrise Academy',
-      SclCode: 'SUNR5678',
-      email: 'sunriseacademy@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 12,
-      SclGroup: 'B-Tier2',
-      SclName: 'Green Valley School',
-      SclCode: 'GREE9101',
-      email: 'greenvalley@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 13,
-      SclGroup: 'B-Tier2',
-      SclName: 'Blue Ridge School',
-      SclCode: 'BLUE1123',
-      email: 'blueridge@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 14,
-      SclGroup: 'B-Tier2',
-      SclName: 'Happy Days School',
-      SclCode: 'HAPP1415',
-      email: 'happydays@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 15,
-      SclGroup: 'B-Tier2',
-      SclName: 'Rainbow International',
-      SclCode: 'RAIN1617',
-      email: 'rainbowintl@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 16,
-      SclGroup: 'B-Tier2',
-      SclName: 'Springfield School',
-      SclCode: 'SPRI1819',
-      email: 'springfield@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 17,
-      SclGroup: 'B-Tier2',
-      SclName: 'Crescent Public School',
-      SclCode: 'CRES2021',
-      email: 'crescentpublic@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 18,
-      SclGroup: 'B-Tier2',
-      SclName: 'Glory Heights School',
-      SclCode: 'GLOR2223',
-      email: 'gloryheights@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 19,
-      SclGroup: 'B-Tier2',
-      SclName: 'Elite Scholars School',
-      SclCode: 'ELIT2425',
-      email: 'elitescholars@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
-    },
-    {
-      id: 20,
-      SclGroup: 'B-Tier2',
-      SclName: 'Heritage International School',
-      SclCode: 'HERI2627',
-      email: 'heritageintl@gmail.com',
-      image: 'https://imgs.search.brave.com/dEd32mOqC3NkPq9VjaWoX26IMpcKcupoBnUCbus3RGk/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/ZnJlZS1waG90by9v/dXRnb2luZy1sZWN0/dXJlci1zdGFuZGlu/Zy1yb3N0cnVtLWV4/cGxhaW5pbmctbWF0/ZXJpYWxfMjMtMjE0/ODIwMTAwNy5qcGc_/c2l6ZT02MjYmZXh0/PWpwZw'
+  const handleSubscriptionOpen = () => setSubscriptionDialogOpen(true);
+
+  const handleSubscriptionClose = () => setSubscriptionDialogOpen(false);
+
+  const handleDeactivateOpen = (student) => {
+    setActiveStudent(student);
+    setDeactivateDialogOpen(true);
+  };
+  const handleDeactivateClose = () => setDeactivateDialogOpen(false);
+
+  const handlePlanChange = (event) => setPlanType(event.target.value);
+
+  const handleDeactivate = async () => {
+    if (!activeStudent) return;
+
+    const newStatus = activeStudent.status === 1 ? 0 : 1;
+
+    try {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/teacher-status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          studentId: activeStudent.id,
+          status: newStatus
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+
+        // Update the local data
+        setData((prevData) =>
+          prevData.map((item) =>
+            item.id === activeStudent.id ? { ...item, status: newStatus } : item
+          )
+        );
+
+        console.log('Student status updated:', result);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error updating student status:', error);
     }
-
-  ]);
-
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  const handleClickOpen = (data = null) => {
-    setDialogData(data);
-    setOpen(true);
+    handleDeactivateClose();
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setDialogData(null);
+  const getData = async (currentPage) => {
+
+    setLoading(true); // Set loading to true before making the request
+    const url = `https://dev-api.solvedudar.com/api/admin/teacher/data?page=${currentPage}`; // Replace with your API endpoint
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setLoading(false);
+
+        setTotalPages(json.data.totalPages);
+        setTotalRecords(json.data.totalRecords);
+        setData(json.data.data); // Update state with response data
+
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+      setLoading(false); // Set loading to false in case of an error
+    }
   };
+
+  useEffect(() => {
+    getData(currentPage);
+  }, [currentPage]);
+
+  const searchData = async (searchQuery) => {
+
+
+    const url = `https://dev-api.solvedudar.com/api/admin/teacher/data?search=${encodeURIComponent(searchQuery)}`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setData(json.data.data);
+        setLoading(false);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+      setLoading(false);
+    }
+  };
+
+  const debouncedFetchData = useCallback(debounce((query) => {
+    searchData(query);
+  }, 500), []); // 300ms debounce time
+
+  const handleSearchChange = (e) => {
+    const { value } = e.target;
+    setSearch(value);
+    debouncedFetchData(value);
+  };
+
+  const handleDeleteRole = async (id) => {
+    try {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/class/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        setData((prevData) => prevData.filter((item) => item.id !== id));
+
+        getData(currentPage)
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error deleting role:', error.message);
+    }
+  };
+
+
 
   const handleOpenAlert = (id) => {
     setDeleteId(id);
@@ -431,43 +327,126 @@ const TeacherManagement = () => {
     setDeleteId(null);
   };
 
-  const handleConfirmDelete = () => {
-    setTableData((prevData) => prevData.filter((item) => item.id !== deleteId));
+  const handleConfirmDelete = async () => {
+    // await handleDeleteRole(deleteId);
     handleCloseAlert();
   };
 
-  const handleSubmit = (formData) => {
-    if (dialogData) {
-      // Update existing item
-      setTableData((prevData) =>
-        prevData.map((item) => (item.id === dialogData.id ? { ...item, ...formData } : item))
-      );
-    } else {
-      // Add new item
-      setTableData((prevData) => [
-        ...prevData,
-        { id: prevData.length + 1, ...formData },
-      ]);
+
+  const handleAddRole = async (formData) => {
+    const { class: className, status } = formData; // Destructure class as className
+
+
+
+    try {
+      const response = await fetch('https://dev-api.solvedudar.com/api/admin/class', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ className, status }), // Correct JSON structure
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result
+
+
+        setFormData({ class: '', status: 1 }); // Clear form data
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error adding role:', error.message);
     }
   };
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+  const handleEditRole = async (id, formData) => {
+    const { class: className, status } = formData;
+
+    try {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/class`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ id, className, status }), // Ensure proper formatting
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+
+
+        // Update the data properly
+        setData((prevData) =>
+          prevData.map((item) => (item.id === id ? result : item))
+        );
+
+
+        getData(currentPage);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error updating role:', error.message);
+    }
   };
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = tableData.slice(indexOfFirstItem, indexOfLastItem);
 
+
+  const handleSubmit = async (formData) => {
+    console.log("formdata in handlesubmit", formData, "dialogData", dialogData)
+    if (dialogData) {
+      console.log('handleEditRole')
+      await handleEditRole(dialogData.id, formData);
+
+    } else {
+      console.log('handleAddRole')
+      // await handleAddRole(formData);
+    }
+    handleClose();
+  };
+
+  const handleClickOpen = (data = null) => {
+    setDialogData(data);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setDialogData(null);
+  };
+
+  const handlePageChange = (newPage) => {
+
+    setCurrentPage(newPage);
+    getData(newPage)
+  };
+  const pageNumbers = [];
+
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+    searchData(search)
+
+  };
+
+  const itemsPerPage = 10;
+  console.log("loading", loading, "data", data)
   return (
     <CRow>
-      <CCol xs={12} >
-        <CCard className="mb-4" >
+      <CCol xs={12}>
+        <CCard className="mb-4">
           <CCardHeader style={{ padding: '10px' }}>
             <CRow >
               <CCol>
                 <CIcon icon={cilAddressBook} height={25} />
-                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Teacher Management</strong> <small style={{ fontSize: '17px' }}>List</small>
+                <strong style={{ marginLeft: '18px', fontSize: '25px' }}>Teacher</strong> <small style={{ fontSize: '17px' }}>List</small>
               </CCol>
 
               <CCol md="auto">
@@ -479,11 +458,13 @@ const TeacherManagement = () => {
                     placeholder="search"
                     aria-label="Username"
                     aria-describedby="basic-addon1"
+                    value={search}
+                    onChange={handleSearchChange}
                   />
                 </CInputGroup>
               </CCol>
               <CCol xs lg={1}>
-                <CButton color='secondary' onClick={() => handleClickOpen()} className='pt-1 pb-1'>Add
+                <CButton color='secondary' onClick={() => handleClickOpen()} className='d-flex align-items-center' style={{ padding: '4px 8px' }}>Add
                   <CIcon icon={cilPlus} height={16} />
                 </CButton>
               </CCol>
@@ -503,49 +484,128 @@ const TeacherManagement = () => {
             </DialogActions>
           </Dialog>
 
-          <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} />
-
-          <CCardBody>
-            <CTable striped hover>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Group Name </CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>School Name </CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>School code </CTableHeaderCell>
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Email</CTableHeaderCell>
+          {/* <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} setdata={setData} data={data} getData={getData} currentPage={currentPage} /> */}
 
 
-                  <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Image</CTableHeaderCell>
+          {!loading ? (
+            <CCardBody style={{ maxwidth: '100%', overflowX: 'auto' }}>
+              <CTable striped hover>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Sr.No.</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Name</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Email</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Phone</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Class</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Subject</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Average Rating</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Image</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Qualification</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Experience</CTableHeaderCell>
 
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {currentItems.map((row, index) => (
-                  <CTableRow key={row.id}>
-                    <CTableHeaderCell scope="row" style={{ padding: '20px' }}>{index + 1 + (currentPage - 1) * itemsPerPage}</CTableHeaderCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.SclGroup}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.SclName}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.SclCode}</CTableDataCell>
-                    <CTableDataCell style={{ padding: '20px' }}>{row.email}</CTableDataCell>
+                   
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Quiz Attempt</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Passing Status</CTableHeaderCell>
 
-                    <CTableDataCell style={{ padding: '20px' }}>
-                      <CImage rounded thumbnail src={row.image} width={100} height={100} />
-
-                    </CTableDataCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Status</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px', whiteSpace: 'nowrap' }}>Action</CTableHeaderCell>
 
                   </CTableRow>
-                ))}
-              </CTableBody>
-              <CTableCaption>List of Exam {tableData.length}</CTableCaption>
-            </CTable>
+                </CTableHead>
+                <CTableBody>
+                  {data.map((row, index) => (
+                    <CTableRow key={row.id}>
+                      <CTableHeaderCell scope="row" style={{ padding: '20px', whiteSpace: 'nowrap' }}>
+                        {(currentPage - 1) * itemsPerPage + index + 1}
 
-            <CPagination className="justify-content-center" aria-label="Page navigation example">
-              <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
-              <CPaginationItem active>{currentPage}</CPaginationItem>
-              <CPaginationItem disabled={currentPage === Math.ceil(tableData.length / itemsPerPage)} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
-            </CPagination>
-          </CCardBody>
+                      </CTableHeaderCell>
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.name}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.email}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.phone}</CTableDataCell>
+                     
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.classes}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.subject}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.average_rating}</CTableDataCell>
+
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }} >
+                        <CImage rounded thumbnail src={row.image} width={80} height={80} />
+
+                      </CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.qualification}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.experience}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.quiz_attempt}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.passing_status}</CTableDataCell>
+                      
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>
+                        <CButton
+                          color={row.status === 1 ? 'success' : 'danger'}
+                          size="sm"
+                          style={{ color: 'white' }}
+                          onClick={() => handleDeactivateOpen(row)}
+                        >
+                          {row.status === 1 ? 'Active' : 'Deactivate'}
+                        </CButton>
+                      </CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>
+                        <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} />
+                        <CIcon icon={cilTrash} height={20} onClick={() => handleOpenAlert(row.id)} />
+                      </CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+                <CTableCaption>Showing 1 to 10 of {totalRecords} entries</CTableCaption>
+              </CTable>
+              {/* dialog box for Subscription plan */}
+              <Dialog open={subscriptionDialogOpen} onClose={handleSubscriptionClose} 
+               PaperProps={{
+                style: {
+                  width: '500px', // Set the fixed width you want here
+                  maxWidth: '500px', // Ensure the max-width does not override your width
+                },
+              }}>
+                <DialogTitle>Subscription Plan</DialogTitle>
+                <DialogContent>
+                  <Select value={planType} onChange={handlePlanChange} style={{ width: '100%' }}>
+                    <MenuItem value="Monthly">Monthly</MenuItem>
+                    <MenuItem value="Quarterly">Quarterly</MenuItem>
+                    <MenuItem value="Annually">Annually</MenuItem>
+                    <MenuItem value="Half-yearly">Half-yearly</MenuItem>
+                  </Select>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleSubscriptionClose}>Close</Button>
+                  <Button onClick={handleSubscriptionClose} color="primary">Save</Button>
+                </DialogActions>
+              </Dialog>
+
+              {/* dialog box for deactivate  */}
+              <Dialog open={deactivateDialogOpen} onClose={handleDeactivateClose}>
+                <DialogTitle>Do you want to deactivate this student?</DialogTitle>
+                <DialogActions>
+                  <Button onClick={handleDeactivate} color="primary">Yes</Button>
+                  <Button onClick={handleDeactivateClose}>No</Button>
+                </DialogActions>
+              </Dialog>
+
+              <CPagination className="justify-content-center" aria-label="Page navigation example">
+                <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
+                {pageNumbers.map((number) => (
+                  <CPaginationItem
+                    key={number}
+                    active={number === currentPage}
+                    onClick={() => handlePageChange(number)}
+                  >
+                    {number}
+                  </CPaginationItem>
+                ))}
+                <CPaginationItem disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
+              </CPagination>
+            </CCardBody>
+          ) : (
+            <div>Loading...</div>
+          )}
+
+
         </CCard>
       </CCol>
     </CRow>

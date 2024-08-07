@@ -20,6 +20,7 @@ import {
   CFormInput,
   CButton,
   CCardText,
+  CImage
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilAddressBook, cilTrash, cilColorBorder, cilSearch, cilPlus } from '@coreui/icons'
@@ -41,9 +42,10 @@ const ExamDialog = ({  open, handleClose, initialData, handleSubmit, setFormData
       setFormData(initialData);
     } else {
       setFormData({
-        exam_id: '',
-        subject_name: '',
+        class: '',
+        name: '',
         description: '',
+    
         status: 1,
       });
     }
@@ -172,8 +174,8 @@ const Subject = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
   const [formData, setFormData] = useState({
-    exam_id: '',
-    subject_name: '',
+    class: '',
+    name: '',
     description: '',
 
     status: 1,
@@ -198,11 +200,11 @@ const Subject = () => {
         const json = await response.json();
         setLoading(false);
         // console.log(json.totalRecords);
-        setTotalPages(json.totalPages)
-        setTotalRecords(json.totalRecords);
+        setTotalPages(json.data.totalPages)
+        setTotalRecords(json.data.totalRecords);
 
-        console.log(json.data);
-        setData(json.data); // Update state with response data
+        console.log(json.data.data);
+        setData(json.data.data); // Update state with response data
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -454,10 +456,10 @@ const Subject = () => {
                 <CTableHead>
                   <CTableRow>
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
-                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Exam Name</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Class Name</CTableHeaderCell>
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Subject Name</CTableHeaderCell>
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Description</CTableHeaderCell>
-
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Image</CTableHeaderCell>
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Status</CTableHeaderCell>
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Action</CTableHeaderCell>
                   </CTableRow>
@@ -466,13 +468,17 @@ const Subject = () => {
                   {data.map((row, index) => (
                     <CTableRow key={row.id}>
                       <CTableHeaderCell scope="row" style={{ padding: '20px' }}>{index + 1 + (currentPage - 1) * itemsPerPage}</CTableHeaderCell>
-                      <CTableDataCell style={{ padding: '20px' }}>{row.exam_name}</CTableDataCell>
-                      <CTableDataCell style={{ padding: '20px' }}>{row.subject_name}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.class}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.name}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>{row.description}</CTableDataCell>
-
                       <CTableDataCell style={{ padding: '20px' }}>
-                        <CButton color={row.status === 1 ? 'success' : 'danger'} size="sm" style={{ color: 'white' }}>
-                          {row.status === 1 ? 'Active' : 'Pending'}
+                      <CImage rounded thumbnail src={row.image===''?'https://dev-v1.solvedudar.com/uploads/subject/73ce23444d67c40755a4a68d481d6b40.png':row.image} width={80} height={80} />
+                      </CTableDataCell>
+
+                     
+                      <CTableDataCell style={{ padding: '20px' }}>
+                        <CButton color= 'success' size="sm" style={{ color: 'white' }}>
+                          Active
                         </CButton>
                       </CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>
