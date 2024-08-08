@@ -125,7 +125,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
   const [examLoading, setExamLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState(null);
 
-  console.log("formData", formData,"initialData",initialData)
+  // console.log("formData", formData,"initialData",initialData)
 
   useEffect(() => {
     if (open) {
@@ -188,7 +188,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     }
     
   }, [initialData]);
-
+console.log("teacherId",teacherId)
   const getClass = async () => {
     const url = `https://dev-api.solvedudar.com/api/admin/teacher/${teacherId}/class`;
     setClassLoading(true);
@@ -430,7 +430,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
                         <MenuItem key={i.id} value={i.id}>{i.name}</MenuItem>
                       ))
                     ) : (
-                      <MenuItem disabled>No classes available</MenuItem>
+                      <MenuItem value="">No classes available</MenuItem>
                     )
                   ) : (
                     <MenuItem disabled>Loading...</MenuItem>
@@ -458,7 +458,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
                         <MenuItem key={i.id} value={i.id}>{i.name}</MenuItem>
                       ))
                     ) : (
-                      <MenuItem disabled>No subjects available</MenuItem>
+                      <MenuItem value="">No subjects available</MenuItem>
                     )
                   ) : (
                     <MenuItem disabled>Loading...</MenuItem>
@@ -486,7 +486,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
                         <MenuItem key={i.id} value={i.id}>{i.name}</MenuItem>
                       ))
                     ) : (
-                      <MenuItem disabled>No chapters available</MenuItem>
+                      <MenuItem value="">No chapters available</MenuItem>
                     )
                   ) : (
                     <MenuItem disabled>Loading...</MenuItem>
@@ -511,7 +511,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
                   label="Select Topic"
                   disabled={!formData.chapter_id}
                 >
-                  <MenuItem disabled><em>-- Select Topic --</em></MenuItem>
+                  <MenuItem value=""><em>-- Select Topic --</em></MenuItem>
 
                   {!topicsLoading ? (
                     topicsData.length > 0 ? (
@@ -519,7 +519,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
                         <MenuItem key={i.id} value={i.id}>{i.name}</MenuItem>
                       ))
                     ) : (
-                      <MenuItem disabled>No topics available</MenuItem>
+                      <MenuItem value="0">No topics available</MenuItem>
                     )
                   ) : (
                     <MenuItem disabled>Loading...</MenuItem>
@@ -539,7 +539,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
                   label="Select Exam"
 
                 >
-                  <MenuItem disabled><em>-- Select Exam --</em></MenuItem>
+                  <MenuItem value=""><em>-- Select Exam --</em></MenuItem>
 
                   {!examLoading ? (
                     examData.length > 0 ? (
@@ -776,7 +776,7 @@ const Question = () => {
       });
 
       if (response.ok) {
-        setData((prevData) => prevData.filter((item) => item.id !== id));
+        // setData((prevData) => prevData.filter((item) => item.id !== id));
         console.log('Role deleted:', id);
         getData(currentPage, teacherId)
       } else {
@@ -807,6 +807,7 @@ const Question = () => {
 
   const handleAddRole = async (formData) => {
     const { class_id, subject_id, chapter_id, teacher_id, topic_id, e_question, target_exams, difficulty, type, duration, solution, options } = formData;
+    console.log('formData', formData)
 
     try {
       const response = await fetch('https://dev-api.solvedudar.com/api/admin/teacher/question', {
@@ -820,7 +821,7 @@ const Question = () => {
 
       if (response.ok) {
         const result = await response.json();
-        setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result.data
+        // setData((prevData) => [...prevData, result]); 
         console.log('Role added:', result, "formData", formData);
         getData(currentPage, teacherId);
       
@@ -861,9 +862,9 @@ const Question = () => {
   
       if (response.ok) {
         const result = await response.json();
-        setData((prevData) =>
-          prevData.map((item) => (item.id === questionId ? result.data : item))
-        );
+        // setData((prevData) =>
+        //   prevData.map((item) => (item.id === questionId ? result.data : item))
+        // );
         console.log('Question updated:', result);
         getData(currentPage, teacherId);
       
@@ -931,7 +932,7 @@ const Question = () => {
 
   const itemsPerPage = 10;
 
-
+console.log("data",data)
 
   return (
     <CRow>

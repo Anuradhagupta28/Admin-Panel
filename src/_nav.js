@@ -71,8 +71,8 @@ export const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Author',
-        to: '/managementComp/ContentManagement/Author',
+        name: 'Topic',
+        to: '/managementComp/ContentManagement/Topic',
       },
     ],
   },

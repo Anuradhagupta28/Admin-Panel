@@ -39,69 +39,165 @@ import {
   FormLabel,
 } from '@mui/material';
 
-const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, getData, currentPage }) => {
+const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, getData, currentPage ,token }) => {
   console.log("initialData", initialData, 'formData', formData);
+  const [classData, setClassData] = useState([]);
+
+  const [subjectData, setSubjectData] = useState([]);
 
   React.useEffect(() => {
     if (initialData) {
       setFormData(initialData);
+      if (initialData.class_id) {
+        getSubject(initialData.class_id);
+      }
     } else {
       setFormData({
-        class: '',
-        status: 1,
+        id:'',
+        class_id: '',
+        subject_id:'',
+        chapter_name:'',
+        description:'',
+        status:1,
+
       });
     }
   }, [initialData, setFormData]);
 
+  useEffect(() => {
+    if (open) {
+      getClass();
+    }
+  }, [open]);
+
+  const getClass = async () => {
+    const url = `https://dev-api.solvedudar.com/api/admin/class/data`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setClassData(json.data);
+     
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const getSubject = async (classId) => {
+    const url = `https://dev-api.solvedudar.com/api/admin/teacher/${classId}/subjects`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setSubjectData(json.data);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const handleClassChange = (event) => {
+    const selectedClassId = event.target.value;
+    setFormData(prevData => ({
+      ...prevData,
+      class_id: selectedClassId,
+      subject_id: '', // Reset subject when class changes
+    }));
+    getSubject(selectedClassId);
+    
+  };
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
       [name]: value,
+     
     });
   };
 
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-    setFormData((prevData) => {
-      const accessArray = (prevData.access || '').split(',').filter(Boolean);
-      if (checked) {
-        accessArray.push(name);
-      } else {
-        const index = accessArray.indexOf(name);
-        if (index > -1) {
-          accessArray.splice(index, 1);
-        }
-      }
-      return {
-        ...prevData,
-        access: accessArray.join(','),
-      };
-    });
-  };
+ 
 
   const onSubmit = async () => {
     await handleSubmit(formData);
-    getData(currentPage);
-    handleClose();
+    
+   
   };
 
-  const isChecked = (name) => {
-    return formData.access ? formData.access.split(',').includes(name) : false;
-  };
+ 
 
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Chapter Form</DialogTitle>
       <DialogContent>
-        <TextField
+      <TextField
           autoFocus
           margin="dense"
-          name="class"
-          label="Class *"
+          name="class_id"
+          label="Class Name *"
+          select
+          fullWidth
+          value={formData.class_id}
+          onChange={handleClassChange}
+        >
+          {classData.map(option => (
+            <MenuItem key={option.id} value={option.id}>
+              {option.class}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          
+          margin="dense"
+          name="subject_id"
+          label="Subject Name *"
+          select
+          fullWidth
+          value={formData.subject_id}
+          onChange={handleChange}
+        >
+          {subjectData.map(option => (
+            <MenuItem key={option.id} value={option.id}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          margin="dense"
+          name="chapter_name"
+          label="chapter name"
           type="text"
           fullWidth
-          value={formData.class}
+          value={formData.chapter_name}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="dense"
+          name="description"
+          label="Description *"
+          type="text"
+          fullWidth
+          value={formData.description}
           onChange={handleChange}
         />
         <TextField
@@ -129,6 +225,163 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
 };
 
 
+// const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, getData, currentPage, token }) => {
+//   const [examData, setExamData] = useState([]);
+//   const [examLoading, setExamLoading] = useState(true);
+//   const [classData, setClassData] = useState([]);
+//   const [selectedFileName, setSelectedFileName] = useState('');
+//   const [imageData, setImageData] = useState(false);
+//   console.log("formdata1", formData)
+//   React.useEffect(() => {
+//     if (initialData) {
+//       setFormData(initialData);
+//       setImageData(true);
+//     } else {
+//       setFormData({
+//         id: '',
+//         class_id: '',
+//         subject_id:'',
+//         subject_name: '',
+//         description: '',
+//         status: 1,
+       
+//       });
+//     }
+//   }, [initialData]);
+
+//   useEffect(() => {
+//     if (open) {
+//       getClass();
+//     }
+//   }, [open]);
+
+//   const getClass = async () => {
+//     const url = `https://dev-api.solvedudar.com/api/admin/class/data`;
+
+//     try {
+//       const response = await fetch(url, {
+//         method: "GET",
+//         headers: {
+//           "Content-Type": "application/json",
+//           "Authorization": `Bearer ${token}`,
+//         },
+//       });
+
+//       if (response.ok) {
+//         const json = await response.json();
+//         setClassData(json.data);
+//       } else {
+//         throw new Error(`Response status: ${response.status}`);
+//       }
+//     } catch (error) {
+//       console.error(error.message);
+//     }
+//   };
+
+//   const handleChange = (event) => {
+//     const { name, value } = event.target;
+//     setFormData({
+//       ...formData,
+//       [name]: value,
+//     });
+//   };
+
+
+//   const onSubmit = async () => {
+  
+//     await handleSubmit(formData);
+   
+  
+//   };
+
+//   return (
+//     <Dialog open={open} onClose={handleClose}>
+//       <DialogTitle>Chapter Form</DialogTitle>
+//       <DialogContent>
+//         <TextField
+//           autoFocus
+//           margin="dense"
+//           name="class_id"
+//           label="Class Name *"
+//           select
+//           fullWidth
+//           value={formData.class_id}
+//           onChange={handleChange}
+//         >
+//           {classData.map(option => (
+//             <MenuItem key={option.id} value={option.id}>
+//               {option.class}
+//             </MenuItem>
+//           ))}
+//         </TextField>
+//         <TextField
+//           margin="dense"
+//           name="subject_name"
+//           label="Subject Name *"
+
+//           fullWidth
+//           value={formData.subject_name}
+//           onChange={handleChange}
+//         />
+
+
+//         <TextField
+//           margin="dense"
+//           name="description"
+//           label="Description *"
+//           type="text"
+//           fullWidth
+//           value={formData.description}
+//           onChange={handleChange}
+//         />
+//         <div>
+//           <input
+//             accept="image/*"
+//             style={{ display: 'none' }}
+//             id="raised-button-file"
+//             multiple
+//             type="file"
+//             name="image"
+
+//             onChange={handleFileChange}
+//           />
+//           <label htmlFor="raised-button-file" style={{ margin: '8px 12px 6px 0' }}>
+//             <Button variant="contained" component="span">
+//               Choose File
+//             </Button>
+//           </label>
+//           <span>{selectedFileName || '*No file chosen'}</span>
+//           {imageData && (
+//   <div style={{ marginTop: '10px' }}>
+//     <img src={formData.imageUrl}  style={{ maxWidth: '20%', height: 'auto' }} />
+//   </div>
+// )}
+         
+//         </div>
+
+//         <TextField
+//           margin="dense"
+//           name="status"
+//           label="Status"
+//           select
+//           fullWidth
+//           value={formData.status}
+//           onChange={handleChange}
+//         >
+//           <MenuItem value="1">Active</MenuItem>
+//           <MenuItem value="0">Inactive</MenuItem>
+//         </TextField>
+//       </DialogContent>
+//       <DialogActions>
+//         <Button onClick={handleClose}>Cancel</Button>
+//         <Button onClick={onSubmit} variant="contained" color="primary">
+//           Submit
+//         </Button>
+//       </DialogActions>
+//     </Dialog>
+//   );
+// };
+
 
 const Chapter = () => {
 
@@ -145,8 +398,11 @@ const Chapter = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
   const [formData, setFormData] = useState({
-    class: '',
-    status: 1,
+    id:'',
+    class_id: '',
+    subject_id:'',
+    chapter_name:'',
+    description:'',
   });
   const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
 
@@ -270,9 +526,9 @@ const Chapter = () => {
 
 
   const handleAddRole = async (formData) => {
-    const { class: className, status } = formData; // Destructure class as className
+    const { class_id, subject_id, chapter_name, description, status } = formData; // Destructure class as className
 
-    console.log('formData', formData);
+    console.log('formDataAdd', formData);
 
     try {
       const response = await fetch('https://dev-api.solvedudar.com/api/admin/chapter', {
@@ -281,7 +537,7 @@ const Chapter = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ className, status }), // Correct JSON structure
+        body: JSON.stringify({ class_id, subject_id, chapter_name, description, status }), // Correct JSON structure
       });
 
       if (response.ok) {
@@ -290,7 +546,7 @@ const Chapter = () => {
 
         console.log('Role added:', result, "formData", formData);
 
-        setFormData({ class: '', status: 1 }); // Clear form data
+        // setFormData({ class: '', status: 1 }); 
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -300,7 +556,7 @@ const Chapter = () => {
   };
 
   const handleEditRole = async (id, formData) => {
-    const { class: className, status } = formData;
+    const { class_id, subject_id, chapter_name, description, status } = formData;
 
     try {
       const response = await fetch(`https://dev-api.solvedudar.com/api/admin/chapter`, {
@@ -309,7 +565,7 @@ const Chapter = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ id, className, status }), // Ensure proper formatting
+        body: JSON.stringify({ id, class_id, subject_id, chapter_name, description, status}), // Ensure proper formatting
       });
 
       if (response.ok) {
@@ -322,7 +578,7 @@ const Chapter = () => {
         );
 
         console.log('Role updated:', result);
-        getData(currentPage);
+       
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -343,7 +599,8 @@ const Chapter = () => {
       console.log('handleAddRole')
       await handleAddRole(formData);
     }
-    handleClose(); // Close the dialog after submission
+    handleClose(); 
+    getData(currentPage);
   };
 
   const handleClickOpen = (data = null) => {
@@ -508,7 +765,7 @@ const Chapter = () => {
             </DialogActions>
           </Dialog>
 
-          <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} setdata={setData} data={data} getData={getData} currentPage={currentPage} />
+          <ExamDialog open={open} handleClose={handleClose} initialData={dialogData} handleSubmit={handleSubmit} setFormData={setFormData} formData={formData} setdata={setData} data={data} getData={getData} currentPage={currentPage} token={token}/>
 
 
           {!loading ? (
@@ -534,7 +791,7 @@ const Chapter = () => {
 
                       </CTableHeaderCell>
                       <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.class}</CTableDataCell>
-                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.subject}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.subject_name}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.chapter_name}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>{row.description}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>
@@ -549,18 +806,11 @@ const Chapter = () => {
                         </CButton>
                       </CTableDataCell> */}
                       <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>
-                        <CRow className="g-2">  {/* Add "g-2" class for small gutter spacing */}
-                          <CCol xs="auto">  {/* Use "auto" to size columns based on their content */}
+                         {/* Use "auto" to size columns based on their content */}
                             <CButton color='secondary'>
                               Topic
                             </CButton>
-                          </CCol>
-                          <CCol xs="auto">
-                            <CButton color='secondary'>
-                              Question
-                            </CButton>
-                          </CCol>
-                        </CRow>
+                         
                       </CTableDataCell>
 
                       <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }}>

@@ -38,7 +38,7 @@ const UserRole = React.lazy(() => import('./views/managementComp/RoleManagement/
 const SystemUser = React.lazy(() => import('./views/managementComp/RoleManagement/SystemUser'))
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
-const Author = React.lazy(() => import('./views/managementComp/ContentManagement/Author'))
+const Topic = React.lazy(() => import('./views/managementComp/ContentManagement/Topic'))
 const Chapter = React.lazy(() => import('./views/managementComp/ContentManagement/Chapter'))
 const Subject = React.lazy(() => import('./views/managementComp/ContentManagement/Subject'))
 const Exam = React.lazy(() => import('./views/managementComp/ContentManagement/Exam'))
@@ -96,7 +96,7 @@ const routes = [
   { path: '/', exact: true, name: 'Login' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   {path: '/managementComp/ContentManagement/Exam', name: 'Exam', element:Exam},
-  {path: '/managementComp/ContentManagement/Author', name: 'Author', element:Author},
+  {path: '/managementComp/ContentManagement/Topic', name: 'Topic', element:Topic},
   {path: '/managementComp/ContentManagement/Chapter', name: 'Chapter', element:Chapter},
   {path: '/managementComp/ContentManagement/Subject', name: 'Subject', element:Subject},
   {path: '/managementComp/ContentManagement/Class', name: 'Class', element:Class},

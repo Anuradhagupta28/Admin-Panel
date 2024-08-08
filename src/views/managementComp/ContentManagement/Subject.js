@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useCallback} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { debounce } from 'lodash';
 import {
   CCard,
@@ -34,29 +34,37 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
 
-const ExamDialog = ({  open, handleClose, initialData, handleSubmit, setFormData, formData, getData, currentPage ,token }) => {
+const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, getData, currentPage, token }) => {
   const [examData, setExamData] = useState([]);
   const [examLoading, setExamLoading] = useState(true);
+  const [classData, setClassData] = useState([]);
+  const [selectedFileName, setSelectedFileName] = useState('');
+  const [imageData, setImageData] = useState(false);
+  console.log("formdata1", formData)
   React.useEffect(() => {
     if (initialData) {
       setFormData(initialData);
+      setImageData(true);
     } else {
       setFormData({
-        class: '',
-        name: '',
+        id: '',
+        class_id: '',
+        subject_name: '',
         description: '',
-    
         status: 1,
+        image: '',
       });
     }
   }, [initialData]);
+
   useEffect(() => {
     if (open) {
-      getExam();
+      getClass();
     }
   }, [open]);
-  const getExam = async () => {
-    const url = `https://dev-api.solvedudar.com/api/admin/exam/data`;
+
+  const getClass = async () => {
+    const url = `https://dev-api.solvedudar.com/api/admin/class/data`;
 
     try {
       const response = await fetch(url, {
@@ -69,14 +77,13 @@ const ExamDialog = ({  open, handleClose, initialData, handleSubmit, setFormData
 
       if (response.ok) {
         const json = await response.json();
-        setExamData(json.data);
-        setExamLoading(false)
+        setClassData(json.data);
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
     } catch (error) {
       console.error(error.message);
-    } 
+    }
   };
 
   const handleChange = (event) => {
@@ -86,31 +93,45 @@ const ExamDialog = ({  open, handleClose, initialData, handleSubmit, setFormData
       [name]: value,
     });
   };
-
+  const handleFileChange = (event) => {
+    const { name, files } = event.target;
+    if (files.length > 0) {
+      const file = files[0];
+      setFormData({
+        ...formData,
+        [name]: file,
+      });
+      setSelectedFileName(file.name);
+    } else {
+      alert('Please select an image file.');
+      setSelectedFileName('');
+    }
+  };
 
   const onSubmit = async () => {
+  
     await handleSubmit(formData);
-    getData(currentPage);
+   
     handleClose();
   };
 
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Exam Form</DialogTitle>
+      <DialogTitle>Subject Form</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
           margin="dense"
-          name="exam_id"
-          label="Exam Name *"
+          name="class_id"
+          label="Class Name *"
           select
           fullWidth
-          value={formData.exam_id}
+          value={formData.class_id}
           onChange={handleChange}
         >
-          {examData.map(option => (
+          {classData.map(option => (
             <MenuItem key={option.id} value={option.id}>
-              {option.exam_name}
+              {option.class}
             </MenuItem>
           ))}
         </TextField>
@@ -118,13 +139,13 @@ const ExamDialog = ({  open, handleClose, initialData, handleSubmit, setFormData
           margin="dense"
           name="subject_name"
           label="Subject Name *"
-          
+
           fullWidth
           value={formData.subject_name}
           onChange={handleChange}
         />
-          
-       
+
+
         <TextField
           margin="dense"
           name="description"
@@ -134,6 +155,30 @@ const ExamDialog = ({  open, handleClose, initialData, handleSubmit, setFormData
           value={formData.description}
           onChange={handleChange}
         />
+        <div>
+          <input
+            accept="image/*"
+            style={{ display: 'none' }}
+            id="raised-button-file"
+            multiple
+            type="file"
+            name="image"
+
+            onChange={handleFileChange}
+          />
+          <label htmlFor="raised-button-file" style={{ margin: '8px 12px 6px 0' }}>
+            <Button variant="contained" component="span">
+              Choose File
+            </Button>
+          </label>
+          <span>{selectedFileName || '*No file chosen'}</span>
+          {imageData && (
+  <div style={{ marginTop: '10px' }}>
+    <img src={formData.imageUrl}  style={{ maxWidth: '20%', height: 'auto' }} />
+  </div>
+)}
+         
+        </div>
 
         <TextField
           margin="dense"
@@ -174,11 +219,12 @@ const Subject = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
   const [formData, setFormData] = useState({
-    class: '',
-    name: '',
+    id: '',
+    class_id: '',
+    subject_name: '',
     description: '',
-
     status: 1,
+    image: '',
   });
 
   const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
@@ -271,11 +317,20 @@ const Subject = () => {
           'Authorization': `Bearer ${token}`,
         },
       });
-
+  
       if (response.ok) {
         setData((prevData) => prevData.filter((item) => item.id !== id));
         console.log('Role deleted:', id);
-        getData(currentPage)
+  
+        // Check if the current page has no data after the delete
+        if (data.length === 1 && currentPage > 1) {
+          // Decrement the current page and fetch the data for the previous page
+          setCurrentPage(currentPage - 1);
+          getData(currentPage - 1);
+        } else {
+          // Fetch the data for the current page
+          getData(currentPage);
+        }
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -303,27 +358,38 @@ const Subject = () => {
 
 
   const handleAddRole = async (formData) => {
-    const { exam_id, subject_name, description, status } = formData; // Destructure class as className
+    const { class_id, subject_name, description, status, image } = formData; // Destructure class as className
 
-    console.log('formData', formData);
+    console.log('formData2', formData);
+
+
+    const formDataToSend = new FormData();
+    formDataToSend.append('class_id', class_id);
+    formDataToSend.append('subject_name', subject_name);
+    formDataToSend.append('description', description);
+    formDataToSend.append('status', status);
+
+
+    if (image instanceof File) {
+      formDataToSend.append('image', image);
+    }
 
     try {
       const response = await fetch('https://dev-api.solvedudar.com/api/admin/subject', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ exam_id, subject_name, description, status }), // Correct JSON structure
+        body: formDataToSend,
       });
 
       if (response.ok) {
         const result = await response.json();
-        setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result
 
+        setData((prevData) => [...prevData, result]);
         console.log('Role added:', result, "formData", formData);
 
-        setFormData({ class: '', status: 1 }); // Clear form data
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -333,16 +399,27 @@ const Subject = () => {
   };
 
   const handleEditRole = async (id, formData) => {
-    const { exam_id, subject_name, description, status } = formData;
+    const { class_id, subject_name, description, status, image } = formData;
+    console.log('formData3', formData);
+    console.log("image", image);
+    const formDataToUpdate = new FormData();
+    formDataToUpdate.append('id', id);
+    formDataToUpdate.append('class_id', class_id);
+    formDataToUpdate.append('subject_name', subject_name);
+    formDataToUpdate.append('description', description);
+    formDataToUpdate.append('status', status);
+
+    if (image instanceof File) {
+      formDataToUpdate.append('image', image);
+    }
 
     try {
       const response = await fetch(`https://dev-api.solvedudar.com/api/admin/subject`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ id,exam_id, subject_name, description, status}), // Ensure proper formatting
+        body: formDataToUpdate, // Ensure proper formatting
       });
 
       if (response.ok) {
@@ -350,12 +427,13 @@ const Subject = () => {
         console.log("current page in edit", currentPage);
 
         // Update the data properly
-        setData((prevData) =>
-          prevData.map((item) => (item.id === id ? result : item))
-        );
+        // setData((prevData) =>
+        //   prevData.map((item) => (item.id === id ? result : item))
+        // );
 
         console.log('Role updated:', result);
-        getData(currentPage);
+        console.log("updated data", data);
+        // getData(currentPage);
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -367,16 +445,13 @@ const Subject = () => {
 
 
   const handleSubmit = async (formData) => {
-    console.log("formdata in handlesubmit", formData, "dialogData", dialogData)
     if (dialogData) {
-      console.log('handleEditRole')
       await handleEditRole(dialogData.id, formData);
-
     } else {
-      console.log('handleAddRole')
       await handleAddRole(formData);
     }
-    handleClose(); // Close the dialog after submission
+    handleClose();
+    getData(currentPage); // Refetch data to reflect changes
   };
 
   const handleClickOpen = (data = null) => {
@@ -394,11 +469,101 @@ const Subject = () => {
     setCurrentPage(newPage);
     getData(newPage)
   };
-  const pageNumbers = [];
+  const renderPaginationItems = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
 
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
+    if (totalPages <= maxVisiblePages) {
+      // If total pages are less than or equal to maxVisiblePages, show all page numbers
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(
+          <CPaginationItem
+            key={i}
+            active={i === currentPage}
+            onClick={() => handlePageChange(i)}
+          >
+            {i}
+          </CPaginationItem>
+        );
+      }
+    } else {
+      // Always add first page
+      pageNumbers.push(
+        <CPaginationItem
+          key={1}
+          active={1 === currentPage}
+          onClick={() => handlePageChange(1)}
+        >
+          1
+        </CPaginationItem>
+      );
+
+      // Add ellipsis if currentPage is > 3
+      if (currentPage > 3) {
+        pageNumbers.push(<CPaginationItem key="ellipsis-1">...</CPaginationItem>);
+      }
+
+      // Add one page before current page if possible
+      if (currentPage > 2) {
+        pageNumbers.push(
+          <CPaginationItem
+            key={currentPage - 1}
+            active={false}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            {currentPage - 1}
+          </CPaginationItem>
+        );
+      }
+
+      // Add current page if not the first or last page
+      if (currentPage !== 1 && currentPage !== totalPages) {
+        pageNumbers.push(
+          <CPaginationItem
+            key={currentPage}
+            active={true}
+          >
+            {currentPage}
+          </CPaginationItem>
+        );
+      }
+
+      // Add one page after current page if possible
+      if (currentPage < totalPages - 1) {
+        pageNumbers.push(
+          <CPaginationItem
+            key={currentPage + 1}
+            active={false}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            {currentPage + 1}
+          </CPaginationItem>
+        );
+      }
+
+      // Add ellipsis if currentPage is < totalPages - 2
+      if (currentPage < totalPages - 2) {
+        pageNumbers.push(<CPaginationItem key="ellipsis-2">...</CPaginationItem>);
+      }
+
+      // Always add last page
+      if (totalPages > 1) {
+        pageNumbers.push(
+          <CPaginationItem
+            key={totalPages}
+            active={totalPages === currentPage}
+            onClick={() => handlePageChange(totalPages)}
+          >
+            {totalPages}
+          </CPaginationItem>
+        );
+      }
+    }
+
+    return pageNumbers;
+  };
+
+ 
 
 
   const itemsPerPage = 10;
@@ -469,15 +634,15 @@ const Subject = () => {
                     <CTableRow key={row.id}>
                       <CTableHeaderCell scope="row" style={{ padding: '20px' }}>{index + 1 + (currentPage - 1) * itemsPerPage}</CTableHeaderCell>
                       <CTableDataCell style={{ padding: '20px' }}>{row.class}</CTableDataCell>
-                      <CTableDataCell style={{ padding: '20px' }}>{row.name}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.subject_name}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>{row.description}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>
-                      <CImage rounded thumbnail src={row.image===''?'https://dev-v1.solvedudar.com/uploads/subject/73ce23444d67c40755a4a68d481d6b40.png':row.image} width={80} height={80} />
+                        <CImage rounded thumbnail src={row.imageUrl} width={80} height={80} />
                       </CTableDataCell>
 
-                     
+
                       <CTableDataCell style={{ padding: '20px' }}>
-                        <CButton color= 'success' size="sm" style={{ color: 'white' }}>
+                        <CButton color='success' size="sm" style={{ color: 'white' }}>
                           Active
                         </CButton>
                       </CTableDataCell>
@@ -492,17 +657,19 @@ const Subject = () => {
               </CTable>
 
               <CPagination className="justify-content-center" aria-label="Page navigation example">
-                <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
-                {pageNumbers.map((number) => (
-                  <CPaginationItem
-                    key={number}
-                    active={number === currentPage}
-                    onClick={() => handlePageChange(number)}
-                  >
-                    {number}
-                  </CPaginationItem>
-                ))}
-                <CPaginationItem disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
+                <CPaginationItem
+                  disabled={currentPage === 1}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                >
+                  Previous
+                </CPaginationItem>
+                {renderPaginationItems()}
+                <CPaginationItem
+                  disabled={currentPage === totalPages}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                >
+                  Next
+                </CPaginationItem>
               </CPagination>
             </CCardBody>
           ) : (
