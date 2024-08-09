@@ -265,17 +265,17 @@ const Subject = () => {
 
   const searchData = async (searchQuery) => {
     console.log('searchQuery', searchQuery);
-    const statusMap = {
-      pending: 0,
-      active: 1,
-    };
+    // const statusMap = {
+    //   pending: 0,
+    //   active: 1,
+    // };
 
-    // Check if searchQuery matches any keyword in statusMap
-    const transformedQuery = statusMap[searchQuery.toLowerCase()] !== undefined
-      ? statusMap[searchQuery.toLowerCase()]
-      : searchQuery;
+    // // Check if searchQuery matches any keyword in statusMap
+    // const transformedQuery = statusMap[searchQuery.toLowerCase()] !== undefined
+    //   ? statusMap[searchQuery.toLowerCase()]
+    //   : searchQuery;
 
-    const url = `https://dev-api.solvedudar.com/api/admin/subject/data?search=${encodeURIComponent(transformedQuery)}`;
+    const url = `https://dev-api.solvedudar.com/api/admin/subject/data?search=${encodeURIComponent(searchQuery)}`;
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -288,7 +288,7 @@ const Subject = () => {
 
       if (response.ok) {
         const json = await response.json();
-        setData(json.data); // Directly set the data without pagination
+        setData(json.data.data); // Directly set the data without pagination
         setLoading(false);
       } else {
         throw new Error(`Response status: ${response.status}`);
@@ -653,7 +653,7 @@ const Subject = () => {
                     </CTableRow>
                   ))}
                 </CTableBody>
-                <CTableCaption>List of Exam {totalRecords}</CTableCaption>
+                <CTableCaption>Showing 1 to 10 of {totalRecords} entries</CTableCaption>
               </CTable>
 
               <CPagination className="justify-content-center" aria-label="Page navigation example">

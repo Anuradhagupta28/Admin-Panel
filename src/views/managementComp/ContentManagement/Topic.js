@@ -48,23 +48,23 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     } else {
       setFormData({
         id: '',
-        class_id: '',
-        subject_name: '',
+        chapter_id: '',
+        topic_name: '',
         description: '',
-        status: 1,
-        image: '',
+        
+      
       });
     }
   }, [initialData]);
 
   useEffect(() => {
     if (open) {
-      getClass();
+      getChapter();
     }
   }, [open]);
 
-  const getClass = async () => {
-    const url = `https://dev-api.solvedudar.com/api/admin/class/data`;
+  const getChapter = async () => {
+    const url = `https://dev-api.solvedudar.com/api/admin//chapter/data`;
 
     try {
       const response = await fetch(url, {
@@ -77,7 +77,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
 
       if (response.ok) {
         const json = await response.json();
-        setClassData(json.data);
+        setClassData(json.data.data);
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -93,20 +93,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
       [name]: value,
     });
   };
-  const handleFileChange = (event) => {
-    const { name, files } = event.target;
-    if (files.length > 0) {
-      const file = files[0];
-      setFormData({
-        ...formData,
-        [name]: file,
-      });
-      setSelectedFileName(file.name);
-    } else {
-      alert('Please select an image file.');
-      setSelectedFileName('');
-    }
-  };
+ 
 
   const onSubmit = async () => {
 
@@ -122,26 +109,26 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
         <TextField
           autoFocus
           margin="dense"
-          name="class_id"
-          label="Class Name *"
+          name="chapter_id"
+          label="Chapter Name *"
           select
           fullWidth
-          value={formData.class_id}
+          value={formData.chapter_id}
           onChange={handleChange}
         >
           {classData.map(option => (
             <MenuItem key={option.id} value={option.id}>
-              {option.class}
+              {option.chapter_name}
             </MenuItem>
           ))}
         </TextField>
         <TextField
           margin="dense"
-          name="subject_name"
-          label="Subject Name *"
+          name="topic_name"
+          label="Topic Name *"
 
           fullWidth
-          value={formData.subject_name}
+          value={formData.topic_name}
           onChange={handleChange}
         />
 
@@ -155,43 +142,9 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
           value={formData.description}
           onChange={handleChange}
         />
-        <div>
-          <input
-            accept="image/*"
-            style={{ display: 'none' }}
-            id="raised-button-file"
-            multiple
-            type="file"
-            name="image"
+       
 
-            onChange={handleFileChange}
-          />
-          <label htmlFor="raised-button-file" style={{ margin: '8px 12px 6px 0' }}>
-            <Button variant="contained" component="span">
-              Choose File
-            </Button>
-          </label>
-          <span>{selectedFileName || '*No file chosen'}</span>
-          {imageData && (
-            <div style={{ marginTop: '10px' }}>
-              <img src={formData.imageUrl} style={{ maxWidth: '20%', height: 'auto' }} />
-            </div>
-          )}
-
-        </div>
-
-        <TextField
-          margin="dense"
-          name="status"
-          label="Status"
-          select
-          fullWidth
-          value={formData.status}
-          onChange={handleChange}
-        >
-          <MenuItem value="1">Active</MenuItem>
-          <MenuItem value="0">Inactive</MenuItem>
-        </TextField>
+       
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
@@ -220,11 +173,9 @@ const Topic = () => {
   const [search, setSearch] = useState('');
   const [formData, setFormData] = useState({
     id: '',
-    class_id: '',
-    subject_name: '',
+    chapter_id: '',
+    topic_name: '',
     description: '',
-    status: 1,
-    image: '',
   });
 
   const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
@@ -235,7 +186,7 @@ const Topic = () => {
   ////////getData
   const getData = async (currentPage) => {
     console.log('page', currentPage)
-    const url = `https://dev-api.solvedudar.com/api/admin/subject/data?page=${currentPage}`; // Replace with your API endpoint
+    const url = `https://dev-api.solvedudar.com/api/admin/topic/data?page=${currentPage}`; // Replace with your API endpoint
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -250,11 +201,11 @@ const Topic = () => {
         const json = await response.json();
         setLoading(false);
         // console.log(json.totalRecords);
-        setTotalPages(json.data.totalPages)
-        setTotalRecords(json.data.totalRecords);
+        setTotalPages(json.totalPages)
+        setTotalRecords(json.totalRecords);
 
-        console.log(json.data.data);
-        setData(json.data.data); // Update state with response data
+        console.log(json.data);
+        setData(json.data); // Update state with response data
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -266,16 +217,16 @@ const Topic = () => {
   ////////searchData
   const searchData = async (searchQuery) => {
     console.log('searchQuery', searchQuery);
-    const statusMap = {
-      pending: 0,
-      active: 1,
-    };
+    // const statusMap = {
+    //   pending: 0,
+    //   active: 1,
+    // };
 
-    const transformedQuery = statusMap[searchQuery.toLowerCase()] !== undefined
-      ? statusMap[searchQuery.toLowerCase()]
-      : searchQuery;
+    // const transformedQuery = statusMap[searchQuery.toLowerCase()] !== undefined
+    //   ? statusMap[searchQuery.toLowerCase()]
+    //   : searchQuery;
 
-    const url = `https://dev-api.solvedudar.com/api/admin/subject/data?search=${encodeURIComponent(transformedQuery)}`;
+    const url = `https://dev-api.solvedudar.com/api/admin//topic/data?search=${encodeURIComponent(searchQuery)}`;
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -297,7 +248,7 @@ const Topic = () => {
       console.error(error.message);
       setLoading(false);
     }
-  };k
+  };
 
   const debouncedFetchData = useCallback(debounce((query) => {
       searchData(query);
@@ -312,7 +263,7 @@ const Topic = () => {
   /////////delete data
   const handleDeleteRole = async (id) => {
     try {
-      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/subject/${id}`, {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/topic/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -343,37 +294,29 @@ const Topic = () => {
 
   ////Add role
   const handleAddRole = async (formData) => {
-    const { class_id, subject_name, description, status, image } = formData; // Destructure class as className
+    const { chapter_id, topic_name, description} = formData; 
 
     console.log('formData2', formData);
 
 
-    const formDataToSend = new FormData();
-    formDataToSend.append('class_id', class_id);
-    formDataToSend.append('subject_name', subject_name);
-    formDataToSend.append('description', description);
-    formDataToSend.append('status', status);
-
-
-    if (image instanceof File) {
-      formDataToSend.append('image', image);
-    }
+ 
 
     try {
-      const response = await fetch('https://dev-api.solvedudar.com/api/admin/subject', {
+      const response = await fetch('https://dev-api.solvedudar.com/api/admin/topic', {
+       
         method: 'POST',
         headers: {
-
-          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Authorization' : `Bearer ${token}`,
         },
-        body: formDataToSend,
+        body: JSON.stringify({ chapter_id, topic_name, description }), // Correct JSON structure
       });
 
       if (response.ok) {
         const result = await response.json();
 
         setData((prevData) => [...prevData, result]);
-        console.log('Role added:', result, "formData", formData);
+        console.log('Role added:', result);
 
       } else {
         throw new Error(`Response status: ${response.status}`);
@@ -384,32 +327,23 @@ const Topic = () => {
   };
  ////Edit role
   const handleEditRole = async (id, formData) => {
-    const { class_id, subject_name, description, status, image } = formData;
-    console.log('formData3', formData);
-    console.log("image", image);
-    const formDataToUpdate = new FormData();
-    formDataToUpdate.append('id', id);
-    formDataToUpdate.append('class_id', class_id);
-    formDataToUpdate.append('subject_name', subject_name);
-    formDataToUpdate.append('description', description);
-    formDataToUpdate.append('status', status);
+    const { chapter_id, topic_name, description} = formData; 
 
-    if (image instanceof File) {
-      formDataToUpdate.append('image', image);
-    }
+  
 
     try {
-      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/subject`, {
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/topic`, {
         method: 'PUT',
         headers: {
+          'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: formDataToUpdate, // Ensure proper formatting
+        body: JSON.stringify({ id, chapter_id, topic_name, description }), // Ensure proper formatting
       });
 
       if (response.ok) {
         const result = await response.json();
-        console.log("current page in edit", currentPage);
+       
 
         // Update the data properly
         // setData((prevData) =>
@@ -449,6 +383,7 @@ const Topic = () => {
       await handleAddRole(formData);
     }
     handleClose();
+    console.log("currentPage",currentPage)
     getData(currentPage); // Refetch data to reflect changes
   };
 
@@ -617,10 +552,12 @@ const Topic = () => {
                 <CTableHead>
                   <CTableRow>
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Sr.No.</CTableHeaderCell>
-                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Class Name</CTableHeaderCell>
+                   
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Subject Name</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Chapter Name</CTableHeaderCell>
+                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Topic Name</CTableHeaderCell>
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Description</CTableHeaderCell>
-                    <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Image</CTableHeaderCell>
+                  
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Status</CTableHeaderCell>
                     <CTableHeaderCell scope="col" style={{ padding: '20px' }}>Action</CTableHeaderCell>
                   </CTableRow>
@@ -629,12 +566,10 @@ const Topic = () => {
                   {data.map((row, index) => (
                     <CTableRow key={row.id}>
                       <CTableHeaderCell scope="row" style={{ padding: '20px' }}>{index + 1 + (currentPage - 1) * itemsPerPage}</CTableHeaderCell>
-                      <CTableDataCell style={{ padding: '20px' }}>{row.class}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>{row.subject_name}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.chapter_name}</CTableDataCell>
+                      <CTableDataCell style={{ padding: '20px' }}>{row.topic_name}</CTableDataCell>
                       <CTableDataCell style={{ padding: '20px' }}>{row.description}</CTableDataCell>
-                      <CTableDataCell style={{ padding: '20px' }}>
-                        <CImage rounded thumbnail src={row.imageUrl} width={80} height={80} />
-                      </CTableDataCell>
 
 
                       <CTableDataCell style={{ padding: '20px' }}>
@@ -649,7 +584,7 @@ const Topic = () => {
                     </CTableRow>
                   ))}
                 </CTableBody>
-                <CTableCaption>List of Exam {totalRecords}</CTableCaption>
+                <CTableCaption>Showing 1 to 10 of {totalRecords} entries</CTableCaption>
               </CTable>
 
               <CPagination className="justify-content-center" aria-label="Page navigation example">

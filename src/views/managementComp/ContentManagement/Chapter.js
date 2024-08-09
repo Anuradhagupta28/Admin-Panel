@@ -225,162 +225,6 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
 };
 
 
-// const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData, formData, getData, currentPage, token }) => {
-//   const [examData, setExamData] = useState([]);
-//   const [examLoading, setExamLoading] = useState(true);
-//   const [classData, setClassData] = useState([]);
-//   const [selectedFileName, setSelectedFileName] = useState('');
-//   const [imageData, setImageData] = useState(false);
-//   console.log("formdata1", formData)
-//   React.useEffect(() => {
-//     if (initialData) {
-//       setFormData(initialData);
-//       setImageData(true);
-//     } else {
-//       setFormData({
-//         id: '',
-//         class_id: '',
-//         subject_id:'',
-//         subject_name: '',
-//         description: '',
-//         status: 1,
-       
-//       });
-//     }
-//   }, [initialData]);
-
-//   useEffect(() => {
-//     if (open) {
-//       getClass();
-//     }
-//   }, [open]);
-
-//   const getClass = async () => {
-//     const url = `https://dev-api.solvedudar.com/api/admin/class/data`;
-
-//     try {
-//       const response = await fetch(url, {
-//         method: "GET",
-//         headers: {
-//           "Content-Type": "application/json",
-//           "Authorization": `Bearer ${token}`,
-//         },
-//       });
-
-//       if (response.ok) {
-//         const json = await response.json();
-//         setClassData(json.data);
-//       } else {
-//         throw new Error(`Response status: ${response.status}`);
-//       }
-//     } catch (error) {
-//       console.error(error.message);
-//     }
-//   };
-
-//   const handleChange = (event) => {
-//     const { name, value } = event.target;
-//     setFormData({
-//       ...formData,
-//       [name]: value,
-//     });
-//   };
-
-
-//   const onSubmit = async () => {
-  
-//     await handleSubmit(formData);
-   
-  
-//   };
-
-//   return (
-//     <Dialog open={open} onClose={handleClose}>
-//       <DialogTitle>Chapter Form</DialogTitle>
-//       <DialogContent>
-//         <TextField
-//           autoFocus
-//           margin="dense"
-//           name="class_id"
-//           label="Class Name *"
-//           select
-//           fullWidth
-//           value={formData.class_id}
-//           onChange={handleChange}
-//         >
-//           {classData.map(option => (
-//             <MenuItem key={option.id} value={option.id}>
-//               {option.class}
-//             </MenuItem>
-//           ))}
-//         </TextField>
-//         <TextField
-//           margin="dense"
-//           name="subject_name"
-//           label="Subject Name *"
-
-//           fullWidth
-//           value={formData.subject_name}
-//           onChange={handleChange}
-//         />
-
-
-//         <TextField
-//           margin="dense"
-//           name="description"
-//           label="Description *"
-//           type="text"
-//           fullWidth
-//           value={formData.description}
-//           onChange={handleChange}
-//         />
-//         <div>
-//           <input
-//             accept="image/*"
-//             style={{ display: 'none' }}
-//             id="raised-button-file"
-//             multiple
-//             type="file"
-//             name="image"
-
-//             onChange={handleFileChange}
-//           />
-//           <label htmlFor="raised-button-file" style={{ margin: '8px 12px 6px 0' }}>
-//             <Button variant="contained" component="span">
-//               Choose File
-//             </Button>
-//           </label>
-//           <span>{selectedFileName || '*No file chosen'}</span>
-//           {imageData && (
-//   <div style={{ marginTop: '10px' }}>
-//     <img src={formData.imageUrl}  style={{ maxWidth: '20%', height: 'auto' }} />
-//   </div>
-// )}
-         
-//         </div>
-
-//         <TextField
-//           margin="dense"
-//           name="status"
-//           label="Status"
-//           select
-//           fullWidth
-//           value={formData.status}
-//           onChange={handleChange}
-//         >
-//           <MenuItem value="1">Active</MenuItem>
-//           <MenuItem value="0">Inactive</MenuItem>
-//         </TextField>
-//       </DialogContent>
-//       <DialogActions>
-//         <Button onClick={handleClose}>Cancel</Button>
-//         <Button onClick={onSubmit} variant="contained" color="primary">
-//           Submit
-//         </Button>
-//       </DialogActions>
-//     </Dialog>
-//   );
-// };
 
 
 const Chapter = () => {
@@ -442,17 +286,17 @@ const Chapter = () => {
 
   const searchData = async (searchQuery) => {
     console.log('searchQuery', searchQuery);
-    const statusMap = {
-      pending: 0,
-      active: 1,
-    };
+    // const statusMap = {
+    //   pending: 0,
+    //   active: 1,
+    // };
 
-    // Check if searchQuery matches any keyword in statusMap
-    const transformedQuery = statusMap[searchQuery.toLowerCase()] !== undefined
-      ? statusMap[searchQuery.toLowerCase()]
-      : searchQuery;
+    // // Check if searchQuery matches any keyword in statusMap
+    // const transformedQuery = statusMap[searchQuery.toLowerCase()] !== undefined
+    //   ? statusMap[searchQuery.toLowerCase()]
+    //   : searchQuery;
 
-    const url = `https://dev-api.solvedudar.com/api/admin/chapter/data?search=${encodeURIComponent(transformedQuery)}`;
+    const url = `https://dev-api.solvedudar.com/api/admin/chapter/data?search=${encodeURIComponent(searchQuery)}`;
     setLoading(true);
     try {
       const response = await fetch(url, {
@@ -465,7 +309,7 @@ const Chapter = () => {
 
       if (response.ok) {
         const json = await response.json();
-        setData(json.data); // Directly set the data without pagination
+        setData(json.data.data); // Directly set the data without pagination
         setLoading(false);
       } else {
         throw new Error(`Response status: ${response.status}`);
@@ -498,7 +342,13 @@ const Chapter = () => {
       if (response.ok) {
         setData((prevData) => prevData.filter((item) => item.id !== id));
         console.log('Role deleted:', id);
-        getData(currentPage)
+       
+        if (data.length === 1 && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+          getData(currentPage - 1);
+        } else {
+          getData(currentPage);
+        }
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -820,7 +670,7 @@ const Chapter = () => {
                     </CTableRow>
                   ))}
                 </CTableBody>
-                <CTableCaption>List of Classes {totalRecords}</CTableCaption>
+                <CTableCaption>Showing 1 to 10 of {totalRecords} entries</CTableCaption>
               </CTable>
               <CPagination className="justify-content-center" aria-label="Page navigation example">
                 <CPaginationItem

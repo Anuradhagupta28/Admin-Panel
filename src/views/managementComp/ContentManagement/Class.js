@@ -61,24 +61,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     });
   };
 
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-    setFormData((prevData) => {
-      const accessArray = (prevData.access || '').split(',').filter(Boolean);
-      if (checked) {
-        accessArray.push(name);
-      } else {
-        const index = accessArray.indexOf(name);
-        if (index > -1) {
-          accessArray.splice(index, 1);
-        }
-      }
-      return {
-        ...prevData,
-        access: accessArray.join(','),
-      };
-    });
-  };
+ 
 
   const onSubmit = async () => {
     await handleSubmit(formData);
@@ -86,9 +69,6 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
     handleClose();
   };
 
-  const isChecked = (name) => {
-    return formData.access ? formData.access.split(',').includes(name) : false;
-  };
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -242,7 +222,14 @@ const Class = () => {
       if (response.ok) {
         setData((prevData) => prevData.filter((item) => item.id !== id));
         console.log('Role deleted:', id);
-        getData(currentPage)
+        if (data.length === 1 && currentPage > 1) {
+          // Decrement the current page and fetch the data for the previous page
+          setCurrentPage(currentPage - 1);
+          getData(currentPage - 1);
+        } else {
+          // Fetch the data for the current page
+          getData(currentPage);
+        }
       } else {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -367,10 +354,98 @@ const Class = () => {
     pageNumbers.push(i);
   }
 
-  const handleSearch = (event) => {
-    setSearch(event.target.value);
-    searchData(search)
+  const renderPaginationItems = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
 
+    if (totalPages <= maxVisiblePages) {
+      // If total pages are less than or equal to maxVisiblePages, show all page numbers
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(
+          <CPaginationItem
+            key={i}
+            active={i === currentPage}
+            onClick={() => handlePageChange(i)}
+          >
+            {i}
+          </CPaginationItem>
+        );
+      }
+    } else {
+      // Always add first page
+      pageNumbers.push(
+        <CPaginationItem
+          key={1}
+          active={1 === currentPage}
+          onClick={() => handlePageChange(1)}
+        >
+          1
+        </CPaginationItem>
+      );
+
+      // Add ellipsis if currentPage is > 3
+      if (currentPage > 3) {
+        pageNumbers.push(<CPaginationItem key="ellipsis-1">...</CPaginationItem>);
+      }
+
+      // Add one page before current page if possible
+      if (currentPage > 2) {
+        pageNumbers.push(
+          <CPaginationItem
+            key={currentPage - 1}
+            active={false}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            {currentPage - 1}
+          </CPaginationItem>
+        );
+      }
+
+      // Add current page if not the first or last page
+      if (currentPage !== 1 && currentPage !== totalPages) {
+        pageNumbers.push(
+          <CPaginationItem
+            key={currentPage}
+            active={true}
+          >
+            {currentPage}
+          </CPaginationItem>
+        );
+      }
+
+      // Add one page after current page if possible
+      if (currentPage < totalPages - 1) {
+        pageNumbers.push(
+          <CPaginationItem
+            key={currentPage + 1}
+            active={false}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            {currentPage + 1}
+          </CPaginationItem>
+        );
+      }
+
+      // Add ellipsis if currentPage is < totalPages - 2
+      if (currentPage < totalPages - 2) {
+        pageNumbers.push(<CPaginationItem key="ellipsis-2">...</CPaginationItem>);
+      }
+
+      // Always add last page
+      if (totalPages > 1) {
+        pageNumbers.push(
+          <CPaginationItem
+            key={totalPages}
+            active={totalPages === currentPage}
+            onClick={() => handlePageChange(totalPages)}
+          >
+            {totalPages}
+          </CPaginationItem>
+        );
+      }
+    }
+
+    return pageNumbers;
   };
 
   const itemsPerPage = 10;
@@ -454,20 +529,22 @@ const Class = () => {
                     </CTableRow>
                   ))}
                 </CTableBody>
-                <CTableCaption>List of Classes {totalRecords}</CTableCaption>
+                <CTableCaption>Showing 1 to 10 of {totalRecords} entries</CTableCaption>
               </CTable>
               <CPagination className="justify-content-center" aria-label="Page navigation example">
-                <CPaginationItem disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>Previous</CPaginationItem>
-                {pageNumbers.map((number) => (
-                  <CPaginationItem
-                    key={number}
-                    active={number === currentPage}
-                    onClick={() => handlePageChange(number)}
-                  >
-                    {number}
-                  </CPaginationItem>
-                ))}
-                <CPaginationItem disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>Next</CPaginationItem>
+                <CPaginationItem
+                  disabled={currentPage === 1}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                >
+                  Previous
+                </CPaginationItem>
+                {renderPaginationItems()}
+                <CPaginationItem
+                  disabled={currentPage === totalPages}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                >
+                  Next
+                </CPaginationItem>
               </CPagination>
             </CCardBody>
           ) : (

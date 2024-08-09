@@ -60,11 +60,12 @@ const ExamDialog = ({
   const [teacherLoading, setTeacherLoading] = useState(true)
   const [searchTeacher, setSearchTeacher] = useState('');
   const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
-
+  const [imageData, setImageData] = useState(false);
   useEffect(() => {
     if (initialData) {
-      console.log("formData in useEffect",formData,"initialData",initialData)
+      console.log("formData in useEffect", formData, "initialData", initialData)
       setFormData(initialData);
+      setImageData(true);
     } else {
       setFormData({
         role: '',
@@ -75,7 +76,7 @@ const ExamDialog = ({
         user_type: '',
         user_type_id: '',
         status: '',
-        userImage: null ,
+        userImage: null,
       });
     }
   }, [initialData]);
@@ -92,17 +93,17 @@ const ExamDialog = ({
     const { name, files } = event.target;
     if (files.length > 0) {
       const file = files[0];
-     setFormData({
-          ...formData,
-          [name]: file.name,
-        });
-        setSelectedFileName(file.name);
-      } else {
-        alert('Please select an image file.');
-        setSelectedFileName('');
-      }
+      setFormData({
+        ...formData,
+        [name]: file.name,
+      });
+      setSelectedFileName(file.name);
+    } else {
+      alert('Please select an image file.');
+      setSelectedFileName('');
     }
-  
+  }
+
 
 
   const handleSearchTeachers = (event) => {
@@ -139,15 +140,15 @@ const ExamDialog = ({
   };
   const handleRowClick = (result) => {
     setFormData({
-      role:'4',
+      role: '4',
       name: result.name || '',
       email: result.email || '',
       password: result.password || '',
       phone: result.phone || '',
-      user_type:'0',
+      user_type: '0',
       user_type_id: result.id || '',
-      status:'1',
-      userImage: result.userImage || null ,
+      status: '1',
+      userImage: result.userImage || null,
     });
     setSelectedFileName(result.userImage || '');
   };
@@ -195,7 +196,7 @@ const ExamDialog = ({
                 />
               </CInputGroup>
 
-              <div  style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 {searchResults.map((result) => (
                   <div
                     key={result.id}
@@ -203,7 +204,7 @@ const ExamDialog = ({
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                   
+
                       // borderBottom: '1px solid #ddd', // Light separator line
                       cursor: 'pointer',
                     }}
@@ -215,15 +216,15 @@ const ExamDialog = ({
                     <div style={{ flex: 2 }}>
                       <p><strong>Phone:</strong> {result.phone}</p>
                     </div>
-                  
-                      <div style={{ flex: 1 }}>
-                        <img
-                          src={result.image ===null?"https://dev-v1.solvedudar.com/assets/master/profile/default.png":result.profile_pic}
-                          alt="Profile"
-                          style={{ width: '40px', height: '40px', objectFit: 'cover' }}
-                        />
-                      </div>
-                    
+
+                    <div style={{ flex: 1 }}>
+                      <img
+                        src={result.image === null ? "https://dev-v1.solvedudar.com/assets/master/profile/default.png" : result.profile_pic}
+                        alt="Profile"
+                        style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+                      />
+                    </div>
+
                   </div>
                 ))}
               </div>
@@ -231,7 +232,7 @@ const ExamDialog = ({
           )}
 
 
-          
+
           <TextField
             margin="dense"
             name="name"
@@ -253,18 +254,18 @@ const ExamDialog = ({
             onChange={handleChange}
           />
           {initialData === null && (
-        <TextField
-          margin="dense"
-          name="password"
-          label="Password"
-          type="password"
-          fullWidth
-          required
-          value={formData.password}
-          onChange={handleChange}
-        />
-      )}
-          
+            <TextField
+              margin="dense"
+              name="password"
+              label="Password"
+              type="password"
+              fullWidth
+              required
+              value={formData.password}
+              onChange={handleChange}
+            />
+          )}
+
           <TextField
             margin="dense"
             name="phone"
@@ -285,7 +286,7 @@ const ExamDialog = ({
                 multiple
                 type="file"
                 name="userImage"
-                
+
                 onChange={handleFileChange}
               />
               <label htmlFor="raised-button-file" style={{ margin: '8px 12px 6px 0' }}>
@@ -296,7 +297,7 @@ const ExamDialog = ({
               <span>{selectedFileName || '*No file chosen'}</span>
             </div>
           )}
-           {initialData && (
+          {initialData && (
             <div>
               <input
                 accept="image/*"
@@ -305,7 +306,7 @@ const ExamDialog = ({
                 multiple
                 type="file"
                 name="userImage"
-                
+
                 onChange={handleFileChange}
               />
               <label htmlFor="raised-button-file" style={{ margin: '8px 12px 6px 0' }}>
@@ -314,7 +315,18 @@ const ExamDialog = ({
                 </Button>
               </label>
               <span>{selectedFileName || '*No file chosen'}</span>
+
+              <div>
+              {imageData && (
+  <div style={{ marginTop: '10px' }}>
+    <img src={formData.userImage}  style={{ maxWidth: '20%', height: 'auto' }} />
+  </div>
+)}
+              </div>
             </div>
+          
+
+
           )}
 
           <TextField
@@ -469,7 +481,7 @@ const SystemUser = () => {
 
 
   const handleAddRole = async (formData) => {
-    const { role, name, email, password, phone, user_type, user_type_id, userImage,status } = formData;
+    const { role, name, email, password, phone, user_type, user_type_id, userImage, status } = formData;
     console.log("formData in handleRole", formData);
 
     const newFormData = new FormData();
@@ -481,32 +493,32 @@ const SystemUser = () => {
     newFormData.append('user_type_id', user_type_id);
     newFormData.append('user_type', user_type);
     newFormData.append('status', status);
-    
+
     if (userImage instanceof File) {
-        newFormData.append('image', userImage);
+      newFormData.append('image', userImage);
     }
 
     try {
-        const response = await fetch('https://dev-api.solvedudar.com/api/admin/systemUser/add', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                // Do not set Content-Type header when sending FormData
-            },
-            body: newFormData,
-        });
+      const response = await fetch('https://dev-api.solvedudar.com/api/admin/systemUser/add', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          // Do not set Content-Type header when sending FormData
+        },
+        body: newFormData,
+      });
 
-        if (response.ok) {
-            const result = await response.json();
-            setData((prevData) => [...prevData, result]);
-            console.log('Role added:', result);
-        } else {
-            throw new Error(`Response status: ${response.status}`);
-        }
+      if (response.ok) {
+        const result = await response.json();
+        setData((prevData) => [...prevData, result]);
+        console.log('Role added:', result);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
     } catch (error) {
-        console.error('Error adding role:', error.message);
+      console.error('Error adding role:', error.message);
     }
-};
+  };
   // const handleEditRole = async (id, formData) => {
   //   const { role, name, email, password, phone, user_type, user_type_id, status, userImage } = formData;
   //   console.log("formData in edit role", formData)
@@ -540,47 +552,47 @@ const SystemUser = () => {
   //   }
   // };
   const handleEditRole = async (id, formData) => {
-    const { role, name, email, phone,  status, userImage } = formData;
+    const { role, name, email, phone, status, userImage } = formData;
     console.log("formData in edit role", formData);
 
     const updatedFormData = new FormData();
-updatedFormData.append('role_id', role);
-updatedFormData.append('email', email);
-updatedFormData.append('name', name);
-updatedFormData.append('phone', phone);
-updatedFormData.append('status', status);
-if (userImage instanceof File) {
-    updatedFormData.append('image', userImage, userImage.name);
-}
+    updatedFormData.append('role_id', role);
+    updatedFormData.append('email', email);
+    updatedFormData.append('name', name);
+    updatedFormData.append('phone', phone);
+    updatedFormData.append('status', status);
+    if (userImage instanceof File) {
+      updatedFormData.append('image', userImage, userImage.name);
+    }
 
     try {
-        const response = await fetch(`https://dev-api.solvedudar.com/api/admin/systemUser/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                // Do not set Content-Type header when sending FormData
-            },
-            body: updatedFormData,
-        });
+      const response = await fetch(`https://dev-api.solvedudar.com/api/admin/systemUser/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          // Do not set Content-Type header when sending FormData
+        },
+        body: updatedFormData,
+      });
 
-        if (response.ok) {
-            const result = await response.json();
-            console.log("current page in edit", currentPage);
+      if (response.ok) {
+        const result = await response.json();
+        console.log("current page in edit", currentPage);
 
-            setData((prevData) =>
-                prevData.map((item) => (item.id === id ? result : item))
-            );
+        setData((prevData) =>
+          prevData.map((item) => (item.id === id ? result : item))
+        );
 
-            // setFormData("");
-            // setSelectedFileName('');
-            console.log('Role updated:', result);
-        } else {
-            throw new Error(`Response status: ${response.status}`);
-        }
+        // setFormData("");
+        // setSelectedFileName('');
+        console.log('Role updated:', result);
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
     } catch (error) {
-        console.error('Error updating role:', error.message);
+      console.error('Error updating role:', error.message);
     }
-};
+  };
 
 
   const handleSubmit = async (formData) => {
@@ -593,7 +605,8 @@ if (userImage instanceof File) {
       console.log('handleAddRole')
       await handleAddRole(formData);
     }
-    handleClose(); // Close the dialog after submission
+    handleClose();
+    getData(currentPage) // Close the dialog after submission
   };
 
   const handleClickOpen = (data = null) => {
