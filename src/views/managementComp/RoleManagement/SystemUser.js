@@ -100,7 +100,7 @@ const ExamDialog = ({
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+         
         },
       });
 
@@ -184,7 +184,11 @@ const ExamDialog = ({
   };
   const handleRowClick = (result) => {
     setFormData({
-      role: null,
+      role: '4',
+      name: result.name || '',
+      email: result.email || '',
+      password: result.password || '',
+      phone: result.phone || '',
       name: result.name || '',
       email: result.email || '',
       password: result.password || '',
@@ -226,7 +230,7 @@ const ExamDialog = ({
             ))}
           </TextField>
 
-          {showTeacherSearch  && (
+          {showTeacherSearch   && (
             <div>
               <CInputGroup className="mt-2 mb-2" style={{ height: '50px' }}>
                 <CInputGroupText id="basic-addon1">
@@ -342,7 +346,7 @@ const ExamDialog = ({
               <span>{selectedFileName || '*No file chosen'}</span>
             </div>
           )}
-          {initialData && (
+          {initialData && initialData.role !== 4 && (
             <div>
               <input
                 accept="image/*"
@@ -413,7 +417,7 @@ const SystemUser = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
   const [formData, setFormData] = useState({
-    role: null,
+    role: '',
     name: '',
     email: '',
     password: '',
@@ -678,6 +682,16 @@ const SystemUser = () => {
 
   };
 
+  const handleAddClick = () => {
+    setDialogData(null); // Reset dialog data for new entry
+    setOpen(true); // Open the dialog
+  };
+
+  const handleEditClick = (rowData) => {
+    setDialogData(rowData); // Set dialog data to the selected row data
+    setOpen(true); // Open the dialog
+  };
+
   const itemsPerPage = 10;
 
   const roleMap = {
@@ -712,7 +726,7 @@ const SystemUser = () => {
                 </CInputGroup>
               </CCol>
               <CCol xs lg={1}>
-                <CButton color='secondary' onClick={() => handleClickOpen()} className='d-flex align-items-center' style={{ padding: '4px 8px' }}>Add
+                <CButton color='secondary' onClick={handleAddClick} className='d-flex align-items-center' style={{ padding: '4px 8px' }}>Add
                   <CIcon icon={cilPlus} height={16} />
                 </CButton>
               </CCol>
@@ -767,7 +781,7 @@ const SystemUser = () => {
 
                       </CTableDataCell>
                       <CTableDataCell style={{ padding: '20px', whiteSpace: 'nowrap' }} >
-                        <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleClickOpen(row)} />
+                        <CIcon icon={cilColorBorder} height={20} style={{ marginRight: '30px' }} onClick={() => handleEditClick(row)} />
                         <CIcon icon={cilTrash} height={20} onClick={() => handleOpenAlert(row.id)} />
                       </CTableDataCell>
                     </CTableRow>
