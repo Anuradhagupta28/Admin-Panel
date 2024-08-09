@@ -61,6 +61,11 @@ const ExamDialog = ({
   const [searchTeacher, setSearchTeacher] = useState('');
   const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ODUsInRpbWUiOjE3MjE5MTIyNzc2ODcsImlhdCI6MTcyMTkxMjI3N30.b5aUEQDTc84g2CEP1DQA32zd5NRP31F-uOEq_7fJsX4`
   const [imageData, setImageData] = useState(false);
+  const [roleData, setRoleData] = useState([]);
+  const [showTeacherSearch, setShowTeacherSearch] = useState(false);
+
+
+
   useEffect(() => {
     if (initialData) {
       console.log("formData in useEffect", formData, "initialData", initialData)
@@ -68,12 +73,12 @@ const ExamDialog = ({
       setImageData(true);
     } else {
       setFormData({
-        role: '',
+        role: null,
         name: '',
         email: '',
         password: '',
         phone: '',
-        user_type: '',
+        user_type: 1,
         user_type_id: '',
         status: '',
         userImage: null,
@@ -81,11 +86,50 @@ const ExamDialog = ({
     }
   }, [initialData]);
 
+  useEffect(() => {
+    if (open) {
+      getRoleData();
+    }
+  }, [open]);
+
+  const getRoleData = async () => {
+    const url = `https://dev-api.solvedudar.com/api/admin/userRole`;
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        setRoleData(json.data);
+        console.log("json.data",json.data)
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
+    setFormData(prevFormData => {
+      const newFormData = {
+        ...prevFormData,
+        [name]: value,
+      };
+      
+      if (name === 'role') {
+        setShowTeacherSearch(value === '4');
+      }
+      
+      console.log("Updated formData:", newFormData); // Log the updated formData
+      return newFormData;
     });
   };
 
@@ -140,12 +184,12 @@ const ExamDialog = ({
   };
   const handleRowClick = (result) => {
     setFormData({
-      role: '4',
+      role: null,
       name: result.name || '',
       email: result.email || '',
       password: result.password || '',
       phone: result.phone || '',
-      user_type: '0',
+      user_type: 1,
       user_type_id: result.id || '',
       status: '1',
       userImage: result.userImage || null,
@@ -165,23 +209,24 @@ const ExamDialog = ({
       <DialogTitle>User Data</DialogTitle>
       <form onSubmit={onSubmit}>
         <DialogContent>
-          <FormControl fullWidth margin="dense" required>
-            <InputLabel id="role-label">Select Role</InputLabel>
-            <Select
-              labelId="role-label"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              label="Select Role"
-            >
-              <MenuItem value="1">Admin</MenuItem>
-              <MenuItem value="2">Sub Admin</MenuItem>
-              <MenuItem value="3">Staff</MenuItem>
-              <MenuItem value="4">Teacher</MenuItem>
-            </Select>
-          </FormControl>
+        <TextField
+            autoFocus
+            margin="dense"
+            name="role"
+            label="Role Name *"
+            select
+            fullWidth
+            value={formData.role}
+            onChange={handleChange}
+          >
+            {roleData.map(option => (
+              <MenuItem key={option.id} value={option.id.toString()}>
+                {option.role_name}
+              </MenuItem>
+            ))}
+          </TextField>
 
-          {formData.role === '4' && (
+          {showTeacherSearch  && (
             <div>
               <CInputGroup className="mt-2 mb-2" style={{ height: '50px' }}>
                 <CInputGroupText id="basic-addon1">
@@ -317,14 +362,14 @@ const ExamDialog = ({
               <span>{selectedFileName || '*No file chosen'}</span>
 
               <div>
-              {imageData && (
-  <div style={{ marginTop: '10px' }}>
-    <img src={formData.userImage}  style={{ maxWidth: '20%', height: 'auto' }} />
-  </div>
-)}
+                {imageData && (
+                  <div style={{ marginTop: '10px' }}>
+                    <img src={formData.userImage} style={{ maxWidth: '20%', height: 'auto' }} />
+                  </div>
+                )}
               </div>
             </div>
-          
+
 
 
           )}
@@ -368,7 +413,7 @@ const SystemUser = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState('');
   const [formData, setFormData] = useState({
-    role: '',
+    role: null,
     name: '',
     email: '',
     password: '',

@@ -50,7 +50,7 @@ const ExamDialog = ({ open, handleClose, initialData, handleSubmit, setFormData,
         id: '',
         class_id: '',
         exam_name: '',
-
+        passing_mark:'',
         normal_doubt: '',
         premium_doubt: '',
         ultra_premium_doubt: '',
@@ -256,7 +256,7 @@ const Exam = () => {
     id: '',
     class_id: '',
     exam_name: '',
-
+    passing_mark:'',
     normal_doubt: '',
     premium_doubt: '',
     ultra_premium_doubt: '',
@@ -383,7 +383,7 @@ const Exam = () => {
 
   ////Add role
   const handleAddRole = async (formData) => {
-    const { class_id, exam_name, normal_doubt, premium_doubt, ultra_premium_doubt, normal_concept, premium_concept, ultra_premium_concept, code, status } = formData;
+    const { class_id, exam_name,passing_mark,normal_doubt, premium_doubt, ultra_premium_doubt, normal_concept, premium_concept, ultra_premium_concept, code, status } = formData;
 
     console.log('formData2', formData);
 
@@ -398,7 +398,7 @@ const Exam = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ class_id, exam_name, normal_doubt, premium_doubt, ultra_premium_doubt, normal_concept, premium_concept, ultra_premium_concept, code, status }), // Correct JSON structure
+        body: JSON.stringify({ class_id, exam_name, passing_mark,normal_doubt, premium_doubt, ultra_premium_doubt, normal_concept, premium_concept, ultra_premium_concept, code, status }), // Correct JSON structure
       });
 
       if (response.ok) {
@@ -416,7 +416,7 @@ const Exam = () => {
   };
   ////Edit role
   const handleEditRole = async (id, formData) => {
-    const { class_id, exam_name , normal_doubt , premium_doubt, ultra_premium_doubt, normal_concept, premium_concept, ultra_premium_concept, code, status } = formData;
+    const { class_id, exam_name , passing_mark,normal_doubt , premium_doubt, ultra_premium_doubt, normal_concept, premium_concept, ultra_premium_concept, code, status } = formData;
 
     console.log('formData3', formData);
 
@@ -427,7 +427,7 @@ const Exam = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ id, class_id, exam_name, normal_doubt, premium_doubt, ultra_premium_doubt, normal_concept, premium_concept, ultra_premium_concept, code, status }), // Ensure proper formatting
+        body: JSON.stringify({ id, class_id, exam_name,passing_mark, normal_doubt, premium_doubt, ultra_premium_doubt, normal_concept, premium_concept, ultra_premium_concept, code, status }), // Ensure proper formatting
       });
 
       if (response.ok) {
