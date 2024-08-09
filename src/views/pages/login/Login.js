@@ -17,23 +17,53 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { useDispatch } from 'react-redux'
 const Login = () => {
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [loginData, setLoginData] = useState('')
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const handleLogin = () => {
-    if (username === 'solvedudar@gmail.com' && password === 'ygp@1586YGP') {
-      dispatch({ type: 'SET_VALID_USER', payload: false })
-      navigate('/*')
-    } else if (username === 'anu@gmail.com' && password === '1234567') {
-      dispatch({ type: 'SET_VALID_USER', payload: true })
-      navigate('/*')
-    } else {
-      console.log(username)
-      console.log(password)
-      alert('Invalid username or password')
+
+  const handleLogin = async () => {
+    
+ try {
+      const response = await fetch('https://dev-api.solvedudar.com/api/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          
+        },
+        body: JSON.stringify({ username, password }), // Correct JSON structure
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setData((prevData) => [...prevData, result]); // Assuming the API returns the new role in result
+
+        console.log('Role added:', result);
+
+        setLoginData(result); 
+      } else {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error adding role:', error.message);
     }
-  }
+  };
+
+  // const handleLogin = () => {
+  //   if (username === 'solvedudar@gmail.com' && password === 'ygp@1586YGP') {
+  //     dispatch({ type: 'SET_VALID_USER', payload: false })
+  //     navigate('/*')
+  //   } else if (username === 'anu@gmail.com' && password === '1234567') {
+  //     dispatch({ type: 'SET_VALID_USER', payload: true })
+  //     navigate('/*')
+  //   } else {
+  //     console.log(username)
+  //     console.log(password)
+  //     alert('Invalid username or password')
+  //   }
+  // }
 
   return (
     <div
